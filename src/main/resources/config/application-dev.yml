@@ -1,0 +1,162 @@
+# ===================================================================
+# Spring Boot configuration for the "dev" profile.
+#
+# This configuration overrides the application.yml file.
+#
+# More information on profiles: https://www.jhipster.tech/profiles/
+# More information on configuration properties: https://www.jhipster.tech/common-application-properties/
+# ===================================================================
+
+# ===================================================================
+# Standard Spring Boot properties.
+# Full reference is available at:
+# http://docs.spring.io/spring-boot/docs/current/reference/html/common-application-properties.html
+# ===================================================================
+
+logging:
+    level:
+        ROOT: DEBUG,CONSOLE
+        io.github.jhipster: DEBUG
+        com.rcd.fiber: DEBUG
+        org.springframework.boot.autoconfigure: ERROR
+    config: classpath:logback-spring.xml
+debug: true
+
+spring:
+    profiles:
+        active: dev
+        include:
+            - swagger
+            # Uncomment to activate TLS for the dev profile
+            #- tls
+    devtools:
+        restart:
+            enabled: true
+            additional-exclude: .h2.server.properties
+        livereload:
+            enabled: false # we use Webpack dev server + BrowserSync for livereload
+    jackson:
+        serialization:
+            indent-output: true
+    datasource:
+        type: com.zaxxer.hikari.HikariDataSource
+#        url: jdbc:h2:mem:fiber_monitor_system;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=FALSE
+        url: jdbc:mysql://localhost:3306/fiber_monitor_system?useUnicode=true&characterEncoding=utf8&useSSL=false&useLegacyDatetimeCode=false&serverTimezone=UTC
+        username: root
+        password: 123456
+        hikari:
+            auto-commit: false
+    # 王伟配置的mongoDB
+    data:
+        mongodb:
+            url: mongodb://localhost:27017
+            database: service_files
+            # 如果bucket-name指定其他值，会导致无法查询GridFS
+            bucket-name: fs
+    h2:
+        console:
+            enabled: false
+    jpa:
+        database-platform: org.hibernate.dialect.MySQL5InnoDBDialect
+        database: MYSQL
+        show-sql: true
+        hibernate:
+            ddl-auto: update
+            naming:
+                physical-strategy: org.hibernate.boot.model.naming.PhysicalNamingStrategyStandardImpl
+        properties:
+            hibernate.id.new_generator_mappings: true
+            hibernate.connection.provider_disables_autocommit: true
+            hibernate.cache.use_second_level_cache: false
+            hibernate.cache.use_query_cache: false
+            hibernate.generate_statistics: true
+    liquibase:
+        contexts: dev
+    mail:
+        host: localhost
+        port: 25
+        username:
+        password:
+    messages:
+        cache-duration: PT1S # 1 second, see the ISO 8601 standard
+    thymeleaf:
+        cache: false
+
+server:
+    port: 8888
+
+# ===================================================================
+# JHipster specific properties
+#
+# Full reference is available at: https://www.jhipster.tech/common-application-properties/
+# ===================================================================
+
+jhipster:
+    http:
+        version: V_1_1 # To use HTTP/2 you will need to activate TLS (see application-tls.yml)
+    # CORS is only enabled by default with the "dev" profile, so BrowserSync can access the API
+    cors:
+        allowed-origins: "*"
+        allowed-methods: "*"
+        allowed-headers: "*"
+        exposed-headers: "Authorization,Link,X-Total-Count"
+        allow-credentials: true
+        max-age: 1800
+    security:
+        authentication:
+            jwt:
+                # This token must be encoded using Base64 and be at least 256 bits long (you can type `openssl rand -base64 64` on your command line to generate a 512 bits one)
+                base64-secret: MzQ3NmNkOTA0MGUyYWFjNjZlM2E3NmRmNDM4YWFjNmQxNzFhYTY1ZDllZjljMjQ0MWNiYzc2N2U3NDgwMTlkMzk0MjhlNTUwODFlMDQyY2I1MWVlOGE5MDM1YjY0ODMwMzFlMThiMDFkMzVmNTc1NmFjNGY1MmQyMWVjMjQ0Mjc=
+                # Token is valid 24 hours
+                token-validity-in-seconds: 86400
+                token-validity-in-seconds-for-remember-me: 2592000
+    mail: # specific JHipster mail property, for standard properties see MailProperties
+        from: fiber_monitor_system@localhost
+        base-url: http://127.0.0.1:8080
+    metrics: # DropWizard Metrics configuration, used by MetricsConfiguration
+        jmx:
+            enabled: true
+        prometheus:
+            enabled: false #expose metrics via prometheus
+        logs: # Reports Dropwizard metrics in the logs
+            enabled: false
+            report-frequency: 60 # in seconds
+    logging:
+        logstash: # Forward logs to logstash over a socket, used by LoggingConfiguration
+            enabled: false
+            host: localhost
+            port: 5000
+            queue-size: 512
+
+# ===================================================================
+# Application specific properties
+# Add your own application properties here, see the ApplicationProperties class
+# to have type-safe configuration, like in the JHipsterProperties above
+#
+# More documentation is available at:
+# https://www.jhipster.tech/common-application-properties/
+# ===================================================================
+
+# application:
+# 自定义的一些参数
+# voltdb的参数
+voltdb:
+    url: jdbc:voltdb://192.168.99.12:21212
+# 订阅发布的配置
+wsn:
+    # 订阅配置
+    receive:
+        wsnAddr1: http://192.168.99.121:9011/wsn-core
+        receiveAddr2: http://192.168.99.18:9008/wsn-subscribe
+        # 是否启用发布订阅 1 为启动 0为不启动
+        status: 0
+#    发布配置
+    send:
+        # 注册时的配置
+        wsnAddr1: http://192.168.99.121:9011/wsn-core
+        sendAddr2: http://192.168.99.18:9199/wsn-send
+        # 发送订阅时
+        sendAddr3: http://192.168.99.121:9199/wsn-send
+        # 是否启用发布订阅 1 为启动 0为不启动
+        status: 0
+

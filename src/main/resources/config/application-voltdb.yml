@@ -1,0 +1,59 @@
+logging:
+    level:
+        ROOT: INFO
+        com.rcd.fiber: INFO
+        io.github.jhipster: INFO
+spring:
+    datasource:
+        driver-class-name: org.voltdb.jdbc.Driver
+        url: jdbc:voltdb://192.168.1.3:21212
+        username:
+        password:
+    liquibase:
+        contexts: voltdb
+# ===================================================================
+server:
+    port: 8888
+
+# ===================================================================
+# JHipster specific properties
+#
+# Full reference is available at: https://www.jhipster.tech/common-application-properties/
+# ===================================================================
+
+jhipster:
+    http:
+        version: V_1_1 # To use HTTP/2 you will need to activate TLS (see application-tls.yml)
+    # CORS is only enabled by default with the "dev" profile, so BrowserSync can access the API
+    cors:
+        allowed-origins: "*"
+        allowed-methods: "*"
+        allowed-headers: "*"
+        exposed-headers: "Authorization,Link,X-Total-Count"
+        allow-credentials: true
+        max-age: 1800
+    security:
+        authentication:
+            jwt:
+                # This token must be encoded using Base64 and be at least 256 bits long (you can type `openssl rand -base64 64` on your command line to generate a 512 bits one)
+                base64-secret: MzQ3NmNkOTA0MGUyYWFjNjZlM2E3NmRmNDM4YWFjNmQxNzFhYTY1ZDllZjljMjQ0MWNiYzc2N2U3NDgwMTlkMzk0MjhlNTUwODFlMDQyY2I1MWVlOGE5MDM1YjY0ODMwMzFlMThiMDFkMzVmNTc1NmFjNGY1MmQyMWVjMjQ0Mjc=
+                # Token is valid 24 hours
+                token-validity-in-seconds: 86400
+                token-validity-in-seconds-for-remember-me: 2592000
+    mail: # specific JHipster mail property, for standard properties see MailProperties
+        from: fiber_monitor_system@localhost
+        base-url: http://127.0.0.1:8080
+    metrics: # DropWizard Metrics configuration, used by MetricsConfiguration
+        jmx:
+            enabled: true
+        prometheus:
+            enabled: false #expose metrics via prometheus
+        logs: # Reports Dropwizard metrics in the logs
+            enabled: false
+            report-frequency: 60 # in seconds
+    logging:
+        logstash: # Forward logs to logstash over a socket, used by LoggingConfiguration
+            enabled: false
+            host: localhost
+            port: 5000
+            queue-size: 512
