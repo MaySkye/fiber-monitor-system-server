@@ -199,8 +199,11 @@ public class TelemetryService {
     public HashMap<String, String> uploadServiceFile(MultipartFile multipartFile, Document metadata) {
         HashMap<String, String> res = new HashMap<>();
         try {
+            String fixedFilename = metadata.getString("filename");
+            metadata.remove("filename");
             InputStream inputStream = multipartFile.getInputStream();
-            ObjectId objectId = mongoRepository.uploadServiceFile(inputStream, multipartFile.getOriginalFilename(), metadata);
+            ObjectId objectId = mongoRepository.uploadServiceFile(inputStream, fixedFilename, metadata);
+            //System.out.println("multipartFile.getOriginalFilename():"+multipartFile.getOriginalFilename());
             res.put("objectId", objectId.toString());
             res.put("type", "success");
             return res;
