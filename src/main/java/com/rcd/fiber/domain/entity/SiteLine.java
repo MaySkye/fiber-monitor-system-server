@@ -17,24 +17,24 @@ public class SiteLine {
     @Column(name = "line_id", length = 255)
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long lineId;
-    @Size(max = 255)
-    @Column(name = "point1", length = 255)
+    //@Size(max = 255)
+    @Column(name = "point1")
     private String point1;
-    @Size(max = 255)
+    //@Size(max = 255)
     @Column(name = "point2")
     private String point2;
-    @Size(max = 255)
+    //@Size(max = 255)
     @Column(name = "line_name")
     private String lineName;
-    @Size(max = 255)
+    //@Size(max = 255)
     @Column(name = "line_type")
     private String lineType;
-    @Size(max = 255)
+    //@Size(max = 255)
     @Column(name = "line_info")
     private String lineInfo;
-    @Size(max = 255)
+    //@Size(max = 255)
     @Column(name = "length")
-    private String len;
+    private Double len;
 
     public long getLineId() {
         return lineId;
@@ -84,11 +84,11 @@ public class SiteLine {
         this.lineInfo = lineInfo;
     }
 
-    public String getLen() {
+    public Double getLen() {
         return len;
     }
 
-    public void setLen(String len) {
+    public void setLen(Double len) {
         this.len = len;
     }
 

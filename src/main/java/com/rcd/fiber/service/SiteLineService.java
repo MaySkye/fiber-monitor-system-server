@@ -24,15 +24,14 @@ public class SiteLineService {
     private final SiteLineRepository siteLineRepository;
 
     public SiteLineService(SiteLineRepository siteLineRepository) {
-
         this.siteLineRepository = siteLineRepository;
     }
-
     // 返回所有数据
     public List<SiteLine> getAllSiteLine() {
-
         return siteLineRepository.findAll();
     }
-
+    public void addsiteLine(SiteLine siteline){
+        siteLineRepository.saveAndFlush(siteline);
+    }
 
 }

@@ -10,10 +10,7 @@ import com.rcd.fiber.service.SiteLineService;
 import com.rcd.fiber.service.SiteService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -60,6 +57,27 @@ public class SiteLineResource {
         String paintInfojson=PaintInfoToJson(siteInfo,siteLinkInfo);
         return paintInfojson;
     }
+
+    @RequestMapping(value = "/addline",method = RequestMethod.POST)
+    @ResponseBody
+    @Timed
+    public void addSitePost(@RequestBody String line_json) {
+        line_json=line_json.substring(1,line_json.length()-1);
+        System.out.println("line_json:"+line_json);
+        JSONObject json = JSONObject.parseObject(line_json);
+        SiteLine siteline=new SiteLine();
+        siteline.setPoint1((String) json.get("val_point1"));
+        siteline.setPoint2((String) json.get("val_point2"));
+        siteline.setLineName((String) json.get("val_linename"));
+        siteline.setLineType((String) json.get("val_linetype"));
+        siteline.setLineInfo((String) json.get("val_lineinfo"));
+        if(!json.get("val_linelen").equals("")){
+            siteline.setLen(Double.valueOf((String) json.get("val_linelen")));
+        }
+        //数据库中添加一条链路，并立即刷新缓存
+        siteLineservice.addsiteLine(siteline);
+    }
+
 
     public static String SiteLineToJson(List<SiteLine> items) throws JSONException {
         if (items == null)

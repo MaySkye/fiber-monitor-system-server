@@ -15,6 +15,5 @@ import java.util.List;
  */
 @Repository
 public interface SiteRepository extends JpaRepository<Site, Long> {
-
     List<Site> findAll();
 }

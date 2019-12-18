@@ -22,16 +22,15 @@ import java.util.List;
 public class SiteService {
     private final Logger log = LoggerFactory.getLogger(SiteService.class);
     private final SiteRepository siteRepository;
-
     public SiteService(SiteRepository siteRepository) {
-
         this.siteRepository = siteRepository;
     }
-
     // 返回所有数据
     public List<Site> getAllSite() {
-
         return siteRepository.findAll();
+    }
+    public void addSite(Site site){
+        siteRepository.saveAndFlush(site);
     }
 
 }

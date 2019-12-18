@@ -11,28 +11,29 @@ public class Site {
     @Column(name = "site_id", length = 255)
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long siteId;
-    @Size(max = 255)
-    @Column(name = "site_level", length = 255)
+
+    //@Size(max = 255)
+    @Column(name = "site_level")
     private long siteLevel;
-    @Size(max = 255)
+    //@Size(max = 255)
     @Column(name = "site_localx")
     private double siteLocalx;
-    @Size(max = 255)
+    //@Size(max = 255)
     @Column(name = "site_localy")
     private double siteLocaly;
-    @Size(max = 255)
+    //@Size(max = 255)
     @Column(name = "site_name")
     private String siteName;
-    @Size(max = 255)
+    //@Size(max = 255)
     @Column(name = "site_info")
     private String siteInfo;
-    @Size(max = 255)
+    //@Size(max = 255)
     @Column(name = "site_type")
     private String siteType;
-    @Size(max = 255)
+    //@Size(max = 255)
     @Column(name = "site_address")
     private String siteAddress;
-    @Size(max = 255)
+    //@Size(max = 255)
     @Column(name = "connect")
     private String connect;
 

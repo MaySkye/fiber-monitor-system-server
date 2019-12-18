@@ -11,10 +11,7 @@ import com.rcd.fiber.service.TelemetryService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -30,7 +27,6 @@ import java.util.List;
 public class SiteResource {
     private final Logger logger = LoggerFactory.getLogger(SiteResource.class);
     private final SiteService siteservice;
-
     public SiteResource(SiteService siteservice) {
         this.siteservice = siteservice;
     }
@@ -44,6 +40,25 @@ public class SiteResource {
         System.out.println("jsonListEmp:  " + jsonListEmp);
         return jsonListEmp;
         //return ResponseEntity.ok(list);
+    }
+
+    @RequestMapping(value = "/addsite",method = RequestMethod.POST)
+    @ResponseBody
+    @Timed
+    public void addSitePost(@RequestBody String site_json) {
+        site_json=site_json.substring(1,site_json.length()-1);
+        System.out.println("site_json:"+site_json);
+        JSONObject json = JSONObject.parseObject(site_json);
+        Site site=new Site();
+        site.setSiteName((String) json.get("val_sitename"));
+        site.setSiteType((String) json.get("val_sitetype"));
+        site.setSiteAddress((String) json.get("val_siteaddress"));
+        site.setSiteInfo((String) json.get("val_siteinfo"));
+        site.setSiteLevel(Long.valueOf((String) json.get("val_sitelevel")));
+        site.setSiteLocalx(Double.valueOf((String) json.get("val_lng")));
+        site.setSiteLocaly(Double.valueOf((String) json.get("val_lat")));
+        //数据库中添加一个站点，并立即刷新缓存
+        siteservice.addSite(site);
     }
 
     public static String SiteToJson(List<Site> items) throws JSONException {
