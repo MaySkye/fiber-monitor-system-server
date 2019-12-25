@@ -5,6 +5,7 @@ import com.rcd.fiber.domain.entity.TelemetryImage;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.mongodb.repository.DeleteQuery;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -42,6 +43,10 @@ public interface TelemetryRepository extends JpaRepository<Telemetry, Long> {
         "Order by timestamp DESC  LIMIT 1")
     int updateAlarmState(double alarm_state, String site_name, String device_name, String data_name);
 
+    @Transactional
+    @Modifying(clearAutomatically = true)
+    @Query(nativeQuery = true, value = "DELETE from telemetry where site_name = ?1 ")
+    int deleteTelemetryBySiteNameEquals(String site_name);
 
     //王伟的jpa，修改监控值detected_value
     @Transactional

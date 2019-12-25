@@ -60,7 +60,6 @@ public class SiteResource {
         //数据库中添加一个站点，并立即刷新缓存
         siteservice.addSite(site);
     }
-
     public static String SiteToJson(List<Site> items) throws JSONException {
         if (items == null)
             return "";

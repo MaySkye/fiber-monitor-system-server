@@ -1,10 +1,12 @@
 package com.rcd.fiber.web.rest;
 
+import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONException;
 import com.alibaba.fastjson.JSONObject;
 import com.codahale.metrics.annotation.Timed;
 import com.rcd.fiber.domain.entity.ServiceFileInfo;
+import com.rcd.fiber.domain.entity.Site;
 import com.rcd.fiber.domain.entity.Telemetry;
 import com.rcd.fiber.service.TelemetryService;
 import org.bson.Document;
@@ -17,6 +19,8 @@ import org.springframework.web.multipart.MultipartFile;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.UnsupportedEncodingException;
+import java.net.URLDecoder;
+import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -114,6 +118,8 @@ public class TelemetryResource {
     @ResponseBody
     @Timed
     public HashMap<String, String> getDetectedValueByParameters(@RequestBody String jsonData) {
+        System.out.println("jsonData:"+jsonData);
+        System.out.println("data:"+service.getDetectedValueByParameters(jsonData).get("data"));
         return service.getDetectedValueByParameters(jsonData);
     }
 
@@ -148,5 +154,51 @@ public class TelemetryResource {
         return service.uploadServiceFile(multipartFile, metadata);
     }
 
+    @RequestMapping(value = "/addtelemetry",method = RequestMethod.POST ,produces = "application/json;charset=utf-8")
+    @ResponseBody
+    @Timed
+    public void addTelemetryPost(@RequestBody String telemetry_info) {
+        System.out.println("telemetry_info:" + telemetry_info);
 
+        try {
+            String newstr = URLDecoder.decode(telemetry_info, "utf-8");
+            System.out.println("newstr:" + newstr);
+            JSONArray res_arr = JSON.parseArray(newstr);
+            String site_name = res_arr.getJSONObject(0).getString("site_name");
+            String telemetry_json = res_arr.getJSONObject(0).getString("telemetry_json");
+            //先根据站点名称把相关数据删除
+            service.deleteTelemetry(site_name);
+            //添加
+            JSONArray arr = JSON.parseArray(telemetry_json);
+            for (int i = 0; i < arr.size(); i++) {
+                JSONObject json = arr.getJSONObject(i);
+                Telemetry telemetry = new Telemetry();
+                telemetry.setSiteName((String) json.get("site_name"));
+                telemetry.setDeviceName((String) json.get("device_name"));
+                telemetry.setDataName((String) json.get("data_name"));
+                telemetry.setBase((String) json.get("base"));
+                if (!json.get("offset").equals("")) {
+                    telemetry.setOffset(Integer.valueOf((String) json.get("offset")));
+                }
+                if (!json.get("ratio").equals("")) {
+                    telemetry.setRatio(Integer.valueOf((String) json.get("ratio")));
+                }
+                telemetry.setUpperLimit((String) json.get("upper_limit"));
+                telemetry.setLowerLimit((String) json.get("lower_limit"));
+                telemetry.setAlarmUpperLimit((String) json.get("alarm_lower_limit"));
+                telemetry.setAlarmLowerLimit((String) json.get("alarm_lower_limit"));
+                if (!json.get("state").equals("")) {
+                    telemetry.setState(Integer.valueOf((String) json.get("state")));
+                }
+                if (!json.get("blocked").equals("")) {
+                    telemetry.setBlocked(Boolean.valueOf((String) json.get("blocked")));
+                }
+                telemetry.setAlarmState((String) json.get("alarm_state"));
+                service.addTelemetry(telemetry);
+            }
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+        }
+
+    }
 }

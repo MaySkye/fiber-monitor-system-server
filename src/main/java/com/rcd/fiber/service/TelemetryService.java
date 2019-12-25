@@ -75,6 +75,10 @@ public class TelemetryService {
         return telemetryRepository.updateAlarmState(alarm_state, site_name, device_name, data_name);
     }
 
+    public int deleteTelemetry(String site_name){
+        return telemetryRepository.deleteTelemetryBySiteNameEquals(site_name);
+    }
+
     // 返回vlotdb内的所有数据
 
     public List<Telemetry> getVoltdbTelemetry() {
@@ -213,4 +217,10 @@ public class TelemetryService {
             return res;
         }
     }
+
+    public void addTelemetry(Telemetry telemetry){
+        telemetryRepository.saveAndFlush(telemetry);
+    }
+
+
 }
