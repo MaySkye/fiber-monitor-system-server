@@ -39,10 +39,24 @@ public class SiteLineResource {
     @Timed
     public String getAllSiteLine() {
 
+        List<SiteLine> l = siteLineservice.getAllSiteLine();
+        for (int i = 0; i < l.size(); i++) {
+            SiteLine sl = l.get(i);
+            //插入新数据
+            double stable = Math.random() * 10;
+            stable = (double) Math.round(stable * 100) / 100;
+            double transspeed = Math.random() * 10;
+            transspeed = (double) Math.round(transspeed * 100) / 100;
+            String point1=sl.getPoint1();
+            String point2=sl.getPoint2();
+            siteLineservice.updateValues(point1+"-"+point2,stable,transspeed,"正常",point1,point2);
+        }
+
+        //读取返回数据
         List<SiteLine> list = siteLineservice.getAllSiteLine();
-        //list.stream().forEach(x->System.out.println(x));
         String jsonListEmp = SiteLineToJson(list);
         System.out.println("jsonListEmp:  " + jsonListEmp);
+
         return jsonListEmp;
         //return ResponseEntity.ok(list);
     }
@@ -50,6 +64,19 @@ public class SiteLineResource {
     @GetMapping("/findPaintInfo")
     @Timed
     public String getAllPaintInfo() {
+        List<SiteLine> l = siteLineservice.getAllSiteLine();
+        for (int i = 0; i < l.size(); i++) {
+            SiteLine sl = l.get(i);
+            //插入新数据
+            double stable = Math.random() * 10;
+            stable = (double) Math.round(stable * 100) / 100;
+            double transspeed = Math.random() * 10;
+            transspeed = (double) Math.round(transspeed * 100) / 100;
+            String point1=sl.getPoint1();
+            String point2=sl.getPoint2();
+            siteLineservice.updateValues(point1+"-"+point2,stable,transspeed,"正常",point1,point2);
+        }
+
         List<Site> sitelist = siteservice.getAllSite();
         List<SiteLine> list = siteLineservice.getAllSiteLine();
         String siteInfo=SiteToJson(sitelist);;
@@ -96,6 +123,9 @@ public class SiteLineResource {
             jsonObject.put("line_type", info.getLineType());
             jsonObject.put("line_info", info.getLineInfo());
             jsonObject.put("length", info.getLen());
+            jsonObject.put("stable", info.getStable());
+            jsonObject.put("transspeed", info.getTransspeed());
+            jsonObject.put("state", info.getState());
             //System.out.println("jsonObject:  " + jsonObject.toString());
             array.add(jsonObject);
         }

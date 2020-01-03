@@ -36,6 +36,13 @@ public class SiteLine {
     @Column(name = "length")
     private Double len;
 
+    @Column(name = "stable")
+    private Double stable;
+    @Column(name = "transspeed")
+    private Double transspeed;
+    @Column(name = "state")
+    private String state;
+
     public long getLineId() {
         return lineId;
     }
@@ -92,6 +99,30 @@ public class SiteLine {
         this.len = len;
     }
 
+    public Double getStable() {
+        return stable;
+    }
+
+    public void setStable(Double stable) {
+        this.stable = stable;
+    }
+
+    public Double getTransspeed() {
+        return transspeed;
+    }
+
+    public void setTransspeed(Double transspeed) {
+        this.transspeed = transspeed;
+    }
+
+    public String getState() {
+        return state;
+    }
+
+    public void setState(String state) {
+        this.state = state;
+    }
+
     @Override
     public String toString() {
         return "SiteLine{" +
@@ -101,7 +132,10 @@ public class SiteLine {
             ", lineName='" + lineName + '\'' +
             ", lineType='" + lineType + '\'' +
             ", lineInfo='" + lineInfo + '\'' +
-            ", len='" + len + '\'' +
+            ", len=" + len +
+            ", stable=" + stable +
+            ", transspeed=" + transspeed +
+            ", state='" + state + '\'' +
             '}';
     }
 }

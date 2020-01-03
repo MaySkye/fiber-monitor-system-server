@@ -30,8 +30,13 @@ public class SiteLineService {
     public List<SiteLine> getAllSiteLine() {
         return siteLineRepository.findAll();
     }
+
     public void addsiteLine(SiteLine siteline){
         siteLineRepository.saveAndFlush(siteline);
+    }
+
+    public int updateValues(String line_name,double stable, double transspeed, String state,String point1,String point2){
+        return siteLineRepository.updateValues(line_name,stable, transspeed,state,point1,point2);
     }
 
 }
