@@ -47,9 +47,7 @@ public class SendInfoByResource {
         if (status.equals("1")) {
             // 异步执行关闭设备
             wsService.sendInfoByWSN("xian","拍频比对设备A1.29","光频_频率稳定度A1.29");
-
         }
-
         // 同时操作数据
         int a = alarmDeviceService.updataData();
         logger.info("更新数据："+ a);

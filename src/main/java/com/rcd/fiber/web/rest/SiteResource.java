@@ -41,7 +41,6 @@ public class SiteResource {
         return jsonListEmp;
         //return ResponseEntity.ok(list);
     }
-
     @RequestMapping(value = "/addsite",method = RequestMethod.POST)
     @ResponseBody
     @Timed

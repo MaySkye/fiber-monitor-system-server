@@ -38,20 +38,7 @@ public class SiteLineResource {
     @GetMapping("/findall")
     @Timed
     public String getAllSiteLine() {
-
-        List<SiteLine> l = siteLineservice.getAllSiteLine();
-        for (int i = 0; i < l.size(); i++) {
-            SiteLine sl = l.get(i);
-            //插入新数据
-            double stable = Math.random() * 10;
-            stable = (double) Math.round(stable * 100) / 100;
-            double transspeed = Math.random() * 10;
-            transspeed = (double) Math.round(transspeed * 100) / 100;
-            String point1=sl.getPoint1();
-            String point2=sl.getPoint2();
-            siteLineservice.updateValues(point1+"-"+point2,stable,transspeed,"正常",point1,point2);
-        }
-
+        updateAllSiteLine();
         //读取返回数据
         List<SiteLine> list = siteLineservice.getAllSiteLine();
         String jsonListEmp = SiteLineToJson(list);
@@ -64,18 +51,7 @@ public class SiteLineResource {
     @GetMapping("/findPaintInfo")
     @Timed
     public String getAllPaintInfo() {
-        List<SiteLine> l = siteLineservice.getAllSiteLine();
-        for (int i = 0; i < l.size(); i++) {
-            SiteLine sl = l.get(i);
-            //插入新数据
-            double stable = Math.random() * 10;
-            stable = (double) Math.round(stable * 100) / 100;
-            double transspeed = Math.random() * 10;
-            transspeed = (double) Math.round(transspeed * 100) / 100;
-            String point1=sl.getPoint1();
-            String point2=sl.getPoint2();
-            siteLineservice.updateValues(point1+"-"+point2,stable,transspeed,"正常",point1,point2);
-        }
+        updateAllSiteLine();
 
         List<Site> sitelist = siteservice.getAllSite();
         List<SiteLine> list = siteLineservice.getAllSiteLine();
@@ -88,7 +64,7 @@ public class SiteLineResource {
     @RequestMapping(value = "/addline",method = RequestMethod.POST)
     @ResponseBody
     @Timed
-    public void addSitePost(@RequestBody String line_json) {
+    public void addSiteLinePost(@RequestBody String line_json) {
         line_json=line_json.substring(1,line_json.length()-1);
         System.out.println("line_json:"+line_json);
         JSONObject json = JSONObject.parseObject(line_json);
@@ -105,6 +81,28 @@ public class SiteLineResource {
         siteLineservice.addsiteLine(siteline);
     }
 
+    //随机更新siteline的全部监测值
+    public  void updateAllSiteLine(){
+        List<SiteLine> l = siteLineservice.getAllSiteLine();
+        for (int i = 0; i < l.size(); i++) {
+            SiteLine sl = l.get(i);
+            //插入新数据
+            // stable  transspeed均大于9为异常
+            double stable = Math.random() * 10;
+            stable = (double) Math.round(stable * 100) / 100;
+            double transspeed = Math.random() * 10;
+            transspeed = (double) Math.round(transspeed * 100) / 100;
+            String point1=sl.getPoint1();
+            String point2=sl.getPoint2();
+            String state="";
+            if(stable<=9&&transspeed<=9){
+                state="正常";
+            }else{
+                state="异常";
+            }
+            siteLineservice.updateValues(point1+"-"+point2,stable,transspeed,state,point1,point2);
+        }
+    }
 
     public static String SiteLineToJson(List<SiteLine> items) throws JSONException {
         if (items == null)

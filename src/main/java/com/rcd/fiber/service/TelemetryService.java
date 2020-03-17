@@ -15,6 +15,7 @@ import org.bson.types.ObjectId;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Sort;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.stereotype.Service;
@@ -172,6 +173,7 @@ public class TelemetryService {
         Query query = new Query(Criteria
             .where("metadata.site_name").is(site_name)
             .and("metadata.site_level").is(site_level));
+        query.with(Sort.by(Sort.Order.desc("uploadDate")));
         GridFSFile gsFile = mongoRepository.getLatestServiceFile(query);
         System.out.println("查询完成");
         //返回结果
