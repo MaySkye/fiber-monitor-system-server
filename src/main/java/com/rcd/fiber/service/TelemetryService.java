@@ -220,6 +220,15 @@ public class TelemetryService {
         }
     }
 
+    //赵艺：查询所有service文件信息
+
+    public List<ServiceFileInfo> getAllServiceInfo(){
+        return  mongoRepository.getAllServiceInfo();
+    }
+
+    //赵艺：删除某一service文件
+
+
     public void addTelemetry(Telemetry telemetry){
         telemetryRepository.saveAndFlush(telemetry);
     }

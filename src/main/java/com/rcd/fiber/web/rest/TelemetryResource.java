@@ -21,6 +21,9 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
 import java.net.URLEncoder;
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -157,6 +160,45 @@ public class TelemetryResource {
             .append("filename",request.getParameter("filename"));
         return service.uploadServiceFile(multipartFile, metadata);
     }
+
+
+    //赵艺：查询所有service文件信息
+       /*
+    * {
+    file_name:
+    site_name:
+    site_level:
+    upload_time:
+  },*/
+
+    @RequestMapping("/getAllServiceInfo")
+    @ResponseBody
+    public String getAllServiceInfo( ) throws ParseException {
+        List<ServiceFileInfo> infos=service.getAllServiceInfo();
+        JSONArray array = new JSONArray();
+        JSONObject jsonObject = null;
+        for(int i = 0 ; i < infos.size() ; i++) {
+            System.out.println(infos.get(i));
+            System.out.println("file_name:"+infos.get(i).getFilename());
+            System.out.println("site_name:"+infos.get(i).getMetadata().getString("site_name"));
+            System.out.println("site_level:"+infos.get(i).getMetadata().getString("site_level"));
+            DateFormat df = new SimpleDateFormat("EEE MMM dd HH:mm:ss zzz yyyy", java.util.Locale.ENGLISH);
+            System.out.println("upload_time:"+df.parse(infos.get(i).getUploadDate().toString()));
+
+            jsonObject = new JSONObject();
+            jsonObject.put("file_name", infos.get(i).getFilename());
+            jsonObject.put("site_name", infos.get(i).getMetadata().getString("site_name"));
+            jsonObject.put("site_level", infos.get(i).getMetadata().getString("site_level"));
+            jsonObject.put("upload_time", infos.get(i).getUploadDate().toString());
+            array.add(jsonObject);
+        }
+        System.out.println("array.toString():"+array.toString());
+        return array.toString();
+    }
+
+
+
+
 
     @RequestMapping(value = "/addtelemetry",method = RequestMethod.POST ,produces = "application/json;charset=utf-8")
     @ResponseBody

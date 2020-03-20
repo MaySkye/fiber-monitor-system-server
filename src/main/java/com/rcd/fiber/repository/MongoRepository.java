@@ -14,6 +14,7 @@ import org.springframework.data.mongodb.gridfs.GridFsTemplate;
 import org.springframework.stereotype.Repository;
 
 import java.io.InputStream;
+import java.util.List;
 
 @Repository
 public class MongoRepository {
@@ -32,6 +33,11 @@ public class MongoRepository {
     public ServiceFileInfo getLastestServiceFileInfo(Query query) {
         ServiceFileInfo info = mongoTemplate.findOne(query, ServiceFileInfo.class, bucketName + ".files");
         return info;
+    }
+    //赵艺：查询所有service文件信息
+    public List<ServiceFileInfo> getAllServiceInfo() {
+        List<ServiceFileInfo> infos = mongoTemplate.findAll( ServiceFileInfo.class,bucketName + ".files");
+        return infos;
     }
 
     //王伟：下载service（latest）文件时查询信息
