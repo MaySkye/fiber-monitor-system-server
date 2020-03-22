@@ -1,5 +1,6 @@
 package com.rcd.fiber.web.rest;
 
+import com.alibaba.fastjson.JSONObject;
 import com.rcd.fiber.service.AlarmDeviceService;
 import com.rcd.fiber.service.ControlService;
 import com.rcd.fiber.service.TelemetryService;
@@ -83,5 +84,14 @@ public class SendInfoByResource {
 
         //直接返回true,还无法得到wsService.sendInfoByWSN的返回结果
         return "true";
+    }
+
+    // 王伟，修改设备监控值
+    @PostMapping("/editTelemetryValue")
+    @Timed
+    @ResponseBody
+    public JSONObject editTelemetryValue(@RequestBody String info)
+    {
+        return wsService.editTelemetryValue(info);
     }
 }

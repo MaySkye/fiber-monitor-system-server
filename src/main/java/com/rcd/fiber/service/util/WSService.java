@@ -1,5 +1,6 @@
 package com.rcd.fiber.service.util;
 
+import com.alibaba.fastjson.JSONObject;
 import com.rcd.fiber.base.start.RegesterAddr;
 import com.rcd.fiber.base.wsn.SendWSNCommand;
 import com.rcd.fiber.base.wsn.Trans;
@@ -66,14 +67,12 @@ public class WSService {
     // 发布主题，关闭设备
     @Async
     public void sendInfoByWSN(String site_name,String device_name,String data_name){
-        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
-        String timestamp;
+        SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         double value = 1; //value=1表示关闭设备
         Trans trans = RegesterAddr.getTrans();
         // value = analyzeData(data);
-        Date date = new Date();
         System.out.println("value:" + value);
-        timestamp = sdf.format(date);
+        String timestamp = df.format(new Date());
         logger.info(getAddr());
         if (!getAddr().isEmpty()) {
             String msg =
@@ -88,4 +87,18 @@ public class WSService {
         }
     }
 
+
+    // 王伟：修改设备监控值
+    @Async
+    public JSONObject editTelemetryValue(String info)
+    {
+        SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        String datatime = df.format(new Date());
+        Trans trans = RegesterAddr.getTrans();
+        trans.sendMethod(info, getAddr(), sendParm1, "admin","test4");
+        JSONObject res = new JSONObject();
+        res.put("type","success");
+        res.put("msg","Test Method: editTelemetryValue");
+        return res;
+    }
 }
