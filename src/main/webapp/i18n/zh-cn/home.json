@@ -1,0 +1,18 @@
+{
+  "home": {
+    "title": "欢迎使用",
+    "subtitle": "光纤授时监控系统",
+    "logged": {
+      "message": "您目前是以 \"{{username}}\" 账号登录."
+    },
+    "question": "如有问题，请联系管理员！",
+    "link": {
+      "title": "链接：",
+      "homepage": "后台首頁",
+      "mxGraph": "组态图工具",
+      "monitorSystem": "光纤授时监控系统"
+    },
+    "like": "如果您喜欢 JHipster, 请记得给我们加星在",
+    "github": "GitHub"
+  }
+}
