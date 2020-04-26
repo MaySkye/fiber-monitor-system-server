@@ -81,6 +81,25 @@ public class SiteResource {
             jsonObject.put("site_type", info.getSiteType());
             jsonObject.put("site_address", info.getSiteAddress());
             jsonObject.put("connect", info.getConnect());
+
+            int devcount=(int)(5+Math.random()*(10-5+1));
+            jsonObject.put("devcount", devcount);
+            if(info.getSiteName().equals("郑州")){
+                jsonObject.put("state","故障" );
+            }
+            else if(info.getSiteName().equals("天津")){
+                jsonObject.put("state","异常" );
+            }
+            else if(info.getSiteName().equals("温州")){
+                jsonObject.put("state","异常" );
+            }
+            else if(info.getSiteName().equals("襄樊")){
+                jsonObject.put("state","异常" );
+            }
+            else if(info.getSiteName().equals("昆明")){
+                jsonObject.put("state","故障" );
+            }
+            else{jsonObject.put("state","正常" );}
             //System.out.println("jsonObject:  " + jsonObject.toString());
             array.add(jsonObject);
         }
