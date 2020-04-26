@@ -9,6 +9,7 @@ import com.rcd.fiber.domain.entity.ServiceFileInfo;
 import com.rcd.fiber.domain.entity.Site;
 import com.rcd.fiber.domain.entity.Telemetry;
 import com.rcd.fiber.service.TelemetryService;
+import com.rcd.fiber.web.rest.auth.Check;
 import org.bson.Document;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -55,6 +56,8 @@ public class TelemetryResource {
     public String getMonitorValue(@PathVariable(value = "site_name") String site_name,
                                   @PathVariable(value = "monitorInfoSet") String monitorInfoSet
     ) {
+        // TODO: kong Check
+        //Check.Check();
         System.out.println("site_name: " + site_name);
         System.out.println("monitorInfoSet: " + monitorInfoSet);
         List<Telemetry> list = new ArrayList<>();
@@ -82,6 +85,20 @@ public class TelemetryResource {
         }
         String jsonListEmp = TelemetryToJson(list);
         System.out.println("jsonListEmp:  " + jsonListEmp);
+        String sss="<resource>\n" +
+            "\t<site_name>西安</site_name>\n" +
+            "\t<alarm_type>故障</alarm_type>\n" +
+            "\t<user>admin</user>\n" +
+            "\t<timestamp>2020-02-02 12:02:02</timestamp>\n" +
+            "\t<info>null</info>\n" +
+            "</resource>\n" +
+            "<alarm>\n" +
+            "\t<device_name>拍频比对设备设备A1.2</device_name>\n" +
+            "\t<data_name>光频_频率稳定度A1.2</data_name>\n" +
+            "\t<value>9.51</value>\n" +
+            "\t<alarm_info>null</alarm_info>\n" +
+            "</alarm>";
+        System.out.println("告警信息：\n"+sss);
         return jsonListEmp;
     }
 

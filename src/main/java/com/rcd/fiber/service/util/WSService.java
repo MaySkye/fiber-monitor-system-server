@@ -96,6 +96,7 @@ public class WSService {
         String datatime = df.format(new Date());
         Trans trans = RegesterAddr.getTrans();
         trans.sendMethod(info, getAddr(), sendParm1, "admin","test4");
+        System.out.println(sendParm1);
         JSONObject res = new JSONObject();
         res.put("type","success");
         res.put("msg","Test Method: editTelemetryValue");

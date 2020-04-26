@@ -51,7 +51,7 @@ public class SiteLineResource {
     @GetMapping("/findPaintInfo")
     @Timed
     public String getAllPaintInfo() {
-        updateAllSiteLine();
+       // updateAllSiteLine();
 
         List<Site> sitelist = siteservice.getAllSite();
         List<SiteLine> list = siteLineservice.getAllSiteLine();
@@ -95,10 +95,14 @@ public class SiteLineResource {
             String point1=sl.getPoint1();
             String point2=sl.getPoint2();
             String state="";
-            if(stable<=9&&transspeed<=9){
-                state="正常";
-            }else{
+            if(stable<=1&&transspeed<=1){
+                state="故障";
+            }
+            else if(stable>9&&transspeed>9){
                 state="异常";
+            }
+            else{
+                state="正常";
             }
             siteLineservice.updateValues(point1+"-"+point2,stable,transspeed,state,point1,point2);
         }

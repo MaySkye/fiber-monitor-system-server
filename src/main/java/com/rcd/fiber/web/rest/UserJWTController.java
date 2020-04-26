@@ -1,9 +1,11 @@
 package com.rcd.fiber.web.rest;
 
+import com.alibaba.fastjson.JSONObject;
 import com.codahale.metrics.annotation.Timed;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.rcd.fiber.security.jwt.JWTFilter;
 import com.rcd.fiber.security.jwt.TokenProvider;
+import com.rcd.fiber.web.rest.auth.VerifyIdentity;
 import com.rcd.fiber.web.rest.vm.LoginVM;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -39,6 +41,19 @@ public class UserJWTController {
     @PostMapping("/authenticate")
     @Timed
     public ResponseEntity<JWTToken> authorize(@Valid @RequestBody LoginVM loginVM) {
+
+
+        //TODO: by kong
+        try {
+            String username = "";
+            String pemPath = "";
+            String resp = VerifyIdentity.VerifyIdentity(username, pemPath);
+            JSONObject jsonRead = JSONObject.parseObject(resp);
+            Long code = (Long)jsonRead.get("code");
+            System.out.println(code);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
 
         UsernamePasswordAuthenticationToken authenticationToken =
             new UsernamePasswordAuthenticationToken(loginVM.getUsername(), loginVM.getPassword());
