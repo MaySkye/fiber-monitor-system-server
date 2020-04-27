@@ -98,20 +98,15 @@ public class Check {
         }
     }
 
-    public static void main(String[] args) throws Exception{
-        String md5sum = "3e704ae00265b91f251822e06140b4d3";
-        Check("策略1","zhao", "物联网资源/态势图","read","","zhao", md5sum);
-
+    public static JSONObject doCheck(String user, String object, String action, String md5sum) throws Exception{
         SubAttr sa = new SubAttr();
-        sa.setName("zhao");
-        sa.setRole("admin");
+        sa.setName(user);
 
         ObjAttr oa = new ObjAttr();
-        oa.setName("物联网资源/工具");
-        oa.setOwner("zhao");
+        oa.setName(object);
 
         ActAttr aa = new ActAttr();
-        aa.setName("read");
+        aa.setName(action);
 
         SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         EnvAttr ea = new EnvAttr();
@@ -123,6 +118,36 @@ public class Check {
         String aastr = JSON.toJSONString(aa);
         String eastr = JSON.toJSONString(ea);
 
-        Check("策略2", sastr, oastr, aastr, eastr,"zhao", md5sum);
+        String res = Check("运控分系统访问控制策略集合", sastr, oastr, aastr, eastr, user, md5sum);
+        return JSONObject.parseObject(res);
+    }
+
+    public static void main(String[] args) throws Exception{
+        String md5sum = "c01c38d953b2a73db0fbde01a44c816f";
+        //Check("策略1","zhao", "物联网资源/态势图","read","","zhao", md5sum);
+
+        SubAttr sa = new SubAttr();
+        sa.setName("wangwei");
+        sa.setRole("设备运维人员");
+
+        ObjAttr oa = new ObjAttr();
+        oa.setName("组态图");
+        oa.setOwner("wangwei");
+
+        ActAttr aa = new ActAttr();
+        aa.setName("查看");
+
+        SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        EnvAttr ea = new EnvAttr();
+        ea.setTime(df.format(new Date()));
+
+
+        String sastr = JSON.toJSONString(sa);
+        System.out.println("sastr: " + sastr);
+        String oastr = JSON.toJSONString(oa);
+        String aastr = JSON.toJSONString(aa);
+        String eastr = JSON.toJSONString(ea);
+
+        Check("运控分系统访问控制策略集合", sastr, oastr, aastr, eastr,"wangwei", md5sum);
     }
 }

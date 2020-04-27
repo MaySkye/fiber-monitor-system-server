@@ -19,7 +19,11 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
+import java.util.Enumeration;
+import java.util.HashMap;
 
 /**
  * Controller to authenticate users.
@@ -32,29 +36,39 @@ public class UserJWTController {
 
     private final AuthenticationManager authenticationManager;
 
+    public static HashMap<String, String> userMd5Map = new HashMap<>();
+
     public UserJWTController(TokenProvider tokenProvider, AuthenticationManager authenticationManager) {
         this.tokenProvider = tokenProvider;
         this.authenticationManager = authenticationManager;
     }
 
-    /** 直接返回id-token */
+    /**
+     * 直接返回id-token
+     */
     @PostMapping("/authenticate")
     @Timed
-    public ResponseEntity<JWTToken> authorize(@Valid @RequestBody LoginVM loginVM) {
-
-
-        //TODO: by kong
-        try {
-            String username = "";
-            String pemPath = "";
-            String resp = VerifyIdentity.VerifyIdentity(username, pemPath);
-            JSONObject jsonRead = JSONObject.parseObject(resp);
-            Long code = (Long)jsonRead.get("code");
-            System.out.println(code);
-        } catch (Exception e) {
-            e.printStackTrace();
+    public ResponseEntity<Object> authorize(@Valid @RequestBody LoginVM loginVM, HttpServletRequest request) {
+        // 若请求不来自http://localhost:9000/（后台管理项目），则验证私钥
+        if(!"http://localhost:9000/".equals(request.getHeader("Referer")))
+        {
+            try {
+                // 校验用户合法性
+                String username = loginVM.getUsername();
+                String pemPath = loginVM.savePemFile();
+                String strRes = VerifyIdentity.VerifyIdentity(username, pemPath);
+                JSONObject jsonRes = JSONObject.parseObject(strRes);
+                String code = jsonRes.getString("code");
+                System.out.println(code);
+                if (!"0".equals(code)) {
+                    throw new Exception("用户校验失败");
+                }
+            } catch (Exception e) {
+                JSONObject jsonMsg = new JSONObject();
+                jsonMsg.put("msg", "用户身份校验失败！");
+                return new ResponseEntity<>(jsonMsg.toJSONString(), new HttpHeaders(), HttpStatus.OK);
+            }
         }
-
         UsernamePasswordAuthenticationToken authenticationToken =
             new UsernamePasswordAuthenticationToken(loginVM.getUsername(), loginVM.getPassword());
 

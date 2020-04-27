@@ -107,6 +107,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
             .antMatchers("/management/health").permitAll()
             .antMatchers("/management/info").permitAll()
             .antMatchers("/management/**").hasAuthority(AuthoritiesConstants.ADMIN)
+            .antMatchers("/telemetry/**").authenticated()  // 王伟：访问/telemetry时需要验证用户
         .and()
             .apply(securityConfigurerAdapter());
 

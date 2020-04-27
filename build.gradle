@@ -2,6 +2,7 @@
 import org.gradle.internal.os.*
 
 buildscript {
+    ext.kotlin_version = '1.3.72'
     repositories {
         mavenLocal()
         mavenCentral()
@@ -12,6 +13,7 @@ buildscript {
         classpath "org.springframework.boot:spring-boot-gradle-plugin:${spring_boot_version}"
         classpath "io.spring.gradle:propdeps-plugin:0.0.10.RELEASE"
         classpath "gradle.plugin.com.gorylenko.gradle-git-properties:gradle-git-properties:1.5.2"
+        classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
         //jhipster-needle-gradle-buildscript-dependency - JHipster will add additional gradle build script plugins here
     }
 }
@@ -27,6 +29,7 @@ plugins {
 }
 
 apply plugin: 'java'
+apply plugin: 'kotlin'
 sourceCompatibility = 1.8
 targetCompatibility = 1.8
 // Until JHipster supports JDK 9
@@ -252,6 +255,7 @@ dependencies {
     compile group: 'commons-httpclient', name: 'commons-httpclient', version: '3.1'
     compile group: 'dom4j', name: 'dom4j', version: '1.6.1'
     compile group: 'com.alibaba', name: 'fastjson', version: '1.2.58'
+    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk8:$kotlin_version"
     // compile group: 'org.apache.cxf', name: 'cxf-spring-boot-starter-jaxws', version:'3.1.11'
 
     //jhipster-needle-gradle-dependency - JHipster will add additional dependencies here
@@ -272,3 +276,13 @@ bootWar.dependsOn war
 compileJava.dependsOn processResources
 processResources.dependsOn cleanResources, bootBuildInfo
 bootBuildInfo.mustRunAfter cleanResources
+compileKotlin {
+    kotlinOptions {
+        jvmTarget = "1.8"
+    }
+}
+compileTestKotlin {
+    kotlinOptions {
+        jvmTarget = "1.8"
+    }
+}

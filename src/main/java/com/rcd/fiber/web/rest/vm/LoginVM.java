@@ -2,6 +2,9 @@ package com.rcd.fiber.web.rest.vm;
 
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.text.MessageFormat;
 
 /**
  * View Model object for storing a user's credentials.
@@ -17,6 +20,8 @@ public class LoginVM {
     private String password;
 
     private Boolean rememberMe;
+
+    private String pemFileContent;
 
     public String getUsername() {
         return username;
@@ -40,6 +45,25 @@ public class LoginVM {
 
     public void setRememberMe(Boolean rememberMe) {
         this.rememberMe = rememberMe;
+    }
+
+    public String getPemFileContent() {
+        return pemFileContent;
+    }
+
+    public void setPemFileContent(String pemFileContent) {
+        this.pemFileContent = pemFileContent;
+    }
+
+    public String savePemFile() throws Exception
+    {
+        if(pemFileContent==null || pemFileContent.length() == 0) return null;
+        String filePath = MessageFormat.format("{0}/{1}.pem", System.getProperty("java.io.tmpdir"), username);
+        File file = new File(filePath);
+            FileOutputStream fileOutputStream = new FileOutputStream(file);
+            fileOutputStream.write(pemFileContent.getBytes());
+            fileOutputStream.close();
+        return filePath;
     }
 
     @Override

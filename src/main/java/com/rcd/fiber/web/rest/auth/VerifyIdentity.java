@@ -1,8 +1,10 @@
 package com.rcd.fiber.web.rest.auth;
 
 import com.alibaba.fastjson.JSONObject;
+import com.rcd.fiber.web.rest.UserJWTController;
 import com.sun.org.apache.xerces.internal.impl.dv.util.Base64;
 
+import javax.servlet.http.HttpSession;
 import java.math.BigInteger;
 import java.security.MessageDigest;
 import java.security.PrivateKey;
@@ -48,12 +50,13 @@ public class VerifyIdentity {
         md.update(s);
         String md5sum = new BigInteger(1, md.digest()).toString(16);
         System.out.println("MD5 Value: " + md5sum);
+        UserJWTController.userMd5Map.put(username, md5sum);
         return resp2;
     }
 
     public static void main(String[] args) throws Exception{
         String username = "wangwei";
-        String pemPath = "D:\\Graduation\\kong\\wangwei\\wangwei.pem";
+        String pemPath = "C:\\Users\\55044\\Desktop\\wangwei\\wangwei.pem";
         VerifyIdentity(username, pemPath);
     }
 }

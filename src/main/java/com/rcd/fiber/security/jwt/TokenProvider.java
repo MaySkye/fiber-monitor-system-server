@@ -1,5 +1,6 @@
 package com.rcd.fiber.security.jwt;
 
+import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.security.Key;
 import java.util.*;
@@ -8,6 +9,7 @@ import javax.annotation.PostConstruct;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
@@ -34,10 +36,18 @@ public class TokenProvider {
 
     private long tokenValidityInMillisecondsForRememberMe;
 
-    private final JHipsterProperties jHipsterProperties;
+//    private final JHipsterProperties jHipsterProperties;
+//
+//    public TokenProvider(JHipsterProperties jHipsterProperties) {
+//        this.jHipsterProperties = jHipsterProperties;
+//    }
 
-    public TokenProvider(JHipsterProperties jHipsterProperties) {
-        this.jHipsterProperties = jHipsterProperties;
+    private static JHipsterProperties jHipsterProperties;
+
+    @Autowired
+    public void setJHipsterProperties(JHipsterProperties jHipsterProperties)
+    {
+        TokenProvider.jHipsterProperties = jHipsterProperties;
     }
 
     @PostConstruct
@@ -115,5 +125,14 @@ public class TokenProvider {
             log.trace("JWT token compact of handler are invalid trace: {}", e);
         }
         return false;
+    }
+
+
+    public static Claims getClaims(String authToken)
+    {
+        String secret = jHipsterProperties.getSecurity().getAuthentication().getJwt().getBase64Secret();
+        byte[] keyBytes = Decoders.BASE64.decode(secret);
+        Key key = key = Keys.hmacShaKeyFor(keyBytes);
+        return Jwts.parser().setSigningKey(key).parseClaimsJws(authToken).getBody();
     }
 }
