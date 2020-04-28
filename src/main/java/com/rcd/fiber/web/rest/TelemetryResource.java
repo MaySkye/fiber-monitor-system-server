@@ -36,7 +36,7 @@ import java.util.List;
  */
 @RestController
 @RequestMapping("/telemetry")
-@CrossOrigin // 防止跨域
+@CrossOrigin(origins = "*") // 跨域
 public class TelemetryResource {
     private final Logger logger = LoggerFactory.getLogger(TelemetryResource.class);
     private final TelemetryService service;

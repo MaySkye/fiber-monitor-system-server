@@ -4,6 +4,7 @@ import com.rcd.fiber.security.*;
 import com.rcd.fiber.security.jwt.*;
 
 import org.springframework.beans.factory.BeanInitializationException;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
@@ -20,10 +21,14 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.web.cors.CorsConfiguration;
+import org.springframework.web.cors.CorsConfigurationSource;
+import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 import org.springframework.web.filter.CorsFilter;
 import org.zalando.problem.spring.web.advice.security.SecurityProblemSupport;
 
 import javax.annotation.PostConstruct;
+import java.util.Arrays;
 
 @Configuration
 @EnableWebSecurity
@@ -83,6 +88,8 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
     @Override
     public void configure(HttpSecurity http) throws Exception {
         http
+            .cors().configurationSource(corsConfigurationSource())  // 王伟：跨域配置
+        .and()
             .csrf()
             .disable()
             .addFilterBefore(corsFilter, UsernamePasswordAuthenticationFilter.class)
@@ -107,10 +114,20 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
             .antMatchers("/management/health").permitAll()
             .antMatchers("/management/info").permitAll()
             .antMatchers("/management/**").hasAuthority(AuthoritiesConstants.ADMIN)
-            .antMatchers("/telemetry/**").authenticated()  // 王伟：访问/telemetry时需要验证用户
+            .antMatchers("/telemetry/**").authenticated()  // 王伟：访问/telemetry，验证用户
         .and()
             .apply(securityConfigurerAdapter());
+    }
 
+    // 王伟：跨域配置
+    @Bean
+    CorsConfigurationSource corsConfigurationSource() {
+        CorsConfiguration configuration = new CorsConfiguration();
+        configuration.setAllowedOrigins(Arrays.asList("*"));
+        configuration.setAllowedMethods(Arrays.asList("GET","POST"));
+        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+        source.registerCorsConfiguration("/**", configuration);
+        return source;
     }
 
     private JWTConfigurer securityConfigurerAdapter() {
