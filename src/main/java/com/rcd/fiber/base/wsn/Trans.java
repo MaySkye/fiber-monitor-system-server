@@ -20,12 +20,13 @@ public class Trans {
         return publishAddress;
     }
 
-    public void sendMethod(String msg, String publishAddress, String sendAddr, String id, String topic) {
+    public int sendMethod(String msg, String publishAddress, String sendAddr, String id, String topic) {
         if (!publishAddress.equals("")) {
             send = new SendWSNCommandWSSyn(sendAddr, publishAddress);
-            send.publish(id, topic, msg);
+            return send.publish(id, topic, msg);
         } else {
             System.out.println("用户还未获得发布地址，无法发布！");
+            return -1;
         }
     }
 

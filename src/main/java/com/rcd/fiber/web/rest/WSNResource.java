@@ -4,7 +4,7 @@ import com.alibaba.fastjson.JSONObject;
 import com.rcd.fiber.service.AlarmDeviceService;
 import com.rcd.fiber.service.ControlService;
 import com.rcd.fiber.service.TelemetryService;
-import com.rcd.fiber.service.util.WSService;
+import com.rcd.fiber.service.WSNService;
 import io.micrometer.core.annotation.Timed;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -15,27 +15,22 @@ import org.springframework.web.bind.annotation.*;
 import java.util.HashMap;
 import java.util.Map;
 
-/**
- * @Author: HUHU
- * @Date: 2019/6/28 16:47
- */
-
 @RestController
 @RequestMapping("/wsn")
 @CrossOrigin // 防止跨域
-public class SendInfoByResource {
+public class WSNResource {
 
-    private final WSService wsService;
+    private final WSNService wsnService;
     private final AlarmDeviceService alarmDeviceService;
     private final ControlService controlService;
     private final TelemetryService telemetryService;
-    Logger logger = LoggerFactory.getLogger(SendInfoByResource.class);
+    Logger logger = LoggerFactory.getLogger(WSNResource.class);
 
     @Value("${wsn.send.status}")
     private String status;
 
-    public SendInfoByResource(WSService wsService, AlarmDeviceService alarmDeviceService, ControlService controlService, TelemetryService telemetryService) {
-        this.wsService = wsService;
+    public WSNResource(WSNService wsnService, AlarmDeviceService alarmDeviceService, ControlService controlService, TelemetryService telemetryService) {
+        this.wsnService = wsnService;
         this.alarmDeviceService = alarmDeviceService;
         this.controlService = controlService;
         this.telemetryService = telemetryService;
@@ -47,7 +42,7 @@ public class SendInfoByResource {
         //status=1代表开启了wsn
         if (status.equals("1")) {
             // 异步执行关闭设备
-            wsService.sendInfoByWSN("xian","拍频比对设备A1.29","光频_频率稳定度A1.29");
+            wsnService.sendInfoByWSN("xian");
         }
         // 同时操作数据
         int a = alarmDeviceService.updataData();
@@ -59,31 +54,43 @@ public class SendInfoByResource {
         return ResponseEntity.ok(map);
     }
 
-    @GetMapping("/sendCloseCmdById/{infoStr}")
+    /*zhaoyi*/
+    @GetMapping("/sendControlInfo")
     @Timed
-    public String sendCloseCmdById(@PathVariable(value = "infoStr") String infoStr)
+    @ResponseBody
+    public int sendControlInfo(@RequestBody String info)
     {
-        System.out.println("------------"+"status:"+status);
-        String[] strings=infoStr.split(":");
-        String site_name=strings[0];
-        String device_name=strings[1];
-        String data_name=strings[2];
-        System.out.println("------------"+"site_name:"+site_name);
-        System.out.println("------------"+"device_name:"+device_name);
-        System.out.println("------------"+"data_name:"+data_name);
-
-        //wsService.sendInfoByWSN(site_name,device_name,data_name);
+        System.out.println("info:"+info);
+        int result;
         //status=1代表开启了wsn
         if (status.equals("1")) {
             // 异步执行关闭设备
-            wsService.sendInfoByWSN("xian","拍频比对设备A1.29","光频_频率稳定度A1.29");
-
+            result = wsnService.sendInfoByWSN(info);
+        }else{
+            result = -1;
         }
-        //修改control数据表的value,将0改为1
-        controlService.updateValue(1,site_name,device_name,data_name);
+        System.out.println("sendControlInfo-result: "+result);
+        return result;
+    }
 
-        //直接返回true,还无法得到wsService.sendInfoByWSN的返回结果
-        return "true";
+    /*zhaoyi*/
+    @GetMapping("/getEventInfo")
+    @Timed
+    @ResponseBody
+    public String getEventInfo(@RequestBody String info)
+    {
+        JSONObject obj = JSONObject.parseObject(info);
+        String id = obj.getString("id");
+        String topic = obj.getString("topic");
+        String resInfo;
+        //status=1代表开启了wsn
+        if (status.equals("1")) {
+            resInfo = wsnService.getInfoByWSN(id,topic);
+        }else{
+            resInfo = null;
+        }
+        System.out.println("getEventInfo-resInfo: "+resInfo);
+        return resInfo;
     }
 
     // 王伟，修改设备监控值
@@ -92,6 +99,6 @@ public class SendInfoByResource {
     @ResponseBody
     public JSONObject editTelemetryValue(@RequestBody String info)
     {
-        return wsService.editTelemetryValue(info);
+        return wsnService.editTelemetryValue(info);
     }
 }

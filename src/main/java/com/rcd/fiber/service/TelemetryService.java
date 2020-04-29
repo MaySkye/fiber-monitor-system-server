@@ -45,8 +45,6 @@ import java.util.List;
 public class TelemetryService {
     private final Logger log = LoggerFactory.getLogger(TelemetryService.class);
     private final TelemetryRepository telemetryRepository;
-
-
     //王伟：拿取注入的mongoDao
     @Autowired
     private MongoRepository mongoRepository;
@@ -81,10 +79,30 @@ public class TelemetryService {
     }
 
     // 返回vlotdb内的所有数据
-
     public List<Telemetry> getVoltdbTelemetry() {
         VoltdbJdbcBaseDao voltdbJdbcBaseDao = new VoltdbJdbcBaseDao();
         ResultSet set = voltdbJdbcBaseDao.executeQuery("select * from TELEMETRY");
+        try {
+            List<Telemetry> list = voltdbJdbcBaseDao.populate(set, TelemetryDTO.class);
+            return list;
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } catch (InstantiationException e) {
+            e.printStackTrace();
+        } catch (IllegalAccessException e) {
+            e.printStackTrace();
+        } finally {
+            voltdbJdbcBaseDao.closeConnection();
+        }
+        return null;
+    }
+
+    // 根据设备名称和属性名称，查询vlotdb内的数据
+    public List<Telemetry> getVoltdbMonitorValue(String site_name, String device_name, String data_name) {
+        VoltdbJdbcBaseDao voltdbJdbcBaseDao = new VoltdbJdbcBaseDao();
+        ResultSet set = voltdbJdbcBaseDao.executeQuery("select * from TELEMETRY where site_name = "+site_name+" and device_name = "
+            +device_name+"and data_name = " +data_name
+        );
         try {
             List<Telemetry> list = voltdbJdbcBaseDao.populate(set, TelemetryDTO.class);
             return list;

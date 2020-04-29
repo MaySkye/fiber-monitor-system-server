@@ -129,6 +129,31 @@ public class TelemetryResource {
         return ResponseEntity.ok(list);
     }
 
+    @GetMapping("/findVoltdbMonitorValue/{site_name}/{monitorInfoSet}")
+    @Timed
+    public String getVoltdbMonitorValue(@PathVariable(value = "site_name") String site_name,
+                                  @PathVariable(value = "monitorInfoSet") String monitorInfoSet)
+    {
+        System.out.println("site_name: " + site_name);
+        System.out.println("monitorInfoSet: " + monitorInfoSet);
+
+        List<Telemetry> list = new ArrayList<>();
+        String[] strings = monitorInfoSet.split("::");
+        for (String str : strings) {
+            String[] s = str.split(":");
+            String device_name = s[0];
+            String data_name = s[1];
+            System.out.println("device_name: " + device_name);
+            System.out.println("data_name: " + data_name);
+            List<Telemetry> telemetrys = service.getVoltdbMonitorValue(site_name, device_name, data_name);
+            if (telemetrys.size() >= 1) {
+                list.add(telemetrys.get(0));
+            }
+        }
+        String jsonListEmp = TelemetryToJson(list);
+        System.out.println("jsonListEmp:  " + jsonListEmp);
+        return jsonListEmp;
+    }
 
     //王伟：更新检测值
     @RequestMapping(value = "/updateDetectedValue", method = RequestMethod.POST)
