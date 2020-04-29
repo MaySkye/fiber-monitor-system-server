@@ -1,4 +1,4 @@
-package com.rcd.fiber.service.util;
+package com.rcd.fiber.service;
 
 import com.alibaba.fastjson.JSONObject;
 import com.rcd.fiber.base.start.RegesterAddr;
@@ -8,7 +8,6 @@ import com.rcd.fiber.base.wsn.UserNotificationProcessImpl;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.context.annotation.Lazy;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -18,15 +17,13 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 
 /**
- * @Author: HUHU
- * @Date: 2019/6/27 23:56
  *
  * 发布与订阅主题
  */
 @Service
 @Transactional
-public class WSService {
-    private final Logger logger = LoggerFactory.getLogger(WSService.class);
+public class WSNService {
+    private final Logger logger = LoggerFactory.getLogger(WSNService.class);
     private String addr;
 
     //对应application-dev.yml配置文件
@@ -47,46 +44,33 @@ public class WSService {
         return addr;
     }
 
-
     // 获取订阅消息
     @Async
-    public void  getInfoByWSN(){
+    public String  getInfoByWSN(String id,String topic){
         //本机地址
         String wsnAddr = receiveParm1;
         String receiveAddr = receiveParm2;
+        System.out.println("wsnAddr: "+wsnAddr);
+        System.out.println("receiveAddr: "+receiveAddr);
         SendWSNCommand receive = new SendWSNCommand(receiveAddr, wsnAddr);
-        //设置用户id
-        String id = "Fiber";
         // 消息处理逻辑
         UserNotificationProcessImpl implementor = new UserNotificationProcessImpl();
         // 启接收服
         Endpoint endpint = Endpoint.publish(receiveAddr, implementor);
-        receive.subscribe(id, "test2");
+        String info = receive.subscribe(id, topic);
+        System.out.println("订阅消息："+info);
+        return info;
     }
 
     // 发布主题，关闭设备
     @Async
-    public void sendInfoByWSN(String site_name,String device_name,String data_name){
-        SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-        double value = 1; //value=1表示关闭设备
+    public int sendInfoByWSN(String info){
         Trans trans = RegesterAddr.getTrans();
-        // value = analyzeData(data);
-        System.out.println("value:" + value);
-        String timestamp = df.format(new Date());
-        logger.info(getAddr());
-        if (!getAddr().isEmpty()) {
-            String msg =
-                "<site_name>" + site_name+ "</site_name>" +
-                    "<device_name>" + device_name + "</device_name>" +
-                    "<data_name>" + data_name+ "</data_name>" +
-                    "<timestamp>" + timestamp + "</timestamp>" +
-                    "<detected_value>" + value + "</detected_value>" +
-                    "<data_table>" + "telemetry" + "</data_table>";
-            System.out.println(msg);
-            trans.sendMethod(msg, getAddr(), sendParm1, "admin", "test3");
-        }
+        int result = trans.sendMethod(info, getAddr(), sendParm1, "admin","test4");
+        System.out.println(sendParm1);
+        System.out.println("result: "+result);
+        return result;
     }
-
 
     // 王伟：修改设备监控值
     @Async

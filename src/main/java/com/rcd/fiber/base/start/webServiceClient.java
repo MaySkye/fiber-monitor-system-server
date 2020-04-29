@@ -1,6 +1,6 @@
 package com.rcd.fiber.base.start;
 
-import com.rcd.fiber.service.util.WSService;
+import com.rcd.fiber.service.WSNService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,7 +20,7 @@ import javax.annotation.PostConstruct;
 public class webServiceClient {
     static Logger logger = LoggerFactory.getLogger(webServiceClient.class);
     @Autowired
-    WSService service;
+    WSNService service;
 
     @Value("${wsn.receive.status}")
     private String status;
@@ -34,7 +34,7 @@ public class webServiceClient {
 
         // service.getInfoByWSN();
         if (status.equals("1")) {
-            service.getInfoByWSN();
+            service.getInfoByWSN("","");
         }
     }
 
