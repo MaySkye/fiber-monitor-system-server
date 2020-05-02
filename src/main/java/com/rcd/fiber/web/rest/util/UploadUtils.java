@@ -1,4 +1,4 @@
-package com.rcd.fiber.util;
+package com.rcd.fiber.web.rest.util;
 
 import java.io.File;
 

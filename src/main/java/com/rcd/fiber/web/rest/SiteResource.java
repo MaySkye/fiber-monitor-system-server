@@ -13,6 +13,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -36,13 +37,32 @@ public class SiteResource {
     public String getAllSite() {
         List<Site> list = siteservice.getAllSite();
         //list.stream().forEach(x->System.out.println(x));
-        String jsonListEmp = SiteToJson(list);
+        String jsonListEmp = getSiteJsonStr(list);
         System.out.println("jsonListEmp:  " + jsonListEmp);
         return jsonListEmp;
         //return ResponseEntity.ok(list);
     }
 
-
+    @GetMapping("/findsiteinfo/{sitelevel}")
+    @Timed
+    public String getSiteInfo(@PathVariable(value = "sitelevel") String sitelevel) {
+        List<Site> list = siteservice.getAllSite();
+        System.out.println("sitelevel: "+sitelevel);
+        if(sitelevel.equals("all")){
+            return getSiteJsonStr(list);
+        }
+        else if(sitelevel.equals("1")){
+            return getSiteJsonStr(getLevelSite(list,1));
+        }
+        else if(sitelevel.equals("2")){
+            return getSiteJsonStr(getLevelSite(list,2));
+        }
+        else if(sitelevel.equals("3")){
+            return getSiteJsonStr(getLevelSite(list,3));
+        }else {
+            return null;
+        }
+    }
 
     @RequestMapping(value = "/addsite",method = RequestMethod.POST)
     @ResponseBody
@@ -62,7 +82,8 @@ public class SiteResource {
         //数据库中添加一个站点，并立即刷新缓存
         siteservice.addSite(site);
     }
-    public static String SiteToJson(List<Site> items) throws JSONException {
+
+    public  static String getSiteJsonStr(List<Site> items) throws JSONException {
         if (items == null)
             return "";
         JSONArray array = new JSONArray();
@@ -104,5 +125,15 @@ public class SiteResource {
             array.add(jsonObject);
         }
         return array.toString();
+    }
+
+    private  List<Site> getLevelSite(List<Site> items,int level){
+        List<Site> resList = new ArrayList<>();
+        for(int i=0;i<items.size();i++){
+            if(items.get(i).getSiteLevel()==level){
+                resList.add(items.get(i));
+            }
+        }
+        return resList;
     }
 }

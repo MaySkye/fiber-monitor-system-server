@@ -2,7 +2,6 @@ package com.rcd.fiber.web.rest;
 
 import com.rcd.fiber.domain.entity.TelemetryImage;
 import com.rcd.fiber.service.TelemetryImageService;
-import com.rcd.fiber.util.UploadUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.ResponseEntity;

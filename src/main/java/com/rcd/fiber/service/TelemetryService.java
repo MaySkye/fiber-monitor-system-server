@@ -37,7 +37,7 @@ import java.util.HashMap;
 import java.util.List;
 
 /**
- * @Author: HUHU
+ * @Author:
  * @Date: 2019/6/17 14:52
  */
 @Service
@@ -45,12 +45,6 @@ import java.util.List;
 public class TelemetryService {
     private final Logger log = LoggerFactory.getLogger(TelemetryService.class);
     private final TelemetryRepository telemetryRepository;
-    //王伟：拿取注入的mongoDao
-    @Autowired
-    private MongoRepository mongoRepository;
-    //王伟：拿取注入的Mongo相关Bean
-    @Autowired
-    private GridFSBucket gridFSBucket;
 
     public TelemetryService(TelemetryRepository telemetryRepository) {
         this.telemetryRepository = telemetryRepository;
@@ -118,8 +112,7 @@ public class TelemetryService {
         return null;
     }
 
-
-    //王伟：修改监控属性service
+    //王伟：修改监控属性
     public HashMap<String, String> updateDetectedValue(String jsonData) {
         //返回结果
         HashMap<String, String> res = new HashMap<>();
@@ -154,7 +147,7 @@ public class TelemetryService {
         return res;
     }
 
-    //王伟：获取监控值service
+    //王伟：获取监控值
     public HashMap<String, String> getDetectedValueByParameters(String jsonData) {
         //待查询的站点名，设备id
         JSONObject obj = JSONObject.parseObject(jsonData);
@@ -176,80 +169,8 @@ public class TelemetryService {
         return res;
     }
 
-    //王伟：查询站点使用的service文件信息
-    public ServiceFileInfo getLastestServiceFileInfo(String site_name, String site_level) {
-        Query query = new Query(Criteria
-            .where("metadata.site_name").is(site_name)
-            .and("metadata.site_level").is(site_level)
-        );
-        return mongoRepository.getLastestServiceFileInfo(query);
-    }
-
-    //王伟：下载站点使用的service文件
-    public void getLatestServiceFile(HttpServletRequest request, HttpServletResponse response, String site_name, String site_level) {
-        //查询GridFSFile文件信息
-        Query query = new Query(Criteria
-            .where("metadata.site_name").is(site_name)
-            .and("metadata.site_level").is(site_level));
-        query.with(Sort.by(Sort.Order.desc("uploadDate")));
-        GridFSFile gsFile = mongoRepository.getLatestServiceFile(query);
-        System.out.println("查询完成");
-        //返回结果
-        HashMap<String,String> res = new HashMap<>();
-        try {
-            System.out.println("开始try");
-            //获取IO流
-            GridFSDownloadStream downloadStream = gridFSBucket.openDownloadStream(gsFile.getObjectId());
-            OutputStream outputStream = response.getOutputStream();
-            //设置编码，防止中文乱码
-            response.setCharacterEncoding("utf-8");
-            // 设置响应头，控制浏览器下载该文件
-            response.setHeader("content-disposition", "attachment;filename=" + URLEncoder.encode(gsFile.getFilename(), "UTF-8"));
-            byte[] buffer = new byte[2048];
-            int len = 0;
-            // 循环将输入流中的内容读取到缓冲区当中
-            while ((len = downloadStream.read(buffer)) > 0) {
-                // 输出缓冲区的内容到浏览器，实现文件下载
-                outputStream.write(buffer, 0, len);
-            }
-        }
-        catch (Exception e)
-        {
-            log.error(e.toString());
-        }
-    }
-
-    //王伟：上传service文件
-    public HashMap<String, String> uploadServiceFile(MultipartFile multipartFile, Document metadata) {
-        HashMap<String, String> res = new HashMap<>();
-        try {
-            String fixedFilename = metadata.getString("filename");
-            metadata.remove("filename");
-            InputStream inputStream = multipartFile.getInputStream();
-            ObjectId objectId = mongoRepository.uploadServiceFile(inputStream, fixedFilename, metadata);
-            //System.out.println("multipartFile.getOriginalFilename():"+multipartFile.getOriginalFilename());
-            res.put("objectId", objectId.toString());
-            res.put("type", "success");
-            return res;
-        } catch (Exception e) {
-            e.printStackTrace();
-            res.put("type", "error");
-            return res;
-        }
-    }
-
-    //赵艺：查询所有service文件信息
-
-    public List<ServiceFileInfo> getAllServiceInfo(){
-        return  mongoRepository.getAllServiceInfo();
-    }
-
-    //赵艺：删除某一service文件
-
-
     public void addTelemetry(Telemetry telemetry){
         telemetryRepository.saveAndFlush(telemetry);
     }
-
 
 }

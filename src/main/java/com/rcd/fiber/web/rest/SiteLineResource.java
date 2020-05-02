@@ -11,10 +11,8 @@ import com.rcd.fiber.service.SiteService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.web.bind.annotation.*;
-
 import java.util.List;
-
-import static com.rcd.fiber.web.rest.SiteResource.SiteToJson;
+import static com.rcd.fiber.web.rest.SiteResource.getSiteJsonStr;
 
 /**
  * @Author:zhoayi
@@ -41,23 +39,20 @@ public class SiteLineResource {
         updateAllSiteLine();
         //读取返回数据
         List<SiteLine> list = siteLineservice.getAllSiteLine();
-        String jsonListEmp = SiteLineToJson(list);
+        String jsonListEmp = siteLineToJson(list);
         System.out.println("jsonListEmp:  " + jsonListEmp);
-
         return jsonListEmp;
-        //return ResponseEntity.ok(list);
     }
 
     @GetMapping("/findPaintInfo")
     @Timed
     public String getAllPaintInfo() {
        // updateAllSiteLine();
-
         List<Site> sitelist = siteservice.getAllSite();
         List<SiteLine> list = siteLineservice.getAllSiteLine();
-        String siteInfo=SiteToJson(sitelist);;
-        String siteLinkInfo=SiteLineToJson(list);
-        String paintInfojson=PaintInfoToJson(siteInfo,siteLinkInfo);
+        String siteInfo= getSiteJsonStr(sitelist);;
+        String siteLinkInfo=siteLineToJson(list);
+        String paintInfojson=paintInfoToJson(siteInfo,siteLinkInfo);
         return paintInfojson;
     }
 
@@ -108,7 +103,7 @@ public class SiteLineResource {
         }
     }
 
-    public static String SiteLineToJson(List<SiteLine> items) throws JSONException {
+    public static String siteLineToJson(List<SiteLine> items) throws JSONException {
         if (items == null)
             return "";
         JSONArray array = new JSONArray();
@@ -134,7 +129,7 @@ public class SiteLineResource {
         return array.toString();
     }
 
-    public static String PaintInfoToJson(String siteInfo,String siteLinkInfo) throws JSONException {
+    public static String paintInfoToJson(String siteInfo,String siteLinkInfo) throws JSONException {
         if (siteInfo == null||siteLinkInfo==null)
             return "";
         JSONArray array = new JSONArray();
