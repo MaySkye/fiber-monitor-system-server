@@ -57,8 +57,7 @@ public class TelemetryResource {
     public String getMonitorValue(@PathVariable(value = "site_name") String site_name,
                                   @PathVariable(value = "monitorInfoSet") String monitorInfoSet
     ) {
-        // TODO: kong Check
-        //Check.Check();
+
         System.out.println("site_name: " + site_name);
         System.out.println("monitorInfoSet: " + monitorInfoSet);
         List<Telemetry> list = new ArrayList<>();
@@ -86,7 +85,7 @@ public class TelemetryResource {
         }
         String jsonListEmp = TelemetryToJson(list);
         System.out.println("jsonListEmp:  " + jsonListEmp);
-        String sss="<resource>\n" +
+    /*    String sss="<resource>\n" +
             "\t<site_name>西安</site_name>\n" +
             "\t<alarm_type>故障</alarm_type>\n" +
             "\t<user>admin</user>\n" +
@@ -99,7 +98,7 @@ public class TelemetryResource {
             "\t<value>9.51</value>\n" +
             "\t<alarm_info>null</alarm_info>\n" +
             "</alarm>";
-        System.out.println("告警信息：\n"+sss);
+        System.out.println("告警信息：\n"+sss);*/
         return jsonListEmp;
     }
 

@@ -22,18 +22,15 @@ public class WSNResource {
 
     private final WSNService wsnService;
     private final AlarmDeviceService alarmDeviceService;
-    private final ControlService controlService;
-    private final TelemetryService telemetryService;
+
     Logger logger = LoggerFactory.getLogger(WSNResource.class);
 
     @Value("${wsn.send.status}")
     private String status;
 
-    public WSNResource(WSNService wsnService, AlarmDeviceService alarmDeviceService, ControlService controlService, TelemetryService telemetryService) {
+    public WSNResource(WSNService wsnService, AlarmDeviceService alarmDeviceService) {
         this.wsnService = wsnService;
         this.alarmDeviceService = alarmDeviceService;
-        this.controlService = controlService;
-        this.telemetryService = telemetryService;
     }
 
     @GetMapping("/sendClosed")
@@ -55,22 +52,23 @@ public class WSNResource {
     }
 
     /*zhaoyi*/
-    @GetMapping("/sendControlInfo")
+    @RequestMapping(value = "/sendControlInfo", method = RequestMethod.POST)
     @Timed
     @ResponseBody
-    public int sendControlInfo(@RequestBody String info)
+    public void sendControlInfo(@RequestBody String info)
     {
-        System.out.println("info:"+info);
+        System.out.println("sendControlInfo-info:"+info);
         int result;
         //status=1代表开启了wsn
         if (status.equals("1")) {
             // 异步执行关闭设备
-            result = wsnService.sendInfoByWSN(info);
-        }else{
-            result = -1;
+            wsnService.sendInfoByWSN(info);
         }
-        System.out.println("sendControlInfo-result: "+result);
-        return result;
+        //未开启wsn
+        else{
+            return;
+        }
+
     }
 
     /*zhaoyi*/
@@ -99,6 +97,7 @@ public class WSNResource {
     @ResponseBody
     public JSONObject editTelemetryValue(@RequestBody String info)
     {
+        System.out.println(" editTelemetryValue-info: "+info);
         return wsnService.editTelemetryValue(info);
     }
 }

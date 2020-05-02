@@ -1,7 +1,9 @@
 package com.rcd.fiber.service;
 
 import com.alibaba.fastjson.JSONObject;
+import com.rcd.fiber.base.pub.CasePublish;
 import com.rcd.fiber.base.start.RegesterAddr;
+import com.rcd.fiber.base.sub.CaseSubscirbe;
 import com.rcd.fiber.base.wsn.SendWSNCommand;
 import com.rcd.fiber.base.wsn.Trans;
 import com.rcd.fiber.base.wsn.UserNotificationProcessImpl;
@@ -27,13 +29,13 @@ public class WSNService {
     private String addr;
 
     //对应application-dev.yml配置文件
-    @Value("${wsn.receive.wsnAddr1}")
-    private String receiveParm1;
+    @Value("${wsn.receive.receiveAddr1}")
+    private String receiveAddr1;
     @Value("${wsn.receive.receiveAddr2}")
-    private String receiveParm2;
+    private String receiveAddr2;
     // 发布的时候
     @Value("${wsn.send.sendAddr3}")
-    private String sendParm1;
+    private String sendAddr3;
 
     // 获取地址
     private String getAddr(){
@@ -48,39 +50,56 @@ public class WSNService {
     @Async
     public String  getInfoByWSN(String id,String topic){
         //本机地址
-        String wsnAddr = receiveParm1;
-        String receiveAddr = receiveParm2;
+        String wsnAddr = receiveAddr1;
+        String receiveAddr = receiveAddr2;
         System.out.println("wsnAddr: "+wsnAddr);
         System.out.println("receiveAddr: "+receiveAddr);
-        SendWSNCommand receive = new SendWSNCommand(receiveAddr, wsnAddr);
+        //CaseSubscirbe param 1:订阅地址 param 2：wsn地址 param 3:订阅主题名
+        CaseSubscirbe sub = new CaseSubscirbe(receiveAddr,wsnAddr,"event");
+        //订阅主题
+        sub.subscibe();
+
+        return null;
+
+        /*SendWSNCommand receive = new SendWSNCommand(receiveAddr, wsnAddr);
         // 消息处理逻辑
         UserNotificationProcessImpl implementor = new UserNotificationProcessImpl();
         // 启接收服
         Endpoint endpint = Endpoint.publish(receiveAddr, implementor);
         String info = receive.subscribe(id, topic);
         System.out.println("订阅消息："+info);
-        return info;
+        return info;*/
     }
 
     // 发布主题，关闭设备
     @Async
-    public int sendInfoByWSN(String info){
-        Trans trans = RegesterAddr.getTrans();
-        int result = trans.sendMethod(info, getAddr(), sendParm1, "admin","test4");
+    public void sendInfoByWSN(String info){
+        /*Trans trans = RegesterAddr.getTrans();
+        int result = trans.sendMethod(info, getAddr(), sendParm1, "admin","control");
         System.out.println(sendParm1);
         System.out.println("result: "+result);
-        return result;
+        return result;*/
+        System.out.println(receiveAddr1);
+        System.out.println(sendAddr3);
+        CasePublish pub = new CasePublish(receiveAddr1,sendAddr3,"control");
+        //发布主题
+        pub.register();
+        //发布消息void
+        pub.publishmsg(info);
     }
 
     // 王伟：修改设备监控值
     @Async
     public JSONObject editTelemetryValue(String info)
     {
-        SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-        String datatime = df.format(new Date());
-        Trans trans = RegesterAddr.getTrans();
-        trans.sendMethod(info, getAddr(), sendParm1, "admin","test4");
-        System.out.println(sendParm1);
+
+        System.out.println(receiveAddr1);
+        System.out.println(sendAddr3);
+        CasePublish pub = new CasePublish(receiveAddr1,sendAddr3,"control");
+        //发布主题
+        pub.register();
+        //发布消息
+        pub.publishmsg(info);
         JSONObject res = new JSONObject();
         res.put("type","success");
         res.put("msg","Test Method: editTelemetryValue");
