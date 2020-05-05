@@ -1,25 +1,158 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org" th:lang="${#locale.language}" lang="en">
     <head>
-        <title th:text="#{email.activation.title}">JHipster activation</title>
+        <title>光纤授时监控系统</title>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
         <link rel="shortcut icon" th:href="@{|${baseUrl}/favicon.ico|}" />
-    </head>
-    <body>
-        <p th:text="#{email.activation.greeting(${user.login})}">
-            Dear
-        </p>
-        <p th:text="#{email.activation.text1}">
-            Your JHipster account has been created, please click on the URL below to activate it:
-        </p>
-        <p>
-            <a th:with="url=(@{|${baseUrl}/account/activate?key=${user.activationKey}|})" th:href="${url}"
-            th:text="${url}">Activation link</a>
-        </p>
-        <p>
-            <span th:text="#{email.activation.text2}">Regards, </span>
-            <br/>
-            <em th:text="#{email.signature}">JHipster.</em>
-        </p>
-    </body>
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+	<style>
+		.content {
+			font-size: 1.2em;
+			color: #CFF;
+			line-height: 1.8em;
+		}
+
+		*{
+			padding: 0%;
+			margin: 0;
+			overflow: hidden;
+		}
+
+		body {
+			line-height: 1;
+		}
+
+		body {
+			font-family: "Kreon";
+			font-weight: 300;
+			color: #333;
+			background: #fff;
+		}
+
+		.header{
+			background-color: black;
+			height:50px;
+			line-height:50px;
+			width:100%;
+			vertical-align: bottom;
+			color: white;
+		}
+
+		.calAdmin{
+			margin-left:20px;
+			display: inline;
+		}
+
+		.calAdmin span{
+			font-size:10px;
+			font-weight: 500;
+			font-family: "微软雅黑 Light";
+			padding: 2px 4px;
+			border:1px solid white;
+			border-radius: 3px;
+		}
+
+		.adminInfo{
+			line-height: 20px;
+			display: none;
+			padding: 10px;
+			width: 150px;
+			background-color: #FFF;
+			position: absolute;
+			left:20px;
+			top: 55px;
+			font-family: 微软雅黑;
+			font-size: 13px;
+			font-weight: normal;
+			border-radius: 3px;
+			box-shadow: 2px 2px 2px rgba(9,9,9,0.5);
+		}
+
+		.calAdmin:hover .adminInfo{
+			display: block;
+		}
+
+		.title{
+			font-size: 15px;
+			font-weight: 700;
+			display: inline;
+			margin-left: 20px;
+		}
+
+		.background {
+			padding-top: 150px;
+			padding-bottom: 80px;
+			height: 100vh;
+			width: 100%;
+			background: #63c0e1;
+			background: linear-gradient(-150deg, #4ad8c3, #83a2f1);
+			display: flex;
+			justify-content: center;
+		}
+
+
+		.myH1 {
+			font-family: sans-serif;
+			font-size: 5em;
+			text-transform: uppercase;
+			letter-spacing: 5px;
+			color: #FFF;
+			text-shadow: 1px 1px 5px rgba(0, 0, 0, 0.20);
+			font-family: "微软雅黑";
+		}
+
+		.myH2 {
+			font-family: sans-serif;
+			font-size: 2em;
+			text-transform: uppercase;
+			letter-spacing: 5px;
+			color: #FFF;
+		}
+
+		.content {
+			text-align: left;
+			font-size: 1.5em;
+			line-height: 1.2em;
+		}
+
+	</style>
+
+</head>
+
+<body>
+				<div id="header" class="header">
+						<div class="calAdmin">
+							<span>联系管理员</span>
+							<div class="adminInfo">
+								<p style="color:black;">
+									管理员：王伟<br>
+									电话：15603305519<br>
+									QQ：550443096
+								</p>
+							</div>
+						</div>
+						<div class="title">光纤授时监控系统</div>
+				</div>
+
+
+
+				<div id="body">
+					<div class="background">
+						<div>
+							<h2 class="myH2" th:text="#{email.activation.greeting(${user.login})}"></h2>
+							<br>
+							<h1 class="myH1" style="color:#CCE6FF;">注册成功</h1>
+							<br>
+							<br>
+							<br>
+							<div class="content">
+								您需要管理员进行授权，才能使用本平台！<br>
+								( 工作日：周一至周五 8:30-11:30 13:30-17:30 )
+							</div>
+						</div>
+					</div>
+				</div>
+
+</body>
+
 </html>
