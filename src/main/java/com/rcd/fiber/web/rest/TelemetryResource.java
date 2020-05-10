@@ -55,16 +55,22 @@ public class TelemetryResource {
         return ResponseEntity.ok(list);
     }
 
-    @GetMapping("/findMonitorValue/{site_name}/{monitorInfoSet}")
-    @Timed
-    public String getMonitorValue(@PathVariable(value = "site_name") String site_name,
-                                  @PathVariable(value = "monitorInfoSet") String monitorInfoSet
-    ) {
 
+    @RequestMapping(value="/findMonitorValue",method = RequestMethod.POST)
+    @ResponseBody
+    @Timed
+    public String getMonitorValue(@RequestBody String req)
+    {
+        req=req.substring(1,req.length()-1);
+        System.out.println("req:"+req);
+        JSONObject json = JSONObject.parseObject(req);
+        String site_name = json.getString("site_name");
+        String resStr = json.getString("resStr");
         System.out.println("site_name: " + site_name);
-        System.out.println("monitorInfoSet: " + monitorInfoSet);
+        System.out.println("resStr: " + resStr);
+
         List<Telemetry> list = new ArrayList<>();
-        String[] strings = monitorInfoSet.split("::");
+        String[] strings = resStr.split("::");
         for (String str : strings) {
             String[] s = str.split(":");
             String device_name = s[0];
@@ -166,17 +172,24 @@ public class TelemetryResource {
         return ResponseEntity.ok(list);
     }
 
-    @GetMapping("/findVoltdbMonitorValue/{site_name}/{monitorInfoSet}")
-    @Timed
-    public String getVoltdbMonitorValue(@PathVariable(value = "site_name") String site_name,
-                                  @PathVariable(value = "monitorInfoSet") String monitorInfoSet)
-    {
-        System.out.println("site_name: " + site_name);
-        System.out.println("monitorInfoSet: " + monitorInfoSet);
 
+    @RequestMapping(value="/findVoltdbMonitorValue",method = RequestMethod.POST)
+    @ResponseBody
+    @Timed
+    public String getVoltdbMonitorValue(@RequestBody String req)
+    {
+        req=req.substring(1,req.length()-1);
+        System.out.println("req:"+req);
+        JSONObject json = JSONObject.parseObject(req);
+        String site_name = json.getString("site_name");
+        String resStr = json.getString("resStr");
+        System.out.println("site_name: " + site_name);
+        System.out.println("resStr: " + resStr);
+
+        List<Telemetry> list = new ArrayList<>();
+        String[] strings = resStr.split("::");
         List<TelemetryDTO2> list1 = new ArrayList<>();
         List<SignalDTO> list2 = new ArrayList<>();
-        String[] strings = monitorInfoSet.split("::");
         for (String str : strings) {
             String[] s = str.split(":");
             String device_name = s[0];

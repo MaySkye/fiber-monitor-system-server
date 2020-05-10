@@ -76,6 +76,19 @@ public class SiteLineResource {
         siteLineservice.addsiteLine(siteline);
     }
 
+    @GetMapping("/delete/{name}")
+    @Timed
+    public int deleteSite(@PathVariable(value = "name") String name) {
+        List<SiteLine> list = siteLineservice.getAllSiteLine();
+        for(int i=0;i<list.size();i++){
+            if(list.get(i).getLineName().equals(name)){
+                siteLineservice.deleteSiteLine(list.get(i));
+                return 0;
+            }
+        }
+        return -1;
+    }
+
     //随机更新siteline的全部监测值
     public  void updateAllSiteLine(){
         List<SiteLine> l = siteLineservice.getAllSiteLine();

@@ -25,12 +25,20 @@ public class SiteService {
     public SiteService(SiteRepository siteRepository) {
         this.siteRepository = siteRepository;
     }
+
     // 返回所有数据
     public List<Site> getAllSite() {
         return siteRepository.findAll();
     }
+
+    //添加数据
     public void addSite(Site site){
         siteRepository.saveAndFlush(site);
+    }
+
+    //删除数据
+    public void deleteSite(Site site){
+        siteRepository.delete(site);
     }
 
 }

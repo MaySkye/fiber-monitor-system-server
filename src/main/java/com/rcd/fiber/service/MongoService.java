@@ -72,6 +72,7 @@ public class MongoService {
             response.setCharacterEncoding("utf-8");
             // 设置响应头，控制浏览器下载该文件
             response.setHeader("content-disposition", "attachment;filename=" + URLEncoder.encode(gsFile.getFilename(), "UTF-8"));
+
             byte[] buffer = new byte[2048];
             int len = 0;
             // 循环将输入流中的内容读取到缓冲区当中
@@ -109,5 +110,44 @@ public class MongoService {
     public List<ServiceFileInfo> getAllServiceInfo(){
         return  mongoRepository.getAllServiceInfo();
     }
+
+    //赵艺：查询某一文件信息
+    public void getFileInfo(HttpServletRequest request, HttpServletResponse response,String md5) {
+        Query query = new Query(Criteria
+            .where("md5").is(md5)
+        );
+        GridFSFile gsFile = mongoRepository.getFileInfo(query);
+        //返回结果
+        HashMap<String,String> res = new HashMap<>();
+        try {
+            System.out.println("开始try");
+            //获取IO流
+            GridFSDownloadStream downloadStream = gridFSBucket.openDownloadStream(gsFile.getObjectId());
+            OutputStream outputStream = response.getOutputStream();
+            //设置编码，防止中文乱码
+            response.setCharacterEncoding("utf-8");
+            // 设置响应头，控制浏览器下载该文件
+            response.setHeader("content-disposition", "attachment;filename=" + URLEncoder.encode(gsFile.getFilename(), "UTF-8"));
+            byte[] buffer = new byte[2048];
+            int len = 0;
+            // 循环将输入流中的内容读取到缓冲区当中
+            while ((len = downloadStream.read(buffer)) > 0) {
+                // 输出缓冲区的内容到浏览器，实现文件下载
+                outputStream.write(buffer, 0, len);
+            }
+        }
+        catch (Exception e)
+        {
+            log.error(e.toString());
+        }
+    }
+
     //赵艺：删除某一service文件
+    public void deleteFile(String md5){
+        Query query = new Query(Criteria
+            .where("md5").is(md5)
+        );
+        mongoRepository.delete(query);
+    }
+
 }

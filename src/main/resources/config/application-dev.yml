@@ -43,7 +43,7 @@ spring:
 #        url: jdbc:h2:mem:fiber_monitor_system;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=FALSE
         url: jdbc:mysql://localhost:3306/fiber_monitor_system?useUnicode=true&characterEncoding=utf8&useSSL=false&useLegacyDatetimeCode=false&serverTimezone=UTC
         username: root
-        password: root
+        password: 123456
         hikari:
             auto-commit: false
     # 王伟配置的mongoDB

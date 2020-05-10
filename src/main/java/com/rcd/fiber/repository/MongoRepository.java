@@ -40,6 +40,16 @@ public class MongoRepository {
         return infos;
     }
 
+    //赵艺：查找某一文件
+    public GridFSFile getFileInfo(Query query) {
+        GridFSFile gsFile = gridFsTemplate.findOne(query);
+        return gsFile;
+    }
+    //赵艺： 删除某一文件
+    public void delete(Query query){
+        mongoTemplate.findAndRemove(query, ServiceFileInfo.class, bucketName + ".files");
+    }
+
     //王伟：下载service（latest）文件时查询信息
     public GridFSFile getLatestServiceFile(Query query) {
         GridFSFile gsFile = gridFsTemplate.findOne(query);

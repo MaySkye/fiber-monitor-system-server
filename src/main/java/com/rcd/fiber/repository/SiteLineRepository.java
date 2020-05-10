@@ -18,7 +18,9 @@ import java.util.List;
  */
 @Repository
 public interface SiteLineRepository extends JpaRepository<SiteLine, Long> {
+
     List<SiteLine> findAll();
+
     @Transactional
     @Modifying(clearAutomatically = true)
     @Query(nativeQuery = true, value = "UPDATE site_line SET line_name=?1 ,stable = ?2 ,transspeed=?3 ,state=?4 " +

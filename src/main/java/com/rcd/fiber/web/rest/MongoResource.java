@@ -81,7 +81,7 @@ public class MongoResource {
     site_level:
     upload_time:
     id:
-  },*/
+    },*/
     @RequestMapping("/getAllServiceInfo")
     @ResponseBody
     public String getAllServiceInfo( ) throws ParseException {
@@ -102,10 +102,30 @@ public class MongoResource {
             jsonObject.put("site_name", infos.get(i).getMetadata().getString("site_name"));
             jsonObject.put("site_level", infos.get(i).getMetadata().getString("site_level"));
             jsonObject.put("upload_time", infos.get(i).getUploadDate().toString());
+            jsonObject.put("md5", infos.get(i).getMd5());
             jsonObject.put("id", infos.get(i).get_id());
             array.add(jsonObject);
         }
         System.out.println("array.toString():"+array.toString());
         return array.toString();
+    }
+
+
+    //赵艺：下载组态图文件
+    @RequestMapping("/getFileByMD5")
+    @ResponseBody
+    @Timed
+    public void getFileByMD5(HttpServletRequest request, HttpServletResponse response,
+                                      @RequestParam("md5") String md5) {
+        System.out.println("get-md5: "+md5);
+        service.getFileInfo(request, response, md5);
+    }
+
+    //赵艺：删除
+    @GetMapping("/delete/{md5}")
+    @Timed
+    public void deleteSite(@PathVariable(value = "md5") String md5) {
+        System.out.println("md5: "+md5);
+        service.deleteFile(md5);
     }
 }

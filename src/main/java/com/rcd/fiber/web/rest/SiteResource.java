@@ -83,6 +83,21 @@ public class SiteResource {
         siteservice.addSite(site);
     }
 
+
+    @GetMapping("/delete/{sitename}")
+    @Timed
+    public int deleteSite(@PathVariable(value = "sitename") String sitename) {
+        System.out.println("delete-sitename: "+sitename);
+        List<Site> list = siteservice.getAllSite();
+        for(int i=0;i<list.size();i++){
+            if(list.get(i).getSiteName().equals(sitename)){
+                siteservice.deleteSite(list.get(i));
+                return 0;
+            }
+        }
+        return -1;
+    }
+
     public  static String getSiteJsonStr(List<Site> items) throws JSONException {
         if (items == null)
             return "";
@@ -98,6 +113,7 @@ public class SiteResource {
             jsonObject.put("site_localx", info.getSiteLocalx());
             jsonObject.put("site_localy", info.getSiteLocaly());
             jsonObject.put("site_name", info.getSiteName());
+            //jsonObject.put("no", info.getSiteName());
             jsonObject.put("site_info", info.getSiteInfo());
             jsonObject.put("site_type", info.getSiteType());
             jsonObject.put("site_address", info.getSiteAddress());

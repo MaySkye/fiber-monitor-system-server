@@ -39,4 +39,9 @@ public class SiteLineService {
         return siteLineRepository.updateValues(line_name,stable, transspeed,state,point1,point2);
     }
 
+    //删除数据
+    public void deleteSiteLine(SiteLine siteLine){
+        siteLineRepository.delete(siteLine);
+    }
+
 }
