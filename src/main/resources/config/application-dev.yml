@@ -149,7 +149,7 @@ wsn:
         receiveAddr1: http://127.0.0.1:9011/wsn-core
         receiveAddr2: http://127.0.0.1:9099/wsn-subscribe
         # 是否启用发布订阅 1 为启动 0为不启动
-        status: 1
+        status: 0
 #    发布配置
     send:
         # 注册时的配置
@@ -159,5 +159,5 @@ wsn:
         sendAddr3: http://127.0.0.1:9499/wsn-send
 
         # 是否启用发布订阅 1 为启动 0为不启动
-        status: 1
+        status: 0
 

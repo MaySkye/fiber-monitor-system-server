@@ -10,7 +10,9 @@ import com.rcd.fiber.domain.entity.ServiceFileInfo;
 import com.rcd.fiber.domain.entity.Telemetry;
 import com.rcd.fiber.repository.MongoRepository;
 import com.rcd.fiber.repository.TelemetryRepository;
+import com.rcd.fiber.service.dto.SignalDTO;
 import com.rcd.fiber.service.dto.TelemetryDTO;
+import com.rcd.fiber.service.dto.TelemetryDTO2;
 import org.bson.types.ObjectId;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -91,14 +93,36 @@ public class TelemetryService {
         return null;
     }
 
-    // 根据设备名称和属性名称，查询vlotdb内的数据
-    public List<Telemetry> getVoltdbMonitorValue(String site_name, String device_name, String data_name) {
+    //赵艺： 根据设备名称和属性名称，查询vlotdb内的遥测数据
+    public List<TelemetryDTO2> getVoltdbTelemetryValue(String site_name, String device_name, String data_name) {
         VoltdbJdbcBaseDao voltdbJdbcBaseDao = new VoltdbJdbcBaseDao();
-        ResultSet set = voltdbJdbcBaseDao.executeQuery("select * from TELEMETRY where site_name = "+site_name+" and device_name = "
-            +device_name+"and data_name = " +data_name
-        );
+        ResultSet set ;
         try {
-            List<Telemetry> list = voltdbJdbcBaseDao.populate(set, TelemetryDTO.class);
+            set = voltdbJdbcBaseDao.executeQuery("select * from TELEMETRY where site_name = '"+site_name+"' and device_name = '"
+                +device_name+"' and data_name = '" +data_name+"'");
+            List<TelemetryDTO2> list = voltdbJdbcBaseDao.populate(set, TelemetryDTO2.class);
+            return list;
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } catch (InstantiationException e) {
+            e.printStackTrace();
+        } catch (IllegalAccessException e) {
+            e.printStackTrace();
+        } finally {
+            voltdbJdbcBaseDao.closeConnection();
+        }
+        return null;
+    }
+
+
+    //赵艺： 根据设备名称和属性名称，查询vlotdb内的遥控数据
+    public List<SignalDTO> getVoltdbSignalValue(String site_name, String device_name, String data_name) {
+        VoltdbJdbcBaseDao voltdbJdbcBaseDao = new VoltdbJdbcBaseDao();
+        ResultSet set ;
+        try {
+            set = voltdbJdbcBaseDao.executeQuery("select * from telesignalling where site_name = '"+site_name+"' and device_name = '"
+                +device_name+"' and data_name = '" +data_name+"'");
+            List<SignalDTO> list = voltdbJdbcBaseDao.populate(set, SignalDTO.class);
             return list;
         } catch (SQLException e) {
             e.printStackTrace();

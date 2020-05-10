@@ -10,7 +10,10 @@ import com.rcd.fiber.domain.entity.ServiceFileInfo;
 import com.rcd.fiber.domain.entity.Site;
 import com.rcd.fiber.domain.entity.Telemetry;
 import com.rcd.fiber.service.TelemetryService;
+import com.rcd.fiber.service.dto.SignalDTO;
+import com.rcd.fiber.service.dto.TelemetryDTO2;
 import com.rcd.fiber.web.rest.auth.Check;
+import com.sun.xml.internal.bind.v2.runtime.unmarshaller.XsiNilLoader;
 import org.bson.Document;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -121,6 +124,41 @@ public class TelemetryResource {
         return array.toString();
     }
 
+    public static String getListJson(List<TelemetryDTO2> items1,List<SignalDTO> items2) throws JSONException {
+        if (items1 == null && items2 == null)
+            return "";
+        JSONArray array = new JSONArray();
+        JSONObject jsonObject = null;
+        TelemetryDTO2 info1 = null;
+        SignalDTO  info2 = null;
+
+        if(items1!=null){
+            for (int i = 0; i < items1.size(); i++) {
+                info1 = items1.get(i);
+                jsonObject = new JSONObject();
+                jsonObject.put("site_name", info1.getSiteName());
+                jsonObject.put("device_name", info1.getDeviceName());
+                jsonObject.put("data_name", info1.getDataName());
+                jsonObject.put("detected_value", info1.getDetectedValue());
+                jsonObject.put("alarm_state", info1.getAlarmState());
+                array.add(jsonObject);
+            }
+        }
+        if(items2!=null){
+            for (int i = 0; i < items2.size(); i++) {
+                info2 = items2.get(i);
+                jsonObject = new JSONObject();
+                jsonObject.put("site_name", info2.getSiteName());
+                jsonObject.put("device_name", info2.getDeviceName());
+                jsonObject.put("data_name", info2.getDataName());
+                jsonObject.put("detected_value", info2.getDetectedValue());
+                array.add(jsonObject);
+            }
+        }
+
+        return array.toString();
+    }
+
     @GetMapping("/find-voltdb-all")
     @Timed
     public ResponseEntity<List<Telemetry>> getVoltdbTelemetry() {
@@ -136,7 +174,8 @@ public class TelemetryResource {
         System.out.println("site_name: " + site_name);
         System.out.println("monitorInfoSet: " + monitorInfoSet);
 
-        List<Telemetry> list = new ArrayList<>();
+        List<TelemetryDTO2> list1 = new ArrayList<>();
+        List<SignalDTO> list2 = new ArrayList<>();
         String[] strings = monitorInfoSet.split("::");
         for (String str : strings) {
             String[] s = str.split(":");
@@ -144,12 +183,20 @@ public class TelemetryResource {
             String data_name = s[1];
             System.out.println("device_name: " + device_name);
             System.out.println("data_name: " + data_name);
-            List<Telemetry> telemetrys = service.getVoltdbMonitorValue(site_name, device_name, data_name);
-            if (telemetrys.size() >= 1) {
-                list.add(telemetrys.get(0));
+
+            if(data_name.equals("锁定状态")||data_name.equals("运行状态")){
+                List<SignalDTO> signals = service.getVoltdbSignalValue(site_name, device_name, data_name);
+                if (signals.size() >= 1) {
+                    list2.add(signals.get(0));
+                }
+            }else{
+                List<TelemetryDTO2> telemetrys = service.getVoltdbTelemetryValue(site_name, device_name, data_name);
+                if (telemetrys.size() >= 1) {
+                    list1.add(telemetrys.get(0));
+                }
             }
         }
-        String jsonListEmp = TelemetryToJson(list);
+        String jsonListEmp = getListJson(list1,list2);
         System.out.println("jsonListEmp:  " + jsonListEmp);
         return jsonListEmp;
     }

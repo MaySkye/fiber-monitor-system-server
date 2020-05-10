@@ -16,7 +16,7 @@ public class VoltdbJdbcBaseDao {
     protected ResultSet rs = null;
     @Value("${voltdb.url}")
     private String dbUrl;
-    //private String dbUrl = "jdbc:voltdb://192.168.99.12:21212";
+    private String url = "jdbc:voltdb://192.168.163.128:21212";
 
     /**
      * 获取连接
@@ -31,8 +31,9 @@ public class VoltdbJdbcBaseDao {
 
         try {
             Class.forName("org.voltdb.jdbc.Driver");
-            System.out.println("voltdb-url: "+dbUrl);
-            conn = DriverManager.getConnection(dbUrl);
+            System.out.println("voltdb-url: "+url);
+            conn = DriverManager.getConnection(url);
+            System.out.println("conn: "+conn);
         } catch (ClassNotFoundException e) {
             e.printStackTrace();
         } catch (SQLException e) {
@@ -175,6 +176,7 @@ public class VoltdbJdbcBaseDao {
                         f.setAccessible(true);
                         f.set(obj, value);
                         f.setAccessible(flag);
+                        System.out.println("f.getName(): "+f.getName()+" value:"+value);
                     }
                 }
             }
