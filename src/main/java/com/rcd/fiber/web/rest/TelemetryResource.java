@@ -13,7 +13,6 @@ import com.rcd.fiber.service.TelemetryService;
 import com.rcd.fiber.service.dto.SignalDTO;
 import com.rcd.fiber.service.dto.TelemetryDTO2;
 import com.rcd.fiber.web.rest.auth.Check;
-import com.sun.xml.internal.bind.v2.runtime.unmarshaller.XsiNilLoader;
 import org.bson.Document;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

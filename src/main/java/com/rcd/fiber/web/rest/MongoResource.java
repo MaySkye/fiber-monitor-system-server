@@ -3,6 +3,7 @@ package com.rcd.fiber.web.rest;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.codahale.metrics.annotation.Timed;
+import com.rcd.fiber.annotation.CheckPermission;
 import com.rcd.fiber.domain.entity.ServiceFileInfo;
 import com.rcd.fiber.service.MongoService;
 import com.rcd.fiber.service.TelemetryService;
@@ -51,7 +52,7 @@ public class MongoResource {
     //王伟：下载service（latest）文件
     @RequestMapping("/getLastestServiceFile")
     @ResponseBody
-    //@CheckPermission(value = true, object = "组态图", action = "查看")
+    @CheckPermission(value = true, object = "组态图", action = "查看")
     @Timed
     public void getLastestServiceFile(HttpServletRequest request, HttpServletResponse response,
                                       @RequestParam("site_name") String site_name,

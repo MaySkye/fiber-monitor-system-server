@@ -2,8 +2,7 @@ package com.rcd.fiber.web.rest.auth;
 
 import com.alibaba.fastjson.JSONObject;
 import com.rcd.fiber.web.rest.UserJWTController;
-import com.sun.org.apache.xerces.internal.impl.dv.util.Base64;
-
+import org.apache.commons.codec.binary.Base64;
 import javax.servlet.http.HttpSession;
 import java.math.BigInteger;
 import java.security.MessageDigest;
@@ -33,10 +32,10 @@ public class VerifyIdentity {
 
         PrivateKey privateKey = SignWithEC.getPrivateKey(privateKeyPath, Common.opensslPath);
         byte[] s = SignWithEC.sign(privateKey, String.valueOf(code));
-        System.out.println("签名："+ Base64.encode(s));
+        System.out.println("签名："+ Base64.encodeBase64String(s));
 
         jsonWrite.put("rand", code);
-        jsonWrite.put("sign", Base64.encode(s));
+        jsonWrite.put("sign", Base64.encodeBase64String(s));
         jsonWrite.put("type", "user");
         System.out.println("STEP 2: " + jsonWrite.toJSONString());
         if (url.contains("https")) {
@@ -56,7 +55,7 @@ public class VerifyIdentity {
 
     public static void main(String[] args) throws Exception{
         String username = "wangwei";
-        String pemPath = "C:\\Users\\55044\\Desktop\\wangwei\\wangwei.pem";
+        String pemPath = "C:\\pairs\\wangwei\\wangwei.pem";
         VerifyIdentity(username, pemPath);
     }
 }

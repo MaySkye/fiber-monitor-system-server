@@ -1,7 +1,6 @@
 package com.rcd.fiber.web.rest.auth;
 
-import com.sun.org.apache.xerces.internal.impl.dv.util.Base64;
-
+import org.apache.commons.codec.binary.Base64;
 import java.io.FileInputStream;
 import java.security.KeyFactory;
 import java.security.PrivateKey;
@@ -26,7 +25,7 @@ public class SignWithEC {
         privateKeyPEM = privateKeyPEM.replaceAll("\n", "");
         privateKeyPEM = privateKeyPEM.replaceAll(" ", "");
 
-        byte[] keyData = Base64.decode(privateKeyPEM);
+        byte[] keyData = Base64.decodeBase64(privateKeyPEM);
         EncodedKeySpec privKeySpec = new PKCS8EncodedKeySpec(keyData);
         KeyFactory kf = KeyFactory.getInstance("EC");
         PrivateKey ecPrivateKey = kf.generatePrivate(privKeySpec);
@@ -72,13 +71,13 @@ public class SignWithEC {
     }
 
     public static void main(String[] args) throws Exception {
-        String certPath = "./pairs/zhao.crt";
-        String privatePath = "./pairs/zhao.pem";
+        String certPath = "C:\\pairs\\wangwei\\wangwei.crt";
+        String privatePath = "C:\\pairs\\wangwei\\wangwei.pem";
         String content = "123456";
         PrivateKey privateKey = getPrivateKey(privatePath, Common.opensslPath);
         PublicKey publicKey = getPublicKeyFromCert(certPath);
         byte[] s = sign(privateKey, content);
-        System.out.println("签名："+ Base64.encode(s));
+        System.out.println("签名："+ Base64.encodeBase64String(s));
         boolean bool = verify(publicKey, s, content);
         System.out.println("验证："+ bool);
         System.out.println(getCertValidity(certPath));
