@@ -72,21 +72,15 @@ public class WSNResource {
     }
 
     /*zhaoyi*/
-    @GetMapping("/getEventInfo")
+    @PostMapping("/getEventInfo")
     @Timed
     @ResponseBody
     public String getEventInfo(@RequestBody String info)
     {
-        info=info.substring(1,info.length()-1);
-        System.out.println("info:"+info);
         JSONObject obj = JSONObject.parseObject(info);
-        String siteName = obj.getString("site_name");
         String id = obj.getString("id");
         String topic = obj.getString("topic");
-        System.out.println("getEventInfo-siteName: "+siteName+" id: "+id+" topic: "+topic);
-        System.out.println("getEventInfo-status: "+status);
-
-        String resInfo; //返回设备名称+属性名称+值
+        String resInfo;
         //status=1代表开启了wsn
         if (status.equals("1")) {
             resInfo = wsnService.getInfoByWSN(id,topic);
