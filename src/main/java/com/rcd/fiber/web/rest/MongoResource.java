@@ -3,6 +3,7 @@ package com.rcd.fiber.web.rest;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.codahale.metrics.annotation.Timed;
+import com.rcd.fiber.annotation.CheckPermission;
 import com.rcd.fiber.domain.entity.ServiceFileInfo;
 import com.rcd.fiber.service.MongoService;
 import com.rcd.fiber.service.TelemetryService;

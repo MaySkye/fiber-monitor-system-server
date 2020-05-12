@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import sun.misc.BASE64Decoder;
+import org.apache.commons.codec.binary.Base64;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -60,7 +60,7 @@ public class TelemetryImageResource {
         // 文件地址
         String filePath = null;
         // 写入图片
-        BASE64Decoder decoder = new BASE64Decoder();
+        //BASE64Decoder decoder = new BASE64Decoder();
 
 //        try {
 //            // 存放上传图片的文件夹
@@ -104,8 +104,9 @@ public class TelemetryImageResource {
                 imageString = list.get(0).getStateImage();
             }
             // 写入图片
-            BASE64Decoder decoder = new BASE64Decoder();
-            byte[] data = decoder.decodeBuffer(imageString);
+            //BASE64Decoder decoder = new BASE64Decoder();
+            byte[] data = Base64.decodeBase64(imageString);
+            //byte[] data = decoder.decodeBuffer(imageString);
             //setContentType("text/plain; charset=utf-8"); 文本
             response.reset();
             response.setContentType(type);
