@@ -92,6 +92,8 @@ public class SiteResource {
         for(int i=0;i<list.size();i++){
             if(list.get(i).getSiteName().equals(sitename)){
                 siteservice.deleteSite(list.get(i));
+                //删除与该站点有关的链路
+
                 return 0;
             }
         }

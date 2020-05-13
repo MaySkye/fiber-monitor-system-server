@@ -58,13 +58,14 @@ public class TelemetryResource {
     @RequestMapping(value="/findMonitorValue",method = RequestMethod.POST)
     @ResponseBody
     @Timed
-    public String getMonitorValue(@RequestBody String req)
-    {
+    public String getMonitorValue(@RequestBody String req) throws UnsupportedEncodingException {
         req=req.substring(1,req.length()-1);
         System.out.println("req:"+req);
         JSONObject json = JSONObject.parseObject(req);
         String site_name = json.getString("site_name");
         String resStr = json.getString("resStr");
+        site_name = URLDecoder.decode(site_name,"utf-8");
+        resStr = URLDecoder.decode(resStr,"utf-8");
         System.out.println("site_name: " + site_name);
         System.out.println("resStr: " + resStr);
 

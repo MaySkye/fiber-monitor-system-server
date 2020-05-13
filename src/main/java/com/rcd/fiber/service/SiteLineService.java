@@ -44,4 +44,7 @@ public class SiteLineService {
         siteLineRepository.delete(siteLine);
     }
 
+    //根据point删除链路数据
+    //public void
+
 }
