@@ -186,7 +186,6 @@ public class TelemetryResource {
         System.out.println("site_name: " + site_name);
         System.out.println("resStr: " + resStr);
 
-        List<Telemetry> list = new ArrayList<>();
         String[] strings = resStr.split("::");
         List<TelemetryDTO2> list1 = new ArrayList<>();
         List<SignalDTO> list2 = new ArrayList<>();
@@ -197,7 +196,12 @@ public class TelemetryResource {
             System.out.println("device_name: " + device_name);
             System.out.println("data_name: " + data_name);
 
-            if(data_name.equals("锁定状态")||data_name.equals("运行状态")){
+            if(data_name.equals("EDFA_复位")){
+                data_name = "复位";
+            }
+
+            if(data_name.equals("锁定状态")||data_name.equals("运行状态")||data_name.equals("使能")||
+                data_name.equals("复位")||data_name.equals("外部晶振")){
                 List<SignalDTO> signals = service.getVoltdbSignalValue(site_name, device_name, data_name);
                 if (signals.size() >= 1) {
                     list2.add(signals.get(0));

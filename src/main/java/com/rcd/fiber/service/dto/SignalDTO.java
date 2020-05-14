@@ -16,17 +16,17 @@ public class SignalDTO {
 
     private String Timestamp;
 
-    private Double DetectedValue;
+    private Integer DetectedValue;
 
     private Integer State;
 
     private Integer Blocked;
 
-    private Double NormalValue;
+    private Integer NormalValue;
 
-    private Double WarningValue;
+    private Integer WarningValue;
 
-    private Double AlarmValue;
+    private Integer AlarmValue;
 
     public Integer getId() {
         return id;
@@ -68,11 +68,11 @@ public class SignalDTO {
         Timestamp = timestamp;
     }
 
-    public Double getDetectedValue() {
+    public Integer getDetectedValue() {
         return DetectedValue;
     }
 
-    public void setDetectedValue(Double detectedValue) {
+    public void setDetectedValue(Integer detectedValue) {
         DetectedValue = detectedValue;
     }
 
@@ -92,27 +92,27 @@ public class SignalDTO {
         Blocked = blocked;
     }
 
-    public Double getNormalValue() {
+    public Integer getNormalValue() {
         return NormalValue;
     }
 
-    public void setNormalValue(Double normalValue) {
+    public void setNormalValue(Integer normalValue) {
         NormalValue = normalValue;
     }
 
-    public Double getWarningValue() {
+    public Integer getWarningValue() {
         return WarningValue;
     }
 
-    public void setWarningValue(Double warningValue) {
+    public void setWarningValue(Integer warningValue) {
         WarningValue = warningValue;
     }
 
-    public Double getAlarmValue() {
+    public Integer getAlarmValue() {
         return AlarmValue;
     }
 
-    public void setAlarmValue(Double alarmValue) {
+    public void setAlarmValue(Integer alarmValue) {
         AlarmValue = alarmValue;
     }
 }
