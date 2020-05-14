@@ -2,11 +2,12 @@ package com.rcd.fiber.service;
 
 import com.alibaba.fastjson.JSONObject;
 import com.rcd.fiber.base.pub.CasePublish;
+import com.rcd.fiber.base.soap.wsn.UserNotificationProcessImpl;
 import com.rcd.fiber.base.start.RegesterAddr;
 import com.rcd.fiber.base.sub.CaseSubscirbe;
 import com.rcd.fiber.base.wsn.SendWSNCommand;
 import com.rcd.fiber.base.wsn.Trans;
-import com.rcd.fiber.base.wsn.UserNotificationProcessImpl;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
@@ -59,16 +60,16 @@ public class WSNService {
         //订阅主题
         sub.subscibe();
 
-        return null;
 
-        /*SendWSNCommand receive = new SendWSNCommand(receiveAddr, wsnAddr);
+        SendWSNCommand receive = new SendWSNCommand(receiveAddr, wsnAddr);
         // 消息处理逻辑
         UserNotificationProcessImpl implementor = new UserNotificationProcessImpl();
+       // String info = implementor.getInfo();
         // 启接收服
         Endpoint endpint = Endpoint.publish(receiveAddr, implementor);
         String info = receive.subscribe(id, topic);
         System.out.println("订阅消息："+info);
-        return info;*/
+        return info;
     }
 
     // 发布主题，关闭设备

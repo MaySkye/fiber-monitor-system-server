@@ -78,6 +78,7 @@ public class WSNResource {
     public String getEventInfo(@RequestBody String info)
     {
         JSONObject obj = JSONObject.parseObject(info);
+        String siteName = obj.getString("site_name");
         String id = obj.getString("id");
         String topic = obj.getString("topic");
         String resInfo;
