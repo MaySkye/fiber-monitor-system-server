@@ -1,6 +1,6 @@
 package com.rcd.fiber.base.start;
 
-import com.rcd.fiber.base.wsn.Trans;
+import com.rcd.fiber.base.pub.Trans;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
@@ -45,7 +45,8 @@ public class RegesterAddr {
             trans = new Trans();
             addr = "dddd";
             if ( !status.isEmpty()&&status.equals("1")) {
-               addr = trans.regester(parameter1, parameter2, "admin", "test3");
+                //没有当前方法，避免报错暂时注释
+               //addr = trans.regester(parameter1, parameter2, "admin", "test3");
             }
 
         }

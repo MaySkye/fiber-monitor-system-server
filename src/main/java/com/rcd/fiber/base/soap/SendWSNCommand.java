@@ -1,5 +1,6 @@
 package com.rcd.fiber.base.soap;
 
+import com.rcd.fiber.service.WSNService;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import org.apache.commons.httpclient.HttpClient;
@@ -87,6 +88,7 @@ public class SendWSNCommand {
         content += "</org:WsnProcess>";
         content += "</soapenv:Body>";
         content += "</soapenv:Envelope>";
+
         String[] responseValue = send(wsnAddr + "/wsnprocess/",new HashMap<String,String>(), "utf-8", true, content.trim());
 
         if(responseValue[0].equals("200") && !responseValue[1].contains("failed")) {
@@ -120,6 +122,7 @@ public class SendWSNCommand {
     }
 
     protected String[] send(String url, Map<String, String> params, String charset, boolean pretty, String content) {
+
         StringBuffer response = new StringBuffer();
 //        HttpClient client = new HttpClient();
         PostMethod method = new PostMethod(url);

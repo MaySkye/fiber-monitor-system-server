@@ -4,6 +4,11 @@ package com.rcd.fiber.base.sub; /**
  * Date: 2020/4/1
  */
 
+import com.rcd.fiber.base.soap.wsn.UserNotificationProcessImpl;
+import com.rcd.fiber.service.WSNService;
+
+import java.nio.file.WatchService;
+
 /**
  * Created by-logan on 2020/4/1.
  */
@@ -29,5 +34,13 @@ public class CaseSubscirbe {
         CaseSubscirbe sub = new CaseSubscirbe(sendAddr,wsnAddr,"event");
 		//订阅主题
         sub.subscibe();
+    /*    SendWSNCommand receive = new SendWSNCommand(sendAddr, wsnAddr);
+        // 消息处理逻辑
+        UserNotificationProcessImpl implementor = new UserNotificationProcessImpl();
+        // 启接收服
+        Endpoint endpint = Endpoint.publish(sendAddr, implementor);
+        String info = receive.subscribe("kobe", "test");
+
+        System.out.println("订阅消息："+implementor.getInfo());*/
     }
 }

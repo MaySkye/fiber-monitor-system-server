@@ -17,7 +17,7 @@ public class Trans {
 	private static int i = 0;
 
 	//设置用户id
-	public static final String id = String.valueOf(System.currentTimeMillis());
+	public  String id;
 
 	public void register()
 	{
@@ -31,6 +31,7 @@ public class Trans {
 		this.wsnAddr = wsnAddr;
 		this.sendAddr = sendAddr;
 		this.topic = sendTopic;
+        id = String.valueOf(System.currentTimeMillis());
 		register = new SendWSNCommandWSSyn(sendAddr, wsnAddr);
 		publishAddress = register.register(id, topic, this.sendAddr);
 	}

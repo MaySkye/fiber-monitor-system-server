@@ -4,9 +4,8 @@ import com.alibaba.fastjson.JSONObject;
 import com.rcd.fiber.base.pub.CasePublish;
 import com.rcd.fiber.base.soap.wsn.UserNotificationProcessImpl;
 import com.rcd.fiber.base.start.RegesterAddr;
+
 import com.rcd.fiber.base.sub.CaseSubscirbe;
-import com.rcd.fiber.base.wsn.SendWSNCommand;
-import com.rcd.fiber.base.wsn.Trans;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -18,6 +17,8 @@ import org.springframework.transaction.annotation.Transactional;
 import javax.xml.ws.Endpoint;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.concurrent.locks.Lock;
+import java.util.concurrent.locks.ReentrantLock;
 
 /**
  *
@@ -48,28 +49,16 @@ public class WSNService {
     }
 
     // 获取订阅消息
-    @Async
-    public String  getInfoByWSN(String id,String topic){
+    public void   startSubService(String id,String topic){
         //本机地址
         String wsnAddr = receiveAddr1;
         String receiveAddr = receiveAddr2;
         System.out.println("wsnAddr: "+wsnAddr);
         System.out.println("receiveAddr: "+receiveAddr);
         //CaseSubscirbe param 1:订阅地址 param 2：wsn地址 param 3:订阅主题名
-        CaseSubscirbe sub = new CaseSubscirbe(receiveAddr,wsnAddr,"event");
+        CaseSubscirbe sub = new CaseSubscirbe(receiveAddr,wsnAddr,topic);
         //订阅主题
         sub.subscibe();
-
-
-        SendWSNCommand receive = new SendWSNCommand(receiveAddr, wsnAddr);
-        // 消息处理逻辑
-        UserNotificationProcessImpl implementor = new UserNotificationProcessImpl();
-       // String info = implementor.getInfo();
-        // 启接收服
-        Endpoint endpint = Endpoint.publish(receiveAddr, implementor);
-        String info = receive.subscribe(id, topic);
-        System.out.println("订阅消息："+info);
-        return info;
     }
 
     // 发布主题，关闭设备

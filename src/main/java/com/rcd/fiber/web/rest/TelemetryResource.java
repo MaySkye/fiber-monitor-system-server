@@ -75,8 +75,8 @@ public class TelemetryResource {
             String[] s = str.split(":");
             String device_name = s[0];
             String data_name = s[1];
-            System.out.println("device_name: " + device_name);
-            System.out.println("data_name: " + data_name);
+            //System.out.println("device_name: " + device_name);
+            //System.out.println("data_name: " + data_name);
 
             //持续更新数据的操作
             double val = Math.random() * 10;

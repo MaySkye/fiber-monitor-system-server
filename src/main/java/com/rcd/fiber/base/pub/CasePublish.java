@@ -28,10 +28,23 @@ public class CasePublish {
 
     public static void main(String[] args) {
 		//CasePublish构造参数 param 1:wsn地址 param 2:发布地址 param 3:发布主题名
-        CasePublish pub = new CasePublish(wsnAddr,sendAddr,"control");
+        CasePublish pub = new CasePublish(wsnAddr,sendAddr,"event");
 		//发布主题
         pub.register();
 		//发布消息
-        pub.publishmsg("<SYSTEM_CATE>41</SYSTEM_CATE>");
+        String msg = "            <event>\n" +
+            "            <eventType>over_lower_limit</eventType>\n" +
+            "            <eventLevel>alarm</eventLevel>\n" +
+            "            </event>\n" +
+            "            <resource>\n" +
+            "            <siteName>西安</siteName>\n" +
+            "            <deviceName>光频传递收发设备</deviceName>\n" +
+            "            <dataName>接收误差信号采样值5</dataName>\n" +
+            "            </resource>\n" +
+            "            <value>\n" +
+            "            <value>-20.0</value>\n" +
+            "            <timestamp>2020/05/17 11:03:45.582</timestamp>\n" +
+            "            </value>\n" ;
+        pub.publishmsg(msg);
     }
 }

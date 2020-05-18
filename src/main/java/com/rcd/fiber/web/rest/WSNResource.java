@@ -1,10 +1,13 @@
 package com.rcd.fiber.web.rest;
 
+import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.rcd.fiber.service.AlarmDeviceService;
 import com.rcd.fiber.service.ControlService;
 import com.rcd.fiber.service.TelemetryService;
 import com.rcd.fiber.service.WSNService;
+import com.rcd.fiber.service.dto.BlockQueue;
+import com.rcd.fiber.service.dto.EventInfoDTO;
 import io.micrometer.core.annotation.Timed;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -12,8 +15,10 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
+import java.util.concurrent.CopyOnWriteArrayList;
+import java.util.concurrent.locks.Lock;
+import java.util.concurrent.locks.ReentrantLock;
 
 @RestController
 @RequestMapping("/wsn")
@@ -22,6 +27,12 @@ public class WSNResource {
 
     private final WSNService wsnService;
     private final AlarmDeviceService alarmDeviceService;
+
+    //public static List<EventInfoDTO> eventInfoDTOList =new LinkedList<>();
+    public static Map<String,List<EventInfoDTO>> eventInfoDTOMap = new HashMap<>();
+    public static Lock lock = new ReentrantLock();
+    public static boolean isStartSub = false;
+    //public static BlockQueue<EventInfoDTO> blockQueue = new BlockQueue<>(new LinkedList<>(),new CopyOnWriteArrayList<>(),30);
 
     Logger logger = LoggerFactory.getLogger(WSNResource.class);
 
@@ -79,17 +90,31 @@ public class WSNResource {
     {
         JSONObject obj = JSONObject.parseObject(info);
         String siteName = obj.getString("site_name");
-        String id = obj.getString("id");
-        String topic = obj.getString("topic");
-        String resInfo;
-        //status=1代表开启了wsn
-        if (status.equals("1")) {
-            resInfo = wsnService.getInfoByWSN(id,topic);
-        }else{
-            resInfo = null;
+       // lock.lock();
+        String jsonEventInfoDTOList = JSON.toJSONString(eventInfoDTOMap.get(siteName));
+        System.out.println("jsonEventInfoDTOList: "+jsonEventInfoDTOList);
+        //lock.unlock();
+        return jsonEventInfoDTOList;
+    }
+
+    /*zhaoyi*/
+    @PostMapping("/startSub")
+    @Timed
+    @ResponseBody
+    public void startSub(@RequestBody String info)
+    {
+
+        if(!isStartSub){
+            JSONObject obj = JSONObject.parseObject(info);
+            String siteName = obj.getString("site_name");
+            String id = obj.getString("id");
+            String topic = obj.getString("topic");
+            //status=1代表开启了wsn
+            if (status.equals("1")) {
+                wsnService.startSubService(id,topic);
+                isStartSub = true;
+            }
         }
-        System.out.println("getEventInfo-resInfo: "+resInfo);
-        return resInfo;
     }
 
     // 王伟，修改设备监控值
