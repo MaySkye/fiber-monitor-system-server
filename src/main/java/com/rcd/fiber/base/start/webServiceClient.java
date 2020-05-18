@@ -32,9 +32,9 @@ public class webServiceClient {
     public void start() {
         logger.info("启动wsn客户端，等待订阅消息");
 
-      /*  if (status.equals("1")) {
+        if (status.equals("1")) {
             service.startSubService("admin","event");
-        }*/
+        }
     }
 
 }

@@ -64,7 +64,7 @@ public class UserNotificationProcessImpl implements INotificationProcess {
             e.printStackTrace();
         }
 
-        EventInfoDTO eventInfoDTO = new EventInfoDTO(siteName,deviceName,dataName,eventLevel,value);
+        EventInfoDTO eventInfoDTO = new EventInfoDTO(siteName,deviceName,dataName,eventType,eventLevel,value,timestamp);
         System.out.println("eventInfoDTO：" + eventInfoDTO.toString());
         //WSNResource.lock.lock();
         List<EventInfoDTO> list = WSNResource.eventInfoDTOMap.get(siteName);

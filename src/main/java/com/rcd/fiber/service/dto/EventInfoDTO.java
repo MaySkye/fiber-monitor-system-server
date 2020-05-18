@@ -8,75 +8,86 @@ package com.rcd.fiber.service.dto;
  */
 public class EventInfoDTO {
 
-    private String SiteName;
+    private String siteName;
 
-    private String DeviceName;
+    private String deviceName;
 
-    private String DataName;
+    private String dataName;
 
-    private String EventType;
+    private String eventType;
 
-    private String Value;
+    private String eventLevel;
+
+    private String value;
+
+    private String timestamp;
 
     public EventInfoDTO() {
     }
 
-    public EventInfoDTO(String siteName, String deviceName, String dataName, String eventType, String value) {
-        SiteName = siteName;
-        DeviceName = deviceName;
-        DataName = dataName;
-        EventType = eventType;
-        Value = value;
+    public EventInfoDTO(String siteName, String deviceName, String dataName, String eventType, String eventLevel, String value, String timestamp) {
+        this.siteName = siteName;
+        this.deviceName = deviceName;
+        this.dataName = dataName;
+        this.eventType = eventType;
+        this.eventLevel = eventLevel;
+        this.value = value;
+        this.timestamp = timestamp;
     }
 
     public String getSiteName() {
-        return SiteName;
+        return siteName;
     }
 
     public void setSiteName(String siteName) {
-        SiteName = siteName;
+        this.siteName = siteName;
     }
 
     public String getDeviceName() {
-        return DeviceName;
+        return deviceName;
     }
 
     public void setDeviceName(String deviceName) {
-        DeviceName = deviceName;
+        this.deviceName = deviceName;
     }
 
     public String getDataName() {
-        return DataName;
+        return dataName;
     }
 
     public void setDataName(String dataName) {
-        DataName = dataName;
+        this.dataName = dataName;
     }
 
     public String getEventType() {
-        return EventType;
+        return eventType;
     }
 
     public void setEventType(String eventType) {
-        EventType = eventType;
+        this.eventType = eventType;
+    }
+
+    public String getEventLevel() {
+        return eventLevel;
+    }
+
+    public void setEventLevel(String eventLevel) {
+        this.eventLevel = eventLevel;
     }
 
     public String getValue() {
-        return Value;
+        return value;
     }
 
     public void setValue(String value) {
-        Value = value;
+        this.value = value;
     }
 
-    @Override
-    public String toString() {
-        return "EventInfoDTO{" +
-            "SiteName='" + SiteName + '\'' +
-            ", DeviceName='" + DeviceName + '\'' +
-            ", DataName='" + DataName + '\'' +
-            ", EventType='" + EventType + '\'' +
-            ", Value='" + Value + '\'' +
-            '}';
+    public String getTimestamp() {
+        return timestamp;
+    }
+
+    public void setTimestamp(String timestamp) {
+        this.timestamp = timestamp;
     }
 }
