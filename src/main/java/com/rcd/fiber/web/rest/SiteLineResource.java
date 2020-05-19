@@ -89,6 +89,23 @@ public class SiteLineResource {
         return -1;
     }
 
+    @RequestMapping(value = "/updateSiteLine",method = RequestMethod.POST)
+    @ResponseBody
+    @Timed
+    public int updateSiteLinePost(@RequestBody String siteLine_json){
+        System.out.println("updateSiteLinePost:  "+siteLine_json);
+        SiteLine siteLine = new SiteLine();
+        JSONObject obj = JSONObject.parseObject(siteLine_json);
+        siteLine.setLineId(obj.getLong("line_id"));
+        siteLine.setPoint1(obj.getString("point1"));
+        siteLine.setPoint2(obj.getString("point2"));
+        siteLine.setLineName(obj.getString("line_name"));
+        siteLine.setLineType(obj.getString("line_type"));
+        siteLine.setLineInfo(obj.getString("line_info"));
+        siteLine.setLen(obj.getDouble("length"));
+        return siteLineservice.updateSiteLine(siteLine);
+    }
+
     //随机更新siteline的全部监测值
     public  void updateAllSiteLine(){
         List<SiteLine> l = siteLineservice.getAllSiteLine();

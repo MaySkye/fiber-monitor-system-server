@@ -16,7 +16,7 @@ public class SiteLine {
     @Id
     @Column(name = "line_id", length = 255)
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private long lineId;
+    private Long lineId;
     //@Size(max = 255)
     @Column(name = "point1")
     private String point1;
@@ -35,7 +35,6 @@ public class SiteLine {
     //@Size(max = 255)
     @Column(name = "length")
     private Double len;
-
     @Column(name = "stable")
     private Double stable;
     @Column(name = "transspeed")
@@ -43,11 +42,26 @@ public class SiteLine {
     @Column(name = "state")
     private String state;
 
-    public long getLineId() {
+    public SiteLine() {
+    }
+
+    public SiteLine(String point1, String point2, String lineName, String lineType, String lineInfo, Double len, Double stable, Double transspeed, String state) {
+        this.point1 = point1;
+        this.point2 = point2;
+        this.lineName = lineName;
+        this.lineType = lineType;
+        this.lineInfo = lineInfo;
+        this.len = len;
+        this.stable = stable;
+        this.transspeed = transspeed;
+        this.state = state;
+    }
+
+    public Long getLineId() {
         return lineId;
     }
 
-    public void setLineId(long lineId) {
+    public void setLineId(Long lineId) {
         this.lineId = lineId;
     }
 

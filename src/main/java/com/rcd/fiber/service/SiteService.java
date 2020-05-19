@@ -41,4 +41,10 @@ public class SiteService {
         siteRepository.delete(site);
     }
 
+    //更新数据
+    public int  updateSite(Site site){
+       return siteRepository.updateSiteValue(site.getSiteLevel(),site.getSiteLocalx(),site.getSiteLocaly(),site.getSiteName(),
+           site.getSiteInfo(),site.getSiteType(),site.getSiteAddress(),site.getSiteId());
+    }
+
 }

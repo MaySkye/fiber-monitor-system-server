@@ -44,6 +44,12 @@ public class SiteLineService {
         siteLineRepository.delete(siteLine);
     }
 
+    //更新数据
+    public int  updateSiteLine(SiteLine siteLine){
+        return siteLineRepository.updateSiteLineValue(siteLine.getPoint1(),siteLine.getPoint2(),siteLine.getLineName(),siteLine.getLineType(),
+            siteLine.getLineInfo(),siteLine.getLen(),siteLine.getLineId());
+    }
+
     //根据point删除链路数据
     //public void
 

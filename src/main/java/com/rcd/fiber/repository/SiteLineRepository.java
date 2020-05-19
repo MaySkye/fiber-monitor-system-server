@@ -26,4 +26,11 @@ public interface SiteLineRepository extends JpaRepository<SiteLine, Long> {
     @Query(nativeQuery = true, value = "UPDATE site_line SET line_name=?1 ,stable = ?2 ,transspeed=?3 ,state=?4 " +
         "where point1 = ?5 and point2=?6 ")
     int updateValues(String line_name, double stable, double transspeed, String state,String point1,String point2);
+
+
+    @Transactional
+    @Modifying(clearAutomatically = true)
+    @Query(nativeQuery = true, value = "UPDATE site_line SET point1 = ?1 ,point2 = ?2 ,line_name = ?3 ," +
+        "line_type = ?4 ,line_info = ?5, length = ?6 where line_id = ?7" )
+    int updateSiteLineValue(String point1, String point2, String lineName, String lineType, String lineInfo, Double len, Long lineId);
 }
