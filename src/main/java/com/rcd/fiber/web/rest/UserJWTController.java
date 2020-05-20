@@ -6,6 +6,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.rcd.fiber.security.jwt.JWTFilter;
 import com.rcd.fiber.security.jwt.TokenProvider;
 import com.rcd.fiber.web.rest.auth.VerifyIdentity;
+import com.rcd.fiber.web.rest.errors.BadRequestAlertException;
 import com.rcd.fiber.web.rest.vm.LoginVM;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -50,7 +51,8 @@ public class UserJWTController {
     @Timed
     public ResponseEntity<Object> authorize(@Valid @RequestBody LoginVM loginVM, HttpServletRequest request) {
         // 若请求不来自http://localhost:9000/（后台管理项目），则验证私钥
-        /*if(!"http://localhost:9000/".equals(request.getHeader("Referer")))
+
+        if(!"http://localhost:9000/".equals(request.getHeader("Referer")))
         {
             try {
                 // 校验用户合法性
@@ -61,14 +63,13 @@ public class UserJWTController {
                 String code = jsonRes.getString("code");
                 System.out.println(code);
                 if (!"0".equals(code)) {
-                    throw new Exception("用户校验失败");
+                    throw new BadRequestAlertException("身份校验失败！", "VerifyIdentity", "Authorization failure");
                 }
             } catch (Exception e) {
-                JSONObject jsonMsg = new JSONObject();
-                jsonMsg.put("msg", "用户身份校验失败！");
-                return new ResponseEntity<>(jsonMsg.toJSONString(), new HttpHeaders(), HttpStatus.OK);
+                throw new BadRequestAlertException("身份校验失败！", "VerifyIdentity", "Unknown failure");
             }
-        }*/
+        }
+
         UsernamePasswordAuthenticationToken authenticationToken =
             new UsernamePasswordAuthenticationToken(loginVM.getUsername(), loginVM.getPassword());
 

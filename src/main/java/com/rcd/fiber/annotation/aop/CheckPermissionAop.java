@@ -6,6 +6,7 @@ import com.rcd.fiber.annotation.CheckPermission;
 import com.rcd.fiber.security.jwt.TokenProvider;
 import com.rcd.fiber.web.rest.UserJWTController;
 import com.rcd.fiber.web.rest.auth.Check;
+import com.rcd.fiber.web.rest.errors.BadRequestAlertException;
 import org.aspectj.lang.JoinPoint;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.AfterThrowing;
@@ -43,12 +44,11 @@ public class CheckPermissionAop {
             try{
                 JSONObject jsonObject = Check.doCheck(subject, checkPermission.object(), checkPermission.action(), UserJWTController.userMd5Map.get(subject));
                 if(!"0".equals(jsonObject.getString("code")))
-                    return;
+                    throw new BadRequestAlertException("您无权查看！", "CheckPermission", "no permission");
             }
             catch (Exception e)
             {
-                e.printStackTrace();
-                return;
+                throw new BadRequestAlertException("您无权查看！", "CheckPermission", "no permission");
             }
         }
         try {
