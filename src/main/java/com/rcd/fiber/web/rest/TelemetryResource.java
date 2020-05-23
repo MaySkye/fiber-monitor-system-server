@@ -78,14 +78,14 @@ public class TelemetryResource {
             //System.out.println("device_name: " + device_name);
             //System.out.println("data_name: " + data_name);
 
-            //持续更新数据的操作
+           /* //持续更新数据的操作
             double val = Math.random() * 10;
             val = (double) Math.round(val * 100) / 100;
             double state=0;
             if(val>9){
                 state=1;
             }
-            service.updateValue(val, site_name, device_name, data_name);
+            service.updateValue(val, site_name, device_name, data_name);*/
 
             List<Telemetry> telemetrys = service.getMonitorValue(site_name, device_name, data_name);
             if (telemetrys.size() >= 1) {

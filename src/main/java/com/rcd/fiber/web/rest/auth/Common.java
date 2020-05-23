@@ -1,16 +1,24 @@
 package com.rcd.fiber.web.rest.auth;
 
+import org.springframework.beans.factory.annotation.Configurable;
+import org.springframework.beans.factory.annotation.Value;
+
 import java.io.BufferedReader;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
 
+@Configurable
 public class Common {
     // 开发环境url
-    public static final String devUrlPrefix = "http://localhost:9090/";
+//    @Value("${tarobackend.devUrlPrefix}")
+    public static String devUrlPrefix;
     // 正式环境url
-    public static final String proUrlPrefix = "https://172.16.79.60:4433/api/";
-    public static final String opensslPath = "C:\\Program Files\\Git\\usr\\bin\\openssl";
+//    @Value("${tarobackend.proUrlPrefix}")
+    public static String proUrlPrefix = "https://192.168.253.2:4433/api/";
+
+//    @Value("${tarobackend.opensslPath}")
+    public static String opensslPath = "C:\\Program Files\\Git\\usr\\bin\\openssl";
 
     public static String getFileContent(FileInputStream fis, String encoding) throws IOException {
         try(BufferedReader br = new BufferedReader( new InputStreamReader(fis, encoding))) {

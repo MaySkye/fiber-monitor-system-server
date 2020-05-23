@@ -5,6 +5,7 @@ import com.codahale.metrics.annotation.Timed;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.rcd.fiber.security.jwt.JWTFilter;
 import com.rcd.fiber.security.jwt.TokenProvider;
+import com.rcd.fiber.web.rest.auth.Common;
 import com.rcd.fiber.web.rest.auth.VerifyIdentity;
 import com.rcd.fiber.web.rest.errors.BadRequestAlertException;
 import com.rcd.fiber.web.rest.vm.LoginVM;
@@ -58,6 +59,8 @@ public class UserJWTController {
                 // 校验用户合法性
                 String username = loginVM.getUsername();
                 String pemPath = loginVM.savePemFile();
+                System.out.println(Common.proUrlPrefix);
+                System.out.println(Common.opensslPath);
                 String strRes = VerifyIdentity.VerifyIdentity(username, pemPath);
                 JSONObject jsonRes = JSONObject.parseObject(strRes);
                 String code = jsonRes.getString("code");
@@ -70,6 +73,23 @@ public class UserJWTController {
             }
         }
 
+        UsernamePasswordAuthenticationToken authenticationToken =
+            new UsernamePasswordAuthenticationToken(loginVM.getUsername(), loginVM.getPassword());
+
+        Authentication authentication = this.authenticationManager.authenticate(authenticationToken);
+        SecurityContextHolder.getContext().setAuthentication(authentication);
+        boolean rememberMe = (loginVM.isRememberMe() == null) ? false : loginVM.isRememberMe();
+        String jwt = tokenProvider.createToken(authentication, rememberMe);
+        HttpHeaders httpHeaders = new HttpHeaders();
+        httpHeaders.add(JWTFilter.AUTHORIZATION_HEADER, "Bearer " + jwt);
+        return new ResponseEntity<>(new JWTToken(jwt), httpHeaders, HttpStatus.OK);
+    }
+
+    @PostMapping("/jgraphAuthenticate")
+    @Timed
+    public ResponseEntity<Object> jgraphAuthorize(@Valid @RequestBody LoginVM loginVM, HttpServletRequest request) {
+
+        System.out.println(loginVM.getUsername() +"  "+loginVM.getPassword());
         UsernamePasswordAuthenticationToken authenticationToken =
             new UsernamePasswordAuthenticationToken(loginVM.getUsername(), loginVM.getPassword());
 

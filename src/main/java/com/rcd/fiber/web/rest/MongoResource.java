@@ -52,7 +52,7 @@ public class MongoResource {
     //王伟：下载service（latest）文件
     @RequestMapping("/getLastestServiceFile")
     @ResponseBody
-    //@CheckPermission(value = true, object = "组态图", action = "查看")
+    @CheckPermission(value = true, object = "组态图", action = "查看")
     @Timed
     public void getLastestServiceFile(HttpServletRequest request, HttpServletResponse response,
                                       @RequestParam("site_name") String site_name,
