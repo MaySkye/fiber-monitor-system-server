@@ -47,7 +47,7 @@ public class SiteLineResource {
     @GetMapping("/findPaintInfo")
     @Timed
     public String getAllPaintInfo() {
-       // updateAllSiteLine();
+        updateAllSiteLine();
         List<Site> sitelist = siteservice.getAllSite();
         List<SiteLine> list = siteLineservice.getAllSiteLine();
         String siteInfo= getSiteJsonStr(sitelist);;

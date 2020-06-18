@@ -196,9 +196,9 @@ public class TelemetryResource {
             System.out.println("device_name: " + device_name);
             System.out.println("data_name: " + data_name);
 
-            if(data_name.equals("EDFA_复位")){
-                data_name = "复位";
-            }
+//            if(data_name.equals("EDFA_复位")){
+//                data_name = "复位";
+//            }
 
             if(data_name.equals("锁定状态")||data_name.equals("运行状态")||data_name.equals("使能")||
                 data_name.equals("复位")||data_name.equals("外部晶振")){

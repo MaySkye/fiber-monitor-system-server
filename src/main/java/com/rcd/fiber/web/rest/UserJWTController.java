@@ -51,8 +51,7 @@ public class UserJWTController {
     @Timed
     public ResponseEntity<Object> authorize(@Valid @RequestBody LoginVM loginVM, HttpServletRequest request) {
         // 若请求不来自http://localhost:9000/（后台管理项目），则验证私钥
-
-        if(!"http://localhost:9000/".equals(request.getHeader("Referer")))
+        if(!"http://localhost:9000/".equals(request.getHeader("Referer")) && !"true".equals(request.getHeader("jgraphx")))
         {
             try {
                 // 校验用户合法性
