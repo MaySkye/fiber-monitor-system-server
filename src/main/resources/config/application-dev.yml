@@ -43,7 +43,7 @@ spring:
 #        url: jdbc:h2:mem:fiber_monitor_system;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=FALSE
         url: jdbc:mysql://localhost:3306/fiber_monitor_system?useUnicode=true&characterEncoding=utf8&useSSL=false&useLegacyDatetimeCode=false&serverTimezone=UTC
         username: root
-        password: 123456
+        password: root
         hikari:
             auto-commit: false
     # 王伟配置的mongoDB
@@ -151,7 +151,7 @@ wsn:
     # 订阅配置
     receive:
         receiveAddr1: http://127.0.0.1:9011/wsn-core
-        receiveAddr2: http://127.0.0.1:9099/wsn-subscribe
+        receiveAddr2: http://127.0.0.1:9039/wsn-subscribe
         # 是否启用发布订阅 1 为启动 0为不启动
         status: 0
 #    发布配置
@@ -165,3 +165,7 @@ wsn:
         # 是否启用发布订阅 1 为启动 0为不启动
         status: 0
 
+tarobackend:
+    devUrlPrefix: http://localhost:9090/
+    proUrlPrefix: https://192.168.253.2:4433/api/
+    opensslPath: C:\\Program Files\\Git\\usr\\bin\\openssl

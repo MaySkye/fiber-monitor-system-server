@@ -153,10 +153,10 @@ public class TelemetryService {
             obj = JSONObject.parseObject(arr.getString(i));
             String data_name = obj.getString("name");
             String detected_value = obj.getString("value");
-            if (Float.parseFloat(detected_value) > 100) {
+           /* if (Float.parseFloat(detected_value) > 100) {
                 errReport.put(data_name, detected_value + "，超出合理范围！");
                 continue;
-            }
+            }*/
             if (telemetryRepository.updateDetectedValue(detected_value, site_name, device_name, data_name) <= 0) {
                 errReport.put(data_name, detected_value + "，修改失败！");
             }
