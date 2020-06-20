@@ -18,7 +18,7 @@ public class VoltdbJdbcBaseDao {
     private String dbUrl;
 
     //private String dbUrl = "jdbc:voltdb://192.168.99.12:21212";
-    private String url = "jdbc:voltdb://192.168.163.128:21212";
+    private String url = "jdbc:voltdb://192.168.253.101:21212";
 
     /**
      * 获取连接

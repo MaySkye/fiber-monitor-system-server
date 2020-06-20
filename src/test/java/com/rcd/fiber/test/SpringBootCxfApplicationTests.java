@@ -1,7 +1,7 @@
 package com.rcd.fiber.test;
 
-import com.rcd.fiber.base.wsn.SendWSNCommand;
-import com.rcd.fiber.base.wsn.UserNotificationProcessImpl;
+import com.rcd.fiber.base.soap.SendWSNCommand;
+import com.rcd.fiber.base.soap.wsn.UserNotificationProcessImpl;
 import org.bson.Document;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -52,6 +52,8 @@ public class SpringBootCxfApplicationTests {
 
     @Test
     public void test1() throws Exception {
+
+
         //本机地址
         String wsnAddr = "http://127.0.0.1:9011/wsn-core";
         String receiveAddr = "http://127.0.0.1:9008/wsn-subscribe";
@@ -64,6 +66,8 @@ public class SpringBootCxfApplicationTests {
         // 启接收服
         Endpoint endpint = Endpoint.publish(receiveAddr, implementor);
         receive.subscribe(id, "test1");
+
+
 
 
     }
