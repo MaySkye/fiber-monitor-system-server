@@ -10,9 +10,9 @@ package com.rcd.fiber.base.pub; /**
 public class CasePublish {
     private Trans trans;
 	//wsn程序中的地址
-    public static String wsnAddr = "http://127.0.0.1:9011/wsn-core";
+    public static String wsnAddr = "http://192.168.253.1:9011/wsn-core";
 	//sendAddr中保证不和其他发布程序的端口冲突
-    public static String sendAddr = "http://127.0.0.1:9019/wsn-send";
+    public static String sendAddr = "http://192.168.253.11:9039/wsn-send";
     public CasePublish(String sendAddr,String wsnAddr,String topic)
     {
         trans = new Trans(sendAddr,wsnAddr,topic);

@@ -158,7 +158,7 @@ public class TelemetryService {
                 continue;
             }*/
             if (telemetryRepository.updateDetectedValue(detected_value, site_name, device_name, data_name) <= 0) {
-                errReport.put(data_name, detected_value + "，修改失败！");
+                // errReport.put(data_name, detected_value + "，修改失败！");
             }
         }
         //若存在错误信息
