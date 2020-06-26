@@ -151,16 +151,16 @@ wsn:
     # 订阅配置
     receive:
         receiveAddr1: http://192.168.253.1:9011/wsn-core
-        receiveAddr2: http://192.168.253.5:9039/wsn-subscribe
+        receiveAddr2: http://192.168.253.11:9039/wsn-subscribe
         # 是否启用发布订阅 1 为启动 0为不启动
         status: 1
 #    发布配置
     send:
         # 注册时的配置
         wsnAddr1: http://192.168.253.1:9011/wsn-core
-        sendAddr2: http://192.168.253.5:9039/wsn-send
+        sendAddr2: http://192.168.253.11:9039/wsn-send
         # 发送订阅时
-        sendAddr3: http://192.168.253.5:9039/wsn-send
+        sendAddr3: http://192.168.253.11:9039/wsn-send
 
         # 是否启用发布订阅 1 为启动 0为不启动
         status: 1
