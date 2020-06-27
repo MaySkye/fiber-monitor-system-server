@@ -145,7 +145,7 @@ jhipster:
 # 自定义的一些参数
 # voltdb的参数
 voltdb:
-    url: jdbc:voltdb://192.168.163.128:21212
+    url: jdbc:voltdb://192.168.253.101:21212
 # 订阅发布的配置
 wsn:
     # 订阅配置

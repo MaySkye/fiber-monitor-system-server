@@ -14,10 +14,8 @@ public class VoltdbJdbcBaseDao {
     protected Connection conn = null; // 链接
     protected PreparedStatement ps = null; //
     protected ResultSet rs = null;
-    @Value("${voltdb.url}")
-    private String dbUrl;
 
-    //private String dbUrl = "jdbc:voltdb://192.168.99.12:21212";
+    @Value("${voltdb.url}")
     private String url = "jdbc:voltdb://192.168.253.101:21212";
 
     /**

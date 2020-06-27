@@ -45,6 +45,8 @@ import java.util.List;
 @Service
 @Transactional
 public class TelemetryService {
+    @Autowired
+    private VoltdbJdbcBaseDao voltdbJdbcBaseDao;
     private final Logger log = LoggerFactory.getLogger(TelemetryService.class);
     private final TelemetryRepository telemetryRepository;
 
@@ -76,7 +78,6 @@ public class TelemetryService {
 
     // 返回vlotdb内的所有数据
     public List<Telemetry> getVoltdbTelemetry() {
-        VoltdbJdbcBaseDao voltdbJdbcBaseDao = new VoltdbJdbcBaseDao();
         ResultSet set = voltdbJdbcBaseDao.executeQuery("select * from TELEMETRY");
         try {
             List<Telemetry> list = voltdbJdbcBaseDao.populate(set, TelemetryDTO.class);
@@ -95,7 +96,6 @@ public class TelemetryService {
 
     //赵艺： 根据设备名称和属性名称，查询vlotdb内的遥测数据
     public List<TelemetryDTO2> getVoltdbTelemetryValue(String site_name, String device_name, String data_name) {
-        VoltdbJdbcBaseDao voltdbJdbcBaseDao = new VoltdbJdbcBaseDao();
         ResultSet set ;
         try {
             set = voltdbJdbcBaseDao.executeQuery("select * from TELEMETRY where site_name = '"+site_name+"' and device_name = '"
@@ -117,7 +117,6 @@ public class TelemetryService {
 
     //赵艺： 根据设备名称和属性名称，查询vlotdb内的遥控数据
     public List<SignalDTO> getVoltdbSignalValue(String site_name, String device_name, String data_name) {
-        VoltdbJdbcBaseDao voltdbJdbcBaseDao = new VoltdbJdbcBaseDao();
         ResultSet set ;
         try {
             set = voltdbJdbcBaseDao.executeQuery("select * from telesignalling where site_name = '"+site_name+"' and device_name = '"
