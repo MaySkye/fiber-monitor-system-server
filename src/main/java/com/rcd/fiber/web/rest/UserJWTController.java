@@ -52,25 +52,25 @@ public class UserJWTController {
     @Timed
     public ResponseEntity<Object> authorize(@Valid @RequestBody LoginVM loginVM, HttpServletRequest request) {
         // 若请求不来自http://localhost:9000/（后台管理项目），则验证私钥
-        if(!"http://localhost:9000/".equals(request.getHeader("Referer")) && !"true".equals(request.getHeader("jgraphx")))
-        {
-            try {
-                // 校验用户合法性
-                String username = loginVM.getUsername();
-                String pemPath = loginVM.savePemFile();
-                System.out.println(Common.proUrlPrefix);
-                System.out.println(Common.opensslPath);
-                String strRes = VerifyIdentity.VerifyIdentity(username, pemPath);
-                JSONObject jsonRes = JSONObject.parseObject(strRes);
-                String code = jsonRes.getString("code");
-                System.out.println(code);
-                if (!"0".equals(code)) {
-                    throw new BadRequestAlertException("身份校验失败！", "VerifyIdentity", "Authorization failure");
-                }
-            } catch (Exception e) {
-                throw new BadRequestAlertException("身份校验失败！", "VerifyIdentity", "Unknown failure");
-            }
-        }
+//        if(!"http://localhost:9000/".equals(request.getHeader("Referer")) && !"true".equals(request.getHeader("jgraphx")))
+//        {
+//            try {
+//                // 校验用户合法性
+//                String username = loginVM.getUsername();
+//                String pemPath = loginVM.savePemFile();
+//                System.out.println(Common.proUrlPrefix);
+//                System.out.println(Common.opensslPath);
+//                String strRes = VerifyIdentity.VerifyIdentity(username, pemPath);
+//                JSONObject jsonRes = JSONObject.parseObject(strRes);
+//                String code = jsonRes.getString("code");
+//                System.out.println(code);
+//                if (!"0".equals(code)) {
+//                    throw new BadRequestAlertException("身份校验失败！", "VerifyIdentity", "Authorization failure");
+//                }
+//            } catch (Exception e) {
+//                throw new BadRequestAlertException("身份校验失败！", "VerifyIdentity", "Unknown failure");
+//            }
+//        }
 
         UsernamePasswordAuthenticationToken authenticationToken =
             new UsernamePasswordAuthenticationToken(loginVM.getUsername(), loginVM.getPassword());

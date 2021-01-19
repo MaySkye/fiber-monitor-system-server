@@ -1,9 +1,7 @@
 package com.rcd.fiber.service;
 
 import com.rcd.fiber.domain.entity.Site;
-import com.rcd.fiber.domain.entity.Telemetry;
 import com.rcd.fiber.repository.SiteRepository;
-import com.rcd.fiber.repository.TelemetryRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;

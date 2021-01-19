@@ -35,19 +35,17 @@ public class CheckPermissionAop {
     // 根据目标方法返回值是否为JSONArray，来决定返回值是JSONObject或JSONArray
     @Around(value = "pointcut() && @annotation(checkPermission)")
     public void around(ProceedingJoinPoint proceedingJoinPoint, CheckPermission checkPermission) throws Exception {
-        HttpServletRequest request = ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getRequest();
-        HttpServletResponse response = ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getResponse();
-        String token_base64 = request.getHeader("Authorization").substring(7);
-        String subject = TokenProvider.getClaims(token_base64).getSubject();
-        if(checkPermission.value())
-        {
-            try{
+        if (checkPermission.value()) {
+            HttpServletRequest request = ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getRequest();
+            HttpServletResponse response = ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getResponse();
+            // 尝试解析Token
+            String token_base64 = request.getHeader("Authorization").substring(7);
+            String subject = TokenProvider.getClaims(token_base64).getSubject();
+            try {
                 JSONObject jsonObject = Check.doCheck(subject, checkPermission.object(), checkPermission.action(), UserJWTController.userMd5Map.get(subject));
-                if(!"0".equals(jsonObject.getString("code")))
+                if (!"0".equals(jsonObject.getString("code")))
                     throw new BadRequestAlertException("您无权查看！", "CheckPermission", "no permission");
-            }
-            catch (Exception e)
-            {
+            } catch (Exception e) {
                 throw new BadRequestAlertException("您无权查看！", "CheckPermission", "no permission");
             }
         }

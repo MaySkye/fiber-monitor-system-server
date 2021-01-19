@@ -1,7 +1,6 @@
 package com.rcd.fiber.repository;
 
 import com.rcd.fiber.domain.entity.AlarmDevice;
-import com.rcd.fiber.domain.entity.TelemetryImage;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;

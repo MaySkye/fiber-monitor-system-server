@@ -41,20 +41,20 @@ public class MongoResource {
     }
 
     //王伟：获取service（latest）文件信息
-    @RequestMapping("/getLastestServiceFileInfo")
+    @RequestMapping("/getCurrentMxeFileInfo")
     @ResponseBody
     @Timed
-    public ServiceFileInfo getLastestServiceFileInfo(@RequestParam("site_name") String site_name,
+    public ServiceFileInfo getCurrentMxeFileInfo(@RequestParam("site_name") String site_name,
                                                      @RequestParam("site_level") String site_level) {
-        return service.getLastestServiceFileInfo(site_name, site_level);
+        return service.getCurrentMxeFileInfo(site_name, site_level);
     }
 
     //王伟：下载service（latest）文件
-    @RequestMapping("/getLastestServiceFile")
+    @RequestMapping("/getCurrentMxeFile")
     @ResponseBody
-    @CheckPermission(value = true, object = "组态图", action = "查看")
+    @CheckPermission(value = false, object = "组态图", action = "查看")
     @Timed
-    public void getLastestServiceFile(HttpServletRequest request, HttpServletResponse response,
+    public void getCurrentMxeFile(HttpServletRequest request, HttpServletResponse response,
                                       @RequestParam("site_name") String site_name,
                                       @RequestParam("site_level") String site_level) {
         System.out.println("site_name:"+site_name+"  site_level:"+site_level);

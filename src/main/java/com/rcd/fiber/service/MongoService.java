@@ -44,12 +44,12 @@ public class MongoService {
     private GridFSBucket gridFSBucket;
 
     //王伟：查询站点使用的service文件信息
-    public ServiceFileInfo getLastestServiceFileInfo(String site_name, String site_level) {
+    public ServiceFileInfo getCurrentMxeFileInfo(String site_name, String site_level) {
         Query query = new Query(Criteria
             .where("metadata.site_name").is(site_name)
             .and("metadata.site_level").is(site_level)
         );
-        return mongoRepository.getLastestServiceFileInfo(query);
+        return mongoRepository.getCurrentMxeFileInfo(query);
     }
 
     //王伟：下载站点使用的service文件

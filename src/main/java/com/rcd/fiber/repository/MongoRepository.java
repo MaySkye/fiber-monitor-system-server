@@ -30,7 +30,7 @@ public class MongoRepository {
 
 
     //王伟：查询站点使用的service文件信息
-    public ServiceFileInfo getLastestServiceFileInfo(Query query) {
+    public ServiceFileInfo getCurrentMxeFileInfo(Query query) {
         ServiceFileInfo info = mongoTemplate.findOne(query, ServiceFileInfo.class, bucketName + ".files");
         return info;
     }

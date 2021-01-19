@@ -1,6 +1,5 @@
 package com.rcd.fiber.base.soap;
 
-import com.rcd.fiber.service.WSNService;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import org.apache.commons.httpclient.HttpClient;
