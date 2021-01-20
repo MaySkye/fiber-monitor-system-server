@@ -2,17 +2,16 @@ package com.rcd.fiber.web.rest;
 
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
+import com.rcd.fiber.base.soap.wsn.UserNotificationProcessImpl;
 import com.rcd.fiber.service.TelemetryService;
 import com.rcd.fiber.service.dto.SignalDTO;
 import com.rcd.fiber.service.dto.TelemetryDTO;
-import com.rcd.fiber.utils.WWLogger;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.Random;
 
 /**
  * @Author:
@@ -28,13 +27,21 @@ public class TelemetryResource {
 
     @PostMapping("/getMonitorValueBySite")
     @ResponseBody
-    public JSONArray getVoltDBMonitorValue(@RequestBody JSONObject params) {
+    public JSONObject getVoltDBMonitorValue(@RequestBody JSONObject params) {
         String siteName = params.getString("siteName");
+        // 获取运行参数
         List<TelemetryDTO> vals = service.getVoltDBMonitorValue(siteName);
         List<SignalDTO> sigs = service.getVoltDBSignalValue(siteName);
-        JSONArray res = new JSONArray();
-        res.addAll(vals);
-        res.addAll(sigs);
+        JSONArray runtimeInfos = new JSONArray();
+        runtimeInfos.addAll(vals);
+        runtimeInfos.addAll(sigs);
+        // 获取告警信息
+        JSONArray eventInfos = new JSONArray();
+        UserNotificationProcessImpl.eventInfoDTOMap.get(siteName);
+        // 返回结果
+        JSONObject res = new JSONObject();
+        res.put("runtimeInfos", runtimeInfos);
+        res.put("eventInfos", eventInfos);
         return res;
     }
 }
