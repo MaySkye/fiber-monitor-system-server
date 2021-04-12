@@ -14,6 +14,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.RequestBody;
 
+import javax.annotation.Resource;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.List;
@@ -26,7 +27,7 @@ import java.util.List;
 @Transactional
 public class TelemetryService {
     private final Logger log = LoggerFactory.getLogger(TelemetryService.class);
-    @Autowired
+    @Resource(type = InfluxRepository.class)
     private InfluxRepository influxRepository;
 
     //王伟（2020-1-11）： 根据站点名称，查询voltDB内的遥测数据
