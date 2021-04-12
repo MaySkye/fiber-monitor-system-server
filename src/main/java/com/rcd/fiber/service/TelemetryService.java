@@ -74,30 +74,33 @@ public class TelemetryService {
      */
     public JSONObject getMonitorInfos(@RequestBody JSONObject params) {
         // 获取查询参数
-        String deviceId = params.getString("deviceId");
         String siteName = params.getString("siteName");
-        JSONArray props = params.getJSONArray("dataNames");
+        JSONArray items = params.getJSONArray("items");
 
         // 设备运行参数
         JSONArray runtimeInfos = new JSONArray();
 
-        for (int i = 0; i < props.size(); i++) {
-            // 新建查询参数
-            JSONObject query = new JSONObject();
-            query.put("site_name", siteName);
-            query.put("device_name", deviceId);
-            String dataName = props.getString(i);
-            query.put("data_name", dataName);
+        for (int i = 0; i < items.size(); i++) {
+            JSONObject item = items.getJSONObject(i);
+            JSONArray dataNames = item.getJSONArray("dataNames");
+            for(int j =0; j < dataNames.size(); j++){
+                // 新建查询参数
+                JSONObject query = new JSONObject();
+                query.put("site_name", siteName);
+                query.put("device_name", item.getString("deviceId"));
+                String dataName = dataNames.getString(j);
+                query.put("data_name", dataName);
 
-            // 查询
-            JSONObject info = null;
-            if (dataName.indexOf("锁定状态") != -1 || dataName.indexOf("运行状态") != -1) {
-                info = influxRepository.getSignalInfo(params);
-            } else {
-                info = influxRepository.getTelemetryInfo(params);
-            }
-            if (info != null) {
-                runtimeInfos.add(info);
+                // 查询
+                JSONObject info = null;
+                if (dataName.indexOf("锁定状态") != -1 || dataName.indexOf("运行状态") != -1) {
+                    info = influxRepository.getSignalInfo(query);
+                } else {
+                    info = influxRepository.getTelemetryInfo(query);
+                }
+                if (info != null) {
+                    runtimeInfos.add(info);
+                }
             }
         }
 
