@@ -6,7 +6,6 @@ import com.codahale.metrics.annotation.Timed;
 import com.rcd.fiber.annotation.CheckPermission;
 import com.rcd.fiber.domain.entity.ServiceFileInfo;
 import com.rcd.fiber.service.MongoService;
-import com.rcd.fiber.service.TelemetryService;
 import org.bson.Document;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

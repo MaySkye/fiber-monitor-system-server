@@ -3,6 +3,7 @@ package com.rcd.fiber.web.rest;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.rcd.fiber.base.soap.wsn.UserNotificationProcessImpl;
+import com.rcd.fiber.repository.InfluxRepository;
 import com.rcd.fiber.service.TelemetryService;
 import com.rcd.fiber.service.dto.SignalDTO;
 import com.rcd.fiber.service.dto.TelemetryDTO;
@@ -25,6 +26,8 @@ public class TelemetryResource {
     @Autowired
     private TelemetryService service;
 
+
+
     @PostMapping("/getMonitorValueBySite")
     @ResponseBody
     public JSONObject getVoltDBMonitorValue(@RequestBody JSONObject params) {
@@ -43,5 +46,11 @@ public class TelemetryResource {
         res.put("runtimeInfos", runtimeInfos);
         res.put("eventInfos", eventInfos);
         return res;
+    }
+
+    @PostMapping("/getMonitorInfos")
+    @ResponseBody
+    public JSONObject getMonitorInfos(@RequestBody JSONObject params) {
+        return service.getMonitorInfos(params);
     }
 }

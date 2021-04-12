@@ -167,10 +167,23 @@ dependencies {
     compile group: 'commons-codec', name: 'commons-codec', version: '1.10'
     // Use ", version: jhipster_dependencies_version, changing: true" if you want
     // to use a SNAPSHOT release instead of a stable release
+
     //王伟引入的mongoDB依赖 start
     compile 'org.springframework.boot:spring-boot-starter-data-mongodb:2.2.0.RELEASE'
     compile 'org.projectlombok:lombok:1.18.10'
     //王伟引入的mongoDB依赖 end
+
+    //王伟引入的influxDB依赖 start
+    compile 'org.influxdb:influxdb-java:2.21'
+    //王伟引入的influxDB依赖 end
+
+    //王伟引入的okhttp3依赖（解决冲突jar，源于influxdb-java） start
+    compile 'com.squareup.okhttp3:okhttp:3.14.9'
+    //王伟引入的okhttp3依赖（解决冲突jar，源于influxdb-java） end
+
+
+    compile 'commons-httpclient:commons-httpclient:3.1'
+
     compile group: "io.github.jhipster", name: "jhipster-framework"
     compile "io.dropwizard.metrics:metrics-core"
     compile "io.dropwizard.metrics:metrics-json"
@@ -252,7 +265,7 @@ dependencies {
 
     compile group: 'commons-logging', name: 'commons-logging', version: '1.2'
 
-    compile group: 'commons-httpclient', name: 'commons-httpclient', version: '3.1'
+
     compile group: 'dom4j', name: 'dom4j', version: '1.6.1'
     compile group: 'com.alibaba', name: 'fastjson', version: '1.2.58'
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk8:$kotlin_version"

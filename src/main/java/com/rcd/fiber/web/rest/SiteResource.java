@@ -6,13 +6,10 @@ import com.alibaba.fastjson.JSONObject;
 import com.codahale.metrics.annotation.Timed;
 import com.rcd.fiber.domain.entity.Site;
 import com.rcd.fiber.domain.entity.SiteLine;
-import com.rcd.fiber.domain.entity.Telemetry;
 import com.rcd.fiber.service.SiteLineService;
 import com.rcd.fiber.service.SiteService;
-import com.rcd.fiber.service.TelemetryService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;

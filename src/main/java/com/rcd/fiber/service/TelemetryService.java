@@ -1,12 +1,18 @@
 package com.rcd.fiber.service;
 
+import com.alibaba.fastjson.JSONArray;
+import com.alibaba.fastjson.JSONObject;
 import com.rcd.fiber.base.VoltdbJdbcBaseDao;
+import com.rcd.fiber.base.soap.wsn.UserNotificationProcessImpl;
+import com.rcd.fiber.repository.InfluxRepository;
 import com.rcd.fiber.service.dto.SignalDTO;
 import com.rcd.fiber.service.dto.TelemetryDTO;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.bind.annotation.RequestBody;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -20,6 +26,8 @@ import java.util.List;
 @Transactional
 public class TelemetryService {
     private final Logger log = LoggerFactory.getLogger(TelemetryService.class);
+    @Autowired
+    private InfluxRepository influxRepository;
 
     //王伟（2020-1-11）： 根据站点名称，查询voltDB内的遥测数据
     public List<TelemetryDTO> getVoltDBMonitorValue(String siteName) {
@@ -55,5 +63,51 @@ public class TelemetryService {
             voltdbJdbcBaseDao.closeConnection();
         }
         return null;
+    }
+
+
+    /**
+     * 获取监控信息
+     * @param params
+     * @return
+     */
+    public JSONObject getMonitorInfos(@RequestBody JSONObject params) {
+        // 获取查询参数
+        String deviceId = params.getString("deviceId");
+        String siteName = params.getString("siteName");
+        JSONArray props = params.getJSONArray("dataNames");
+
+        // 设备运行参数
+        JSONArray runtimeInfos = new JSONArray();
+
+        for (int i = 0; i < props.size(); i++) {
+            // 新建查询参数
+            JSONObject query = new JSONObject();
+            query.put("site_name", siteName);
+            query.put("device_name", deviceId);
+            String dataName = props.getString(i);
+            query.put("data_name", dataName);
+
+            // 查询
+            JSONObject info = null;
+            if (dataName.indexOf("锁定状态") != -1 || dataName.indexOf("运行状态") != -1) {
+                info = influxRepository.getSignalInfo(params);
+            } else {
+                info = influxRepository.getTelemetryInfo(params);
+            }
+            if (info != null) {
+                runtimeInfos.add(info);
+            }
+        }
+
+        // 获取告警信息
+        JSONArray eventInfos = new JSONArray();
+        UserNotificationProcessImpl.eventInfoDTOMap.get(siteName);
+
+        // 返回结果
+        JSONObject res = new JSONObject();
+        res.put("runtimeInfos", runtimeInfos);
+        res.put("eventInfos", eventInfos);
+        return res;
     }
 }

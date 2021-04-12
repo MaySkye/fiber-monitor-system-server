@@ -23,6 +23,12 @@ logging:
 debug: true
 
 spring:
+    # influxdb
+    influx:
+        url: http://localhost:8086
+        user: root
+        password: root
+        database: timeservice
     profiles:
         active: dev
         include:
