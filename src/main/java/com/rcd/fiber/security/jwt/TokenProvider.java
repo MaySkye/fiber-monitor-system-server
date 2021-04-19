@@ -91,6 +91,29 @@ public class TokenProvider {
             .compact();
     }
 
+    /**
+     * 王伟：强制签发token
+     * @param username
+     * @param rememberMe
+     * @return
+     */
+    public String createTokenByUserName(String username, boolean rememberMe){
+        long now = (new Date()).getTime();
+        Date validity;
+        if (rememberMe) {
+            validity = new Date(now + this.tokenValidityInMillisecondsForRememberMe);
+        } else {
+            validity = new Date(now + this.tokenValidityInMilliseconds);
+        }
+
+        return Jwts.builder()
+            .setSubject(username)
+            .claim(AUTHORITIES_KEY, "[\"默认用户\"]")
+            .signWith(key, SignatureAlgorithm.HS512)
+            .setExpiration(validity)
+            .compact();
+    }
+
     public Authentication getAuthentication(String token) {
         Claims claims = Jwts.parser()
             .setSigningKey(key)
