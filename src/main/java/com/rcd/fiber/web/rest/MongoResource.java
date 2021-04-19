@@ -58,15 +58,15 @@ public class MongoResource {
      * @param site_name
      * @param site_level
      */
-    @RequestMapping("/getCurrentMxeFile")
+    @RequestMapping("/getMxeFileBySiteNameAndLevel")
     @ResponseBody
     @CheckPermission(value = true, object = "组态图", action = "查看", checkDepartment = true)
     @Timed
-    public void getCurrentMxeFile(HttpServletRequest request, HttpServletResponse response,
+    public void getMxeFileBySiteNameAndLevel(HttpServletRequest request, HttpServletResponse response,
                                   @RequestParam("site_name") String site_name,
                                   @RequestParam("site_level") String site_level) {
         System.out.println("site_name:" + site_name + "  site_level:" + site_level);
-        service.getLatestServiceFile(request, response, site_name, site_level);
+        service.getMxeFileBySiteNameAndLevel(request, response, site_name, site_level);
     }
 
     /**

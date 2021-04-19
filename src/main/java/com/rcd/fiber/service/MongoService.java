@@ -76,7 +76,7 @@ public class MongoService {
     }
 
     //王伟：下载站点使用的service文件
-    public void getLatestServiceFile(HttpServletRequest request, HttpServletResponse response, String site_name, String site_level) {
+    public void getMxeFileBySiteNameAndLevel(HttpServletRequest request, HttpServletResponse response, String site_name, String site_level) {
         //查询GridFSFile文件信息
         Query query = new Query(Criteria
             .where("metadata.site_name").is(site_name)
