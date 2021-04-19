@@ -1,7 +1,6 @@
 package com.rcd.fiber.domain.entity;
 
 
-import java.io.File;
 import java.util.Date;
 
 import org.bson.types.ObjectId;
@@ -9,7 +8,7 @@ import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 @Document(collection = "bucket")
-public class ServiceFileInfo {
+public class MxeFileInfo {
     @Id
     private ObjectId _id;
     private String filename;

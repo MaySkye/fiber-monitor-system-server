@@ -2,14 +2,13 @@ package com.rcd.fiber.repository;
 
 
 import com.mongodb.client.gridfs.model.GridFSFile;
-import com.rcd.fiber.domain.entity.ServiceFileInfo;
+import com.rcd.fiber.domain.entity.MxeFileInfo;
 import org.bson.Document;
 import org.bson.types.ObjectId;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.query.Query;
-import org.springframework.data.mongodb.gridfs.GridFsResource;
 import org.springframework.data.mongodb.gridfs.GridFsTemplate;
 import org.springframework.stereotype.Repository;
 
@@ -30,13 +29,13 @@ public class MongoRepository {
 
 
     //王伟：查询站点使用的service文件信息
-    public ServiceFileInfo getCurrentMxeFileInfo(Query query) {
-        ServiceFileInfo info = mongoTemplate.findOne(query, ServiceFileInfo.class, bucketName + ".files");
+    public MxeFileInfo getCurrentMxeFileInfo(Query query) {
+        MxeFileInfo info = mongoTemplate.findOne(query, MxeFileInfo.class, bucketName + ".files");
         return info;
     }
     //赵艺：查询所有service文件信息
-    public List<ServiceFileInfo> getAllServiceInfo() {
-        List<ServiceFileInfo> infos = mongoTemplate.findAll( ServiceFileInfo.class,bucketName + ".files");
+    public List<MxeFileInfo> getAllServiceInfo() {
+        List<MxeFileInfo> infos = mongoTemplate.findAll( MxeFileInfo.class,bucketName + ".files");
         return infos;
     }
 
@@ -45,9 +44,10 @@ public class MongoRepository {
         GridFSFile gsFile = gridFsTemplate.findOne(query);
         return gsFile;
     }
+
     //赵艺： 删除某一文件
     public void delete(Query query){
-        mongoTemplate.findAndRemove(query, ServiceFileInfo.class, bucketName + ".files");
+        mongoTemplate.findAndRemove(query, MxeFileInfo.class, bucketName + ".files");
     }
 
     //王伟：下载service（latest）文件时查询信息

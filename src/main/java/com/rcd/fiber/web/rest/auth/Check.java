@@ -2,12 +2,14 @@ package com.rcd.fiber.web.rest.auth;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
+import org.springframework.stereotype.Component;
 
-import javax.swing.*;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
+
 public class Check {
+
     // 每次身份认证后 md5sum 值均不一样
     public static String Check(String policyname, String sub, String obj, String act, String env,
                                String username, String md5sum) throws Exception {
@@ -53,6 +55,7 @@ public class Check {
             return role;
         }
     }
+
     public static class ObjAttr {
         private String name;
         private String owner;
@@ -98,32 +101,8 @@ public class Check {
         }
     }
 
-    public static JSONObject doCheck(String user, String object, String action, String md5sum) throws Exception{
-        SubAttr sa = new SubAttr();
-        sa.setName(user);
-
-        ObjAttr oa = new ObjAttr();
-        oa.setName(object);
-
-        ActAttr aa = new ActAttr();
-        aa.setName(action);
-
-        SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-        EnvAttr ea = new EnvAttr();
-        ea.setTime(df.format(new Date()));
-
-        String sastr = JSON.toJSONString(sa);
-        System.out.println("sastr: " + sastr);
-        String oastr = JSON.toJSONString(oa);
-        String aastr = JSON.toJSONString(aa);
-        String eastr = JSON.toJSONString(ea);
-
-        String res = Check("运控分系统访问控制策略集合", sastr, oastr, aastr, eastr, user, md5sum);
-        return JSONObject.parseObject(res);
-    }
-
-    public static void main(String[] args) throws Exception{
-        String md5sum = "c01c38d953b2a73db0fbde01a44c816f";
+    public static void main(String[] args) throws Exception {
+        String md5sum = "25d2e3ba66ec9bff9f35de504650061b";
         //Check("策略1","zhao", "物联网资源/态势图","read","","zhao", md5sum);
 
         SubAttr sa = new SubAttr();
@@ -131,7 +110,7 @@ public class Check {
         sa.setRole("设备运维人员");
 
         ObjAttr oa = new ObjAttr();
-        oa.setName("组态图");
+        oa.setName("web管控资源/光纤光频传递分系统");
         oa.setOwner("wangwei");
 
         ActAttr aa = new ActAttr();
@@ -148,6 +127,6 @@ public class Check {
         String aastr = JSON.toJSONString(aa);
         String eastr = JSON.toJSONString(ea);
 
-        Check("运控分系统访问控制策略集合", sastr, oastr, aastr, eastr,"wangwei", md5sum);
+        Check("运控分系统访问控制策略集合", sastr, oastr, aastr, eastr, "wangwei", md5sum);
     }
 }

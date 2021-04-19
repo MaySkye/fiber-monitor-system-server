@@ -10,6 +10,10 @@ import java.lang.annotation.Target;
 @Retention(RetentionPolicy.RUNTIME)
 public @interface CheckPermission {
     boolean value() default true;
+
     String object() default "";
+
     String action() default "";
+
+    boolean checkDepartment() default false;
 }

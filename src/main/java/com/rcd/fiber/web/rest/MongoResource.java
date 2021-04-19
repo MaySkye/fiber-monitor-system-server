@@ -1,10 +1,9 @@
 package com.rcd.fiber.web.rest;
 
 import com.alibaba.fastjson.JSONArray;
-import com.alibaba.fastjson.JSONObject;
 import com.codahale.metrics.annotation.Timed;
 import com.rcd.fiber.annotation.CheckPermission;
-import com.rcd.fiber.domain.entity.ServiceFileInfo;
+import com.rcd.fiber.domain.entity.MxeFileInfo;
 import com.rcd.fiber.service.MongoService;
 import org.bson.Document;
 import org.slf4j.Logger;
@@ -14,11 +13,8 @@ import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.text.DateFormat;
 import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.HashMap;
-import java.util.List;
 
 /**
  * @Author:zhoayi
@@ -35,31 +31,51 @@ public class MongoResource {
     private final Logger logger = LoggerFactory.getLogger(MongoResource.class);
     private final MongoService service;
 
-   public MongoResource(MongoService service) {
+    public MongoResource(MongoService service) {
         this.service = service;
     }
 
-    //王伟：获取service（latest）文件信息
-    @RequestMapping("/getCurrentMxeFileInfo")
+    /**
+     * 根据站点名、站点等级获取文件的元数据
+     *
+     * @param site_name
+     * @param site_level
+     * @return
+     */
+    @RequestMapping("/getMxeFileInfoBySiteNameAndLevel")
     @ResponseBody
     @Timed
-    public ServiceFileInfo getCurrentMxeFileInfo(@RequestParam("site_name") String site_name,
-                                                     @RequestParam("site_level") String site_level) {
-        return service.getCurrentMxeFileInfo(site_name, site_level);
+    public MxeFileInfo getMxeFileInfoBySiteNameAndLevel(@RequestParam("site_name") String site_name,
+                                                        @RequestParam("site_level") String site_level) {
+        return service.getMxeFileInfoBySiteNameAndLevel(site_name, site_level);
     }
 
-    //王伟：下载service（latest）文件
+    /**
+     * 根据站点名、站点等级获取最新的组态图文件
+     *
+     * @param request
+     * @param response
+     * @param site_name
+     * @param site_level
+     */
     @RequestMapping("/getCurrentMxeFile")
     @ResponseBody
-    @CheckPermission(value = false, object = "组态图", action = "查看")
+    @CheckPermission(value = true, object = "组态图", action = "查看", checkDepartment = true)
     @Timed
     public void getCurrentMxeFile(HttpServletRequest request, HttpServletResponse response,
-                                      @RequestParam("site_name") String site_name,
-                                      @RequestParam("site_level") String site_level) {
-        System.out.println("site_name:"+site_name+"  site_level:"+site_level);
+                                  @RequestParam("site_name") String site_name,
+                                  @RequestParam("site_level") String site_level) {
+        System.out.println("site_name:" + site_name + "  site_level:" + site_level);
         service.getLatestServiceFile(request, response, site_name, site_level);
     }
 
+    /**
+     * 上传组态图文件
+     *
+     * @param multipartFile
+     * @param request
+     * @return
+     */
     @RequestMapping(value = "/upload", method = RequestMethod.POST)
     @ResponseBody
     public HashMap<String, String> upload(MultipartFile multipartFile,
@@ -67,65 +83,50 @@ public class MongoResource {
         Document metadata = new Document()
             .append("site_name", request.getParameter("site_name"))
             .append("site_level", request.getParameter("site_level"))
-            .append("latest", request.getParameter("latest"))
-            .append("filename",request.getParameter("filename"));
+            .append("department", request.getParameter("department"))
+            .append("filename", request.getParameter("filename"));
         return service.uploadServiceFile(multipartFile, metadata);
     }
 
-
-    //赵艺：查询所有service文件信息
-       /*
-    * {
-    file_name:
-    site_name:
-    site_level:
-    upload_time:
-    id:
-    },*/
+    /**
+     * 查询所有组态图文件信息
+     *
+     * @return
+     * @throws ParseException
+     */
     @RequestMapping("/getAllServiceInfo")
     @ResponseBody
-    public String getAllServiceInfo( ) throws ParseException {
-        List<ServiceFileInfo> infos=service.getAllServiceInfo();
-        JSONArray array = new JSONArray();
-        JSONObject jsonObject = null;
-        for(int i = 0 ; i < infos.size() ; i++) {
-            System.out.println(infos.get(i));
-            System.out.println("file_name:"+infos.get(i).getFilename());
-            System.out.println("site_name:"+infos.get(i).getMetadata().getString("site_name"));
-            System.out.println("site_level:"+infos.get(i).getMetadata().getString("site_level"));
-            DateFormat df = new SimpleDateFormat("EEE MMM dd HH:mm:ss zzz yyyy", java.util.Locale.ENGLISH);
-            System.out.println("upload_time:"+df.parse(infos.get(i).getUploadDate().toString()));
-            System.out.println("_id:"+infos.get(i).get_id());
-
-            jsonObject = new JSONObject();
-            jsonObject.put("file_name", infos.get(i).getFilename());
-            jsonObject.put("site_name", infos.get(i).getMetadata().getString("site_name"));
-            jsonObject.put("site_level", infos.get(i).getMetadata().getString("site_level"));
-            jsonObject.put("upload_time", infos.get(i).getUploadDate().toString());
-            jsonObject.put("md5", infos.get(i).getMd5());
-            jsonObject.put("id", infos.get(i).get_id());
-            array.add(jsonObject);
-        }
-        System.out.println("array.toString():"+array.toString());
-        return array.toString();
+    public JSONArray getAllServiceInfo() throws ParseException {
+        return service.getAllServiceInfo();
     }
 
 
-    //赵艺：下载组态图文件
+    /**
+     * 根据md5下载组态图文件
+     *
+     * @param request
+     * @param response
+     * @param md5
+     */
     @RequestMapping("/getFileByMD5")
     @ResponseBody
+    @CheckPermission(value = true, object = "组态图", action = "查看", checkDepartment = true)
     @Timed
     public void getFileByMD5(HttpServletRequest request, HttpServletResponse response,
-                                      @RequestParam("md5") String md5) {
-        System.out.println("get-md5: "+md5);
-        service.getFileInfo(request, response, md5);
+                             @RequestParam("md5") String md5) {
+        System.out.println("get-md5: " + md5);
+        service.getMxeFileByMd5(request, response, md5);
     }
 
-    //赵艺：删除
+    /**
+     * 根据md5删除组态图文件
+     *
+     * @param md5
+     */
     @GetMapping("/delete/{md5}")
     @Timed
     public void deleteSite(@PathVariable(value = "md5") String md5) {
-        System.out.println("md5: "+md5);
+        System.out.println("md5: " + md5);
         service.deleteFile(md5);
     }
 }

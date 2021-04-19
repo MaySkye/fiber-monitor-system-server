@@ -171,6 +171,19 @@ wsn:
         # 是否启用发布订阅 1 为启动 0为不启动
         status: 0
 
+# 授权系统
+auth:
+  url: https://10.109.253.3:20185/api/
+  opensslPath: C:\Program Files\Git\usr\bin\openssl
+  policyName: Web管控指挥系统资源控制策略
+  monitorGraphResource: web管控资源
+
+# 全局异常处理是否打印日志
+my-logging:
+  exception-handler:
+    printStackTrace: true
+
+
 tarobackend:
     devUrlPrefix: http://localhost:9090/
     proUrlPrefix: https://192.168.8.2:4433/api/
