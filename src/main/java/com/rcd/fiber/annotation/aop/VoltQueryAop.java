@@ -1,10 +1,8 @@
 package com.rcd.fiber.annotation.aop;
 
-import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.rcd.fiber.annotation.VoltQuery;
-import com.rcd.fiber.base.VoltdbJdbcBaseDao;
-import com.rcd.fiber.service.dto.TelemetryDTO;
+import com.rcd.fiber.config.VoltdbJdbcBaseConfig;
 import com.rcd.fiber.utils.SqlStringProcessor;
 import com.rcd.fiber.utils.WWLogger;
 import org.aspectj.lang.ProceedingJoinPoint;
@@ -12,7 +10,6 @@ import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.annotation.Pointcut;
 import org.aspectj.lang.reflect.MethodSignature;
-import org.bson.types.ObjectId;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -28,8 +25,8 @@ public class VoltQueryAop {
     private void pointcut() {
     }
 
-    @Autowired
-    private VoltdbJdbcBaseDao voltDao;
+//    @Autowired
+    private VoltdbJdbcBaseConfig voltDao;
 
     @Around("pointcut() && @annotation(query)")
     public Object around(ProceedingJoinPoint proceedingJoinPoint, VoltQuery query) throws Exception {

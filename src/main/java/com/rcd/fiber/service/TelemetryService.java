@@ -2,7 +2,7 @@ package com.rcd.fiber.service;
 
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
-import com.rcd.fiber.base.VoltdbJdbcBaseDao;
+import com.rcd.fiber.config.VoltdbJdbcBaseConfig;
 import com.rcd.fiber.base.soap.wsn.UserNotificationProcessImpl;
 import com.rcd.fiber.repository.InfluxRepository;
 import com.rcd.fiber.service.dto.EventInfoDTO;
@@ -30,29 +30,30 @@ public class TelemetryService {
     @Resource(type = InfluxRepository.class)
     private InfluxRepository influxRepository;
 
+    //    @Autowired
+    private VoltdbJdbcBaseConfig voltdbJdbcBaseConfig;
+
     //王伟（2020-1-11）： 根据站点名称，查询voltDB内的遥测数据
     public List<TelemetryDTO> getVoltDBMonitorValue(String siteName) {
-        VoltdbJdbcBaseDao voltdbJdbcBaseDao = new VoltdbJdbcBaseDao();
         ResultSet set;
         try {
-            set = voltdbJdbcBaseDao.executeQuery("select * from TELEMETRY where site_name = '" + siteName);
-            List<TelemetryDTO> list = voltdbJdbcBaseDao.populate(set, TelemetryDTO.class);
+            set = voltdbJdbcBaseConfig.executeQuery("select * from TELEMETRY where site_name = '" + siteName);
+            List<TelemetryDTO> list = voltdbJdbcBaseConfig.populate(set, TelemetryDTO.class);
             return list;
         } catch (Exception e) {
             e.printStackTrace();
         } finally {
-            voltdbJdbcBaseDao.closeConnection();
+            voltdbJdbcBaseConfig.closeConnection();
         }
         return null;
     }
 
     //王伟（2020-1-11）： 根据站点名称，查询voltDB内的遥控数据
     public List<SignalDTO> getVoltDBSignalValue(String siteName) {
-        VoltdbJdbcBaseDao voltdbJdbcBaseDao = new VoltdbJdbcBaseDao();
         ResultSet set;
         try {
-            set = voltdbJdbcBaseDao.executeQuery("select * from telesignalling where site_name = '" + siteName);
-            List<SignalDTO> list = voltdbJdbcBaseDao.populate(set, SignalDTO.class);
+            set = voltdbJdbcBaseConfig.executeQuery("select * from telesignalling where site_name = '" + siteName);
+            List<SignalDTO> list = voltdbJdbcBaseConfig.populate(set, SignalDTO.class);
             return list;
         } catch (SQLException e) {
             e.printStackTrace();
@@ -61,7 +62,7 @@ public class TelemetryService {
         } catch (IllegalAccessException e) {
             e.printStackTrace();
         } finally {
-            voltdbJdbcBaseDao.closeConnection();
+            voltdbJdbcBaseConfig.closeConnection();
         }
         return null;
     }

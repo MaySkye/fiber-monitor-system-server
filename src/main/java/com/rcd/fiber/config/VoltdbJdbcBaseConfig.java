@@ -1,4 +1,4 @@
-package com.rcd.fiber.base;
+package com.rcd.fiber.config;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
@@ -9,8 +9,8 @@ import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
-@Component
-public class VoltdbJdbcBaseDao {
+//@Component
+public class VoltdbJdbcBaseConfig {
     protected Connection conn = null; // 链接
     protected PreparedStatement ps = null; //
     protected ResultSet rs = null;
