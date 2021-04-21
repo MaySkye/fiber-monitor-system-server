@@ -18,6 +18,7 @@ import javax.annotation.Resource;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.List;
+import java.util.function.BiConsumer;
 
 /**
  * @Author:
@@ -77,33 +78,32 @@ public class TelemetryService {
     public JSONObject getMonitorInfos(@RequestBody JSONObject params) {
         // 获取查询参数
         String siteName = params.getString("siteName");
-        JSONArray items = params.getJSONArray("items");
+        JSONArray deviceNames = params.getJSONArray("deviceNames");
 
         // 设备运行参数
         JSONArray runtimeInfos = new JSONArray();
 
-        for (int i = 0; i < items.size(); i++) {
-            JSONObject item = items.getJSONObject(i);
-            JSONArray dataNames = item.getJSONArray("dataNames");
-            for (int j = 0; j < dataNames.size(); j++) {
-                // 新建查询参数
-                JSONObject query = new JSONObject();
-                query.put("site_name", siteName);
-                query.put("device_name", item.getString("deviceId"));
-                String dataName = dataNames.getString(j);
-                query.put("data_name", dataName);
-
-                // 查询
-                JSONObject info = null;
-                if (dataName.indexOf("锁定状态") != -1 || dataName.indexOf("运行状态") != -1) {
-                    info = influxRepository.getSignalInfo(query);
-                } else {
-                    info = influxRepository.getTelemetryInfo(query);
-                }
-                if (info != null) {
+        for (int i = 0; i < deviceNames.size(); i++) {
+            JSONObject query = new JSONObject();
+            query.put("site_name", siteName);
+            query.put("device_name", deviceNames.getString(i));
+            // Consumer
+            BiConsumer<String, Object> consumer = (String deviceName, Object infosObj) -> {
+                JSONArray infos = (JSONArray) infosObj;
+                for (int j = 0; j < infos.size(); j++) {
+                    JSONObject info = infos.getJSONObject(j);
+                    // 添加分组查询被省去的字段
+                    info.put("data_name", deviceName);
                     runtimeInfos.add(info);
                 }
-            }
+            };
+            JSONObject groupRes = null;
+            // 查询signal表
+            groupRes = influxRepository.getSignalInfo(query);
+            if (groupRes != null) groupRes.forEach(consumer);
+            // 查询telemetry表
+            groupRes = influxRepository.getTelemetryInfo(query);
+            if (groupRes != null) groupRes.forEach(consumer);
         }
 
         // 获取告警信息
