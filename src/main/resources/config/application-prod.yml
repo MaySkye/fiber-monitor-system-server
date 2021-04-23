@@ -28,7 +28,7 @@ spring:
     url: http://10.109.253.3:20218
     user: root
     password: root@buaa
-    database: timeservice
+    database: newiot
   profiles:
     active: dev
     include:

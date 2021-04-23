@@ -11,6 +11,8 @@ import org.dom4j.io.SAXReader;
 
 import javax.jws.WebService;
 import java.util.*;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ConcurrentLinkedDeque;
 
 /**
  * 客户端ws处理程序
@@ -20,7 +22,7 @@ import java.util.*;
     serviceName = "NotificationProcessImpl")
 public class UserNotificationProcessImpl implements INotificationProcess {
 
-    public static Map<String, List<EventInfoDTO>> eventInfoDTOMap = new HashMap<>();
+    public static ConcurrentHashMap<String, ConcurrentLinkedDeque<EventInfoDTO>> eventInfoDTOMap = new ConcurrentHashMap<>();
 
 
     public UserNotificationProcessImpl() {
@@ -63,18 +65,18 @@ public class UserNotificationProcessImpl implements INotificationProcess {
         // 创建提醒事件对象
         EventInfoDTO eventInfoDTO = new EventInfoDTO(siteName, deviceName, dataName, eventType, eventLevel, value, timestamp);
         System.out.println("eventInfoDTO：" + eventInfoDTO.toString());
-        List<EventInfoDTO> list = UserNotificationProcessImpl.eventInfoDTOMap.get(siteName);
+        ConcurrentLinkedDeque<EventInfoDTO> list = UserNotificationProcessImpl.eventInfoDTOMap.get(siteName);
         if (list != null) {
             // 删除上一个提醒事件
             for (EventInfoDTO infoDTO : list) {
-                if (infoDTO.getSiteName().equals(siteName) && infoDTO.getDeviceName().equals(deviceName) && infoDTO.getDataName().equals(dataName)) {
+                if (infoDTO.getDeviceName().equals(deviceName) && infoDTO.getDataName().equals(dataName)) {
                     list.remove(eventInfoDTO);
                     break;
                 }
             }
             list.add(eventInfoDTO);
         } else {
-            list = new LinkedList<>();
+            list = new ConcurrentLinkedDeque<>();
             list.add(eventInfoDTO);
             UserNotificationProcessImpl.eventInfoDTOMap.put(siteName, list);
         }

@@ -18,6 +18,7 @@ import javax.annotation.Resource;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.List;
+import java.util.concurrent.ConcurrentLinkedDeque;
 import java.util.function.BiConsumer;
 
 /**
@@ -107,7 +108,7 @@ public class TelemetryService {
         }
 
         // 获取告警信息
-        List<EventInfoDTO> eventInfoDTOS = UserNotificationProcessImpl.eventInfoDTOMap.get(siteName);
+        ConcurrentLinkedDeque<EventInfoDTO> eventInfoDTOS = UserNotificationProcessImpl.eventInfoDTOMap.get(siteName);
 
         // 返回结果
         JSONObject res = new JSONObject();

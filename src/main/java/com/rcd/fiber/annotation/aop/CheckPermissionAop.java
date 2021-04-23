@@ -77,6 +77,8 @@ public class CheckPermissionAop {
                 } else if (siteLevel != null && siteName != null) {
                     MxeFileInfo info = mongoService.getMxeFileInfoBySiteNameAndLevel(siteName, siteLevel);
                     targetObject = info.getMetadata().getString("department");
+                } else if (request.getParameter("department") != null) {
+                    targetObject = request.getParameter("department");
                 }
             }
             try {

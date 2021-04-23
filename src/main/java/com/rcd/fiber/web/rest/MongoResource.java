@@ -60,7 +60,7 @@ public class MongoResource {
      */
     @RequestMapping("/getMxeFileBySiteNameAndLevel")
     @ResponseBody
-    @CheckPermission(value = true, object = "组态图", action = "查看", checkDepartment = true)
+    @CheckPermission(value = true, object = "", action = "查看", checkDepartment = true)
     @Timed
     public void getMxeFileBySiteNameAndLevel(HttpServletRequest request, HttpServletResponse response,
                                   @RequestParam("site_name") String site_name,
@@ -77,6 +77,7 @@ public class MongoResource {
      * @return
      */
     @RequestMapping(value = "/upload", method = RequestMethod.POST)
+    @CheckPermission(value = false, object = "", action = "上传", checkDepartment = true)
     @ResponseBody
     public HashMap<String, String> upload(MultipartFile multipartFile,
                                           HttpServletRequest request) {
@@ -110,7 +111,7 @@ public class MongoResource {
      */
     @RequestMapping("/getFileByMD5")
     @ResponseBody
-    @CheckPermission(value = true, object = "组态图", action = "查看", checkDepartment = true)
+    @CheckPermission(value = true, object = "", action = "查看", checkDepartment = true)
     @Timed
     public void getFileByMD5(HttpServletRequest request, HttpServletResponse response,
                              @RequestParam("md5") String md5) {
