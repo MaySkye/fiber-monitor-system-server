@@ -1,6 +1,7 @@
 package com.rcd.fiber.base.soap.wsn;
 
 import com.rcd.fiber.base.soap.INotificationProcess;
+import com.rcd.fiber.base.start.NotificationHandler;
 import com.rcd.fiber.service.dto.EventInfoDTO;
 import com.rcd.fiber.utils.WWLogger;
 import com.rcd.fiber.web.rest.WSNResource;
@@ -22,7 +23,7 @@ import java.util.concurrent.ConcurrentLinkedDeque;
     serviceName = "NotificationProcessImpl")
 public class UserNotificationProcessImpl implements INotificationProcess {
 
-    public static ConcurrentHashMap<String, ConcurrentLinkedDeque<EventInfoDTO>> eventInfoDTOMap = new ConcurrentHashMap<>();
+    public static NotificationHandler notificationHandler = new NotificationHandler();
 
 
     public UserNotificationProcessImpl() {
@@ -32,7 +33,7 @@ public class UserNotificationProcessImpl implements INotificationProcess {
     /**
      * 中间件函数：拦截并对notification进行预处理
      */
-    public String notificationProcess(String notification) {
+    public synchronized String notificationProcess(String notification) {
         String msg = getValueFromXMLFragment(notification, "message");
         String eventType = null, eventLevel = null, siteName = null, deviceName = null, dataName = null, value = null, timestamp = null;
         try {
@@ -64,22 +65,7 @@ public class UserNotificationProcessImpl implements INotificationProcess {
         }
         // 创建提醒事件对象
         EventInfoDTO eventInfoDTO = new EventInfoDTO(siteName, deviceName, dataName, eventType, eventLevel, value, timestamp);
-        System.out.println("eventInfoDTO：" + eventInfoDTO.toString());
-        ConcurrentLinkedDeque<EventInfoDTO> list = UserNotificationProcessImpl.eventInfoDTOMap.get(siteName);
-        if (list != null) {
-            // 删除上一个提醒事件
-            for (EventInfoDTO infoDTO : list) {
-                if (infoDTO.getDeviceName().equals(deviceName) && infoDTO.getDataName().equals(dataName)) {
-                    list.remove(eventInfoDTO);
-                    break;
-                }
-            }
-            list.add(eventInfoDTO);
-        } else {
-            list = new ConcurrentLinkedDeque<>();
-            list.add(eventInfoDTO);
-            UserNotificationProcessImpl.eventInfoDTOMap.put(siteName, list);
-        }
+        notificationHandler.addNewEvent(eventInfoDTO);
         return notification;
     }
 

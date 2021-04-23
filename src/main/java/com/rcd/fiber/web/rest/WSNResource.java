@@ -19,23 +19,6 @@ public class WSNResource {
     @Autowired
     private WSNService wsnService;
 
-
-    /**
-     * 根据站点名获取提醒事件信息
-     *
-     * @param info
-     * @return
-     */
-    @PostMapping("/getEventInfo")
-    @Timed
-    @ResponseBody
-    public String getEventInfo(@RequestBody String info) {
-        JSONObject obj = JSONObject.parseObject(info);
-        String siteName = obj.getString("siteName");
-        String jsonEventInfoDTOList = JSON.toJSONString(UserNotificationProcessImpl.eventInfoDTOMap.get(siteName));
-        return jsonEventInfoDTOList;
-    }
-
     /**
      * 发送遥控信息：修改设备监控值
      *

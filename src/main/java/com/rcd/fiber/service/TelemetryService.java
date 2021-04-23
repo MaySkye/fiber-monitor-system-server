@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import javax.annotation.Resource;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ConcurrentLinkedDeque;
 import java.util.function.BiConsumer;
@@ -107,13 +108,11 @@ public class TelemetryService {
             if (groupRes != null) groupRes.forEach(consumer);
         }
 
-        // 获取告警信息
-        ConcurrentLinkedDeque<EventInfoDTO> eventInfoDTOS = UserNotificationProcessImpl.eventInfoDTOMap.get(siteName);
-
         // 返回结果
         JSONObject res = new JSONObject();
+        // 获取告警信息
         res.put("runtimeInfos", runtimeInfos);
-        res.put("eventInfos", eventInfoDTOS);
+        res.put("eventInfos", UserNotificationProcessImpl.notificationHandler.getEventsBySite(siteName));
         return res;
     }
 }

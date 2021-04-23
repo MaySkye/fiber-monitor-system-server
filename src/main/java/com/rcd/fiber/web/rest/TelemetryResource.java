@@ -26,28 +26,6 @@ public class TelemetryResource {
     @Autowired
     private TelemetryService service;
 
-
-
-    @PostMapping("/getMonitorValueBySite")
-    @ResponseBody
-    public JSONObject getVoltDBMonitorValue(@RequestBody JSONObject params) {
-        String siteName = params.getString("siteName");
-        // 获取运行参数
-        List<TelemetryDTO> vals = service.getVoltDBMonitorValue(siteName);
-        List<SignalDTO> sigs = service.getVoltDBSignalValue(siteName);
-        JSONArray runtimeInfos = new JSONArray();
-        runtimeInfos.addAll(vals);
-        runtimeInfos.addAll(sigs);
-        // 获取告警信息
-        JSONArray eventInfos = new JSONArray();
-        UserNotificationProcessImpl.eventInfoDTOMap.get(siteName);
-        // 返回结果
-        JSONObject res = new JSONObject();
-        res.put("runtimeInfos", runtimeInfos);
-        res.put("eventInfos", eventInfos);
-        return res;
-    }
-
     @PostMapping("/getMonitorInfos")
     @ResponseBody
     public JSONObject getMonitorInfos(@RequestBody JSONObject params) {
