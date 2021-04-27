@@ -1,7 +1,9 @@
 package com.rcd.fiber.web.rest.auth;
 
 import com.rcd.fiber.utils.WWLogger;
+import net.bytebuddy.implementation.bytecode.Throw;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.PostConstruct;
@@ -9,6 +11,7 @@ import java.io.BufferedReader;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.util.Locale;
 
 @Component
 public class Common {
@@ -23,14 +26,29 @@ public class Common {
         Common.proUrlPrefix = proUrlPrefix;
     }
 
+    @Value("${auth.opensslPathForWindows}")
+    String opensslPathForWindows = "";
+    @Value("${auth.opensslPathForLinux}")
+    String opensslPathForLinux = "";
 
-    @Value("${auth.opensslPath}")
-    public void setOpensslPath(String opensslPath) {
-        Common.opensslPath = opensslPath;
-    }
 
     @PostConstruct
-    public void logStatus(){
+    public void opensslPathForWindows() throws Exception {
+        String os = System.getProperty("os.name").toLowerCase();
+        if (os.indexOf("windows") != -1) {
+            WWLogger.info("openssl：使用windows版本路径");
+            opensslPath = opensslPathForWindows;
+        } else if (os.indexOf("linux") != -1) {
+            WWLogger.info("openssl：使用linux版本路径");
+            opensslPath = opensslPathForLinux;
+        } else {
+            throw new Exception("不适用的操作系统");
+        }
+    }
+
+
+    @PostConstruct
+    public void logStatus() {
         WWLogger.info("授权管理： proUrlPrefix：" + proUrlPrefix + "，opensslPath" + opensslPath);
     }
 

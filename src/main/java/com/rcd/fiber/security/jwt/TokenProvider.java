@@ -108,7 +108,7 @@ public class TokenProvider {
 
         return Jwts.builder()
             .setSubject(username)
-            .claim(AUTHORITIES_KEY, "[\"默认用户\"]")
+            .claim(AUTHORITIES_KEY, "[\"ROLE_USER\"]")
             .signWith(key, SignatureAlgorithm.HS512)
             .setExpiration(validity)
             .compact();

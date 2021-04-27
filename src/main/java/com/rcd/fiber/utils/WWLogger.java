@@ -15,7 +15,7 @@ public class WWLogger {
         NONE
     }
 
-    public static final LogLevel logLevel = LogLevel.ERROR;
+    public static final LogLevel logLevel = LogLevel.INFO;
 
     /**
      * 内部方法，打印所在方法
@@ -23,13 +23,14 @@ public class WWLogger {
     private static void printCurrentMethod() {
         StackTraceElement[] stacks = Thread.currentThread().getStackTrace();
         StackTraceElement element = (StackTraceElement) stacks[4];
-        String out = MessageFormat.format("      \033[47;35m{0} --- {1}()  Line: {2} --- {3}\033[0m", element.getClassName(), element.getMethodName(), element.getLineNumber(),new Date().toLocaleString());
+        String out = MessageFormat.format("      \033[47;35m{0} --- {1}()  Line: {2} --- {3}\033[0m", element.getClassName(), element.getMethodName(), element.getLineNumber(), new Date().toLocaleString());
         System.out.println(out);
     }
 
 
     /**
      * 调试日志, example: WWLogger.debugF("Message: {0}", content)
+     *
      * @param pattern
      * @param args
      */
@@ -39,6 +40,7 @@ public class WWLogger {
 
     /**
      * 调试日志
+     *
      * @param args
      */
     public static void debug(Object... args) {
@@ -52,6 +54,7 @@ public class WWLogger {
 
     /**
      * 信息日志,  example: WWLogger.infoF("Message: {0}", content)
+     *
      * @param pattern
      * @param args
      */
@@ -61,6 +64,7 @@ public class WWLogger {
 
     /**
      * 信息日志
+     *
      * @param args
      */
     public static void info(Object... args) {
@@ -73,6 +77,7 @@ public class WWLogger {
 
     /**
      * 警告日志,  example: WWLogger.warnF("Message: {0}", content)
+     *
      * @param pattern
      * @param args
      */
@@ -83,6 +88,7 @@ public class WWLogger {
 
     /**
      * 警告日志
+     *
      * @param args
      */
     public static void warn(Object... args) {
@@ -94,9 +100,9 @@ public class WWLogger {
     }
 
 
-
     /**
      * 错误日志, example: WWLogger.error("Message: {0}", content)
+     *
      * @param pattern
      * @param args
      */
@@ -106,6 +112,7 @@ public class WWLogger {
 
     /**
      * 错误日志
+     *
      * @param args
      */
     public static void error(Object... args) {
@@ -118,6 +125,7 @@ public class WWLogger {
 
     /**
      * 内部方法，判断是否需要打印该等级的日志
+     *
      * @param printLevel
      * @return
      */
@@ -127,6 +135,7 @@ public class WWLogger {
 
     /**
      * 内部方法，根据等级打印日志
+     *
      * @param level
      * @param content
      */

@@ -11,10 +11,6 @@ public class WSNService {
     PublisherHandler publisherHandler;
 
     public JSONObject sendControlInfo(String info){
-        publisherHandler.sendControlInfo(info);
-        JSONObject res= new JSONObject();
-        res.put("status", "success");
-        res.put("msg", "发布成功！");
-        return res;
+        return publisherHandler.sendControlInfo(info);
     }
 }
