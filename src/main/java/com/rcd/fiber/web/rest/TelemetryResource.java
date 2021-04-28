@@ -1,18 +1,14 @@
 package com.rcd.fiber.web.rest;
 
-import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
-import com.rcd.fiber.base.soap.wsn.UserNotificationProcessImpl;
-import com.rcd.fiber.repository.InfluxRepository;
+import com.rcd.fiber.security.jwt.TokenProvider;
 import com.rcd.fiber.service.TelemetryService;
-import com.rcd.fiber.service.dto.SignalDTO;
-import com.rcd.fiber.service.dto.TelemetryDTO;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
+import javax.servlet.http.HttpServletRequest;
 
 /**
  * @Author:
@@ -30,5 +26,25 @@ public class TelemetryResource {
     @ResponseBody
     public JSONObject getMonitorInfos(@RequestBody JSONObject params) {
         return service.getMonitorInfos(params);
+    }
+
+
+    @PostMapping("/validSSO")
+    @ResponseBody
+    public JSONObject validSSO(@RequestBody JSONObject info, HttpServletRequest request) {
+        System.out.println("start");
+        try {
+            // 尝试解析Token
+            String token_base64 = request.getHeader("Authorization").substring(7);
+            String user = TokenProvider.getClaims(token_base64).getSubject();
+            UserJWTController.userMd5Map.put(user, info.getString("hash"));
+            JSONObject res = new JSONObject();
+            res.put("type", "success");
+            return res;
+        } catch (Exception e) {
+            JSONObject res = new JSONObject();
+            res.put("type", "error");
+            return res;
+        }
     }
 }

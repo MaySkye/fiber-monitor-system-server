@@ -36,11 +36,11 @@ public class Common {
     public void opensslPathForWindows() throws Exception {
         String os = System.getProperty("os.name").toLowerCase();
         if (os.indexOf("windows") != -1) {
-            WWLogger.info("openssl：使用windows版本路径");
             opensslPath = opensslPathForWindows;
+            WWLogger.info("openssl：使用windows版本路径：" + opensslPath);
         } else if (os.indexOf("linux") != -1) {
-            WWLogger.info("openssl：使用linux版本路径");
             opensslPath = opensslPathForLinux;
+            WWLogger.info("openssl：使用linux版本路径：" + opensslPath);
         } else {
             throw new Exception("不适用的操作系统");
         }
@@ -49,7 +49,7 @@ public class Common {
 
     @PostConstruct
     public void logStatus() {
-        WWLogger.info("授权管理： proUrlPrefix：" + proUrlPrefix + "，opensslPath" + opensslPath);
+        WWLogger.info("授权管理： proUrlPrefix：" + proUrlPrefix);
     }
 
 

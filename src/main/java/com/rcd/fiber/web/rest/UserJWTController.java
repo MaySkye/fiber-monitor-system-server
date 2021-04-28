@@ -17,12 +17,12 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.context.request.RequestContextHolder;
+import org.springframework.web.context.request.ServletRequestAttributes;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
 import java.util.Enumeration;
@@ -44,6 +44,25 @@ public class UserJWTController {
     public UserJWTController(TokenProvider tokenProvider, AuthenticationManager authenticationManager) {
         this.tokenProvider = tokenProvider;
         this.authenticationManager = authenticationManager;
+    }
+
+    @PostMapping("/validSSO")
+    @ResponseBody
+    public JSONObject validSSO(@RequestBody JSONObject info, HttpServletRequest request) {
+        System.out.println("start");
+        try {
+            // 尝试解析Token
+            String token_base64 = request.getHeader("Authorization").substring(7);
+            String user = TokenProvider.getClaims(token_base64).getSubject();
+            userMd5Map.put(user, info.getString("hash"));
+            JSONObject res = new JSONObject();
+            res.put("type", "success");
+            return res;
+        } catch (Exception e) {
+            JSONObject res = new JSONObject();
+            res.put("type", "error");
+            return res;
+        }
     }
 
     /**

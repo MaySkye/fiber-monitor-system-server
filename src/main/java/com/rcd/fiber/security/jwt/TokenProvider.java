@@ -151,7 +151,7 @@ public class TokenProvider {
     }
 
 
-    public static Claims getClaims(String authToken)
+    public static Claims getClaims(String authToken) throws Exception
     {
         String secret = jHipsterProperties.getSecurity().getAuthentication().getJwt().getBase64Secret();
         byte[] keyBytes = Decoders.BASE64.decode(secret);

@@ -169,7 +169,7 @@ wsn:
         sendAddr3: http://10.109.253.3:9040/wsn-send
 
         # 是否启用发布订阅 1 为启动 0为不启动
-        status: 0
+        status: 1
 
 # 授权系统
 auth:
