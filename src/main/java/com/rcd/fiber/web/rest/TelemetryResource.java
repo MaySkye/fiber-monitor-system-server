@@ -27,24 +27,4 @@ public class TelemetryResource {
     public JSONObject getMonitorInfos(@RequestBody JSONObject params) {
         return service.getMonitorInfos(params);
     }
-
-
-    @PostMapping("/validSSO")
-    @ResponseBody
-    public JSONObject validSSO(@RequestBody JSONObject info, HttpServletRequest request) {
-        System.out.println("start");
-        try {
-            // 尝试解析Token
-            String token_base64 = request.getHeader("Authorization").substring(7);
-            String user = TokenProvider.getClaims(token_base64).getSubject();
-            UserJWTController.userMd5Map.put(user, info.getString("hash"));
-            JSONObject res = new JSONObject();
-            res.put("type", "success");
-            return res;
-        } catch (Exception e) {
-            JSONObject res = new JSONObject();
-            res.put("type", "error");
-            return res;
-        }
-    }
 }
