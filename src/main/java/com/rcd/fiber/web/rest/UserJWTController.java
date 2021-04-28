@@ -6,9 +6,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.rcd.fiber.config.exceptionHandler.PermissionException;
 import com.rcd.fiber.security.jwt.JWTFilter;
 import com.rcd.fiber.security.jwt.TokenProvider;
-import com.rcd.fiber.web.rest.auth.Common;
 import com.rcd.fiber.web.rest.auth.VerifyIdentity;
-import com.rcd.fiber.web.rest.errors.BadRequestAlertException;
 import com.rcd.fiber.web.rest.vm.LoginVM;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -18,14 +16,9 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.context.request.RequestContextHolder;
-import org.springframework.web.context.request.ServletRequestAttributes;
 
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
-import java.util.Enumeration;
 import java.util.HashMap;
 
 /**
@@ -49,16 +42,16 @@ public class UserJWTController {
     @PostMapping("/validSSO")
     @ResponseBody
     public JSONObject validSSO(@RequestBody JSONObject info, HttpServletRequest request) {
-        System.out.println("start");
         try {
             // 尝试解析Token
-            String token_base64 = request.getHeader("Authorization").substring(7);
+            String token_base64 = info.getString("token").substring(7);
             String user = TokenProvider.getClaims(token_base64).getSubject();
             userMd5Map.put(user, info.getString("hash"));
             JSONObject res = new JSONObject();
             res.put("type", "success");
             return res;
         } catch (Exception e) {
+            e.printStackTrace();
             JSONObject res = new JSONObject();
             res.put("type", "error");
             return res;
