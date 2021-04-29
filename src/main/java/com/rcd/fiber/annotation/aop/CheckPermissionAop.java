@@ -71,13 +71,24 @@ public class CheckPermissionAop {
                 String md5 = request.getParameter("md5");
                 String siteLevel = request.getParameter("site_level");
                 String siteName = request.getParameter("site_name");
+                // 根据md5查询mxe文件权限
                 if (md5 != null) {
                     MxeFileInfo info = mongoService.getMxeFileInfoByMd5(md5);
+                    if (info == null) {
+                        throw new Exception("找不到组态图", new Throwable("MxeFile not found"));
+                    }
                     targetObject = info.getMetadata().getString("department");
-                } else if (siteLevel != null && siteName != null) {
+                }
+                // 根据站点名、站点等级查询mxe文件权限
+                else if (siteLevel != null && siteName != null) {
                     MxeFileInfo info = mongoService.getMxeFileInfoBySiteNameAndLevel(siteName, siteLevel);
+                    if (info == null) {
+                        throw new Exception("找不到组态图", new Throwable("MxeFile not found"));
+                    }
                     targetObject = info.getMetadata().getString("department");
-                } else if (request.getParameter("department") != null) {
+                }
+                // 检验分系统
+                else if (request.getParameter("department") != null) {
                     targetObject = request.getParameter("department");
                 }
             }
