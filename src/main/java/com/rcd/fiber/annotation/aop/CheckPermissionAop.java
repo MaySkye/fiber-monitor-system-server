@@ -1,5 +1,6 @@
 package com.rcd.fiber.annotation.aop;
 
+import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.rcd.fiber.annotation.CheckPermission;
 import com.rcd.fiber.config.exceptionHandler.PermissionException;
@@ -24,6 +25,8 @@ import org.springframework.web.context.request.ServletRequestAttributes;
 import javax.annotation.PostConstruct;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
+import java.io.PrintWriter;
 
 @Aspect
 @Component
@@ -106,8 +109,25 @@ public class CheckPermissionAop {
     }
 
     @AfterThrowing(value = "pointcut() && @annotation(checkPermission)", throwing = "ex")
-    public void afterThrowing(JoinPoint joinPoint, CheckPermission checkPermission, Exception ex) {
-        System.out.println("【异常】【CheckPermission.afterThrowing切面方法】请求：" + checkPermission.value());
+    public void afterThrowing(JoinPoint joinPoint, CheckPermission checkPermission, Exception ex) throws IOException {
+        HttpServletResponse response = ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getResponse();
+        // 返回信息
+        JSONObject res = new JSONObject();
+        // 设置标题
+        res.put("title", ex.getMessage());
+        // 尝试获取原因
+        if (ex.getCause() != null) {
+            res.put("detail", ex.getCause().getMessage());
+        }
+        // 写入异常类型
+        res.put("type", ex.getClass().getSimpleName());
+        // 写出信息
+        response.setCharacterEncoding("utf-8");
+        response.setStatus(504);
+        PrintWriter writer = response.getWriter();
+        writer.write(JSON.toJSONString(res));
+        writer.close();
+        WWLogger.error("【异常】【CheckPermission.afterThrowing切面方法】请求：" + ex.getMessage());
         ex.printStackTrace();
     }
 
