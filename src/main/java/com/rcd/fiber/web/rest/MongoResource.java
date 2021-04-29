@@ -63,8 +63,8 @@ public class MongoResource {
     @CheckPermission(value = true, object = "", action = "查看", checkDepartment = true)
     @Timed
     public void getMxeFileBySiteNameAndLevel(HttpServletRequest request, HttpServletResponse response,
-                                  @RequestParam("site_name") String site_name,
-                                  @RequestParam("site_level") String site_level) {
+                                             @RequestParam("site_name") String site_name,
+                                             @RequestParam("site_level") String site_level) {
         System.out.println("site_name:" + site_name + "  site_level:" + site_level);
         service.getMxeFileBySiteNameAndLevel(request, response, site_name, site_level);
     }
@@ -109,12 +109,12 @@ public class MongoResource {
      * @param response
      * @param md5
      */
-    @RequestMapping("/getFileByMD5")
+    @RequestMapping("/getMxeFileByMd5")
     @ResponseBody
     @CheckPermission(value = true, object = "", action = "查看", checkDepartment = true)
     @Timed
-    public void getFileByMD5(HttpServletRequest request, HttpServletResponse response,
-                             @RequestParam("md5") String md5) {
+    public void getMxeFileByMd5(HttpServletRequest request, HttpServletResponse response,
+                                @RequestParam("md5") String md5) {
         System.out.println("get-md5: " + md5);
         service.getMxeFileByMd5(request, response, md5);
     }

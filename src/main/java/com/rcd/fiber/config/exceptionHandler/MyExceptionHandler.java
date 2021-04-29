@@ -58,8 +58,9 @@ public class MyExceptionHandler {
         }
         // 写入异常类型
         res.put("type", e.getClass().getSimpleName());
+        String m = e.getMessage();
         // 授权异常
-        if (e instanceof PermissionException) {
+        if (PermissionException.TYPE_TOKEN_EXPIRED.equals(e.getMessage()) || PermissionException.TYPE_TOKEN_FORMAT_ERROR.equals(e.getMessage()) || PermissionException.TYPE_TOKEN_SIGNATURE_FAIL.equals(e.getMessage()) || PermissionException.TYPE_AUTH_FAIL.equals(e.getMessage())) {
             response.setStatus(401);
         }
         // 数据库约束异常

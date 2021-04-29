@@ -69,11 +69,17 @@ public class UserJWTController {
             // 校验用户合法性
             String username = loginVM.getUsername();
             String pemPath = loginVM.savePemFile();
-            String strRes = VerifyIdentity.VerifyIdentity(username, pemPath);
-            JSONObject jsonRes = JSONObject.parseObject(strRes);
-            String code = jsonRes.getString("code");
-            if (!"0".equals(code)) {
-                throw new PermissionException("身份校验失败！", "认证失败");
+            try {
+                String strRes = VerifyIdentity.VerifyIdentity(username, pemPath);
+                JSONObject jsonRes = JSONObject.parseObject(strRes);
+                String code = jsonRes.getString("code");
+                if (!"0".equals(code)) {
+                    throw new PermissionException(PermissionException.TYPE_AUTH_FAIL, "认证失败");
+                }
+            } catch (PermissionException e) {
+                throw e;
+            } catch (Exception e) {
+                throw new PermissionException(PermissionException.TYPE_AUTH_FAIL, e.getCause().getMessage());
             }
         }
 

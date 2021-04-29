@@ -7,6 +7,7 @@ public class PermissionException extends Exception {
     public static final String TYPE_TOKEN_EXPIRED = "Token过期";
     public static final String TYPE_TOKEN_SIGNATURE_FAIL = "Token验证失败";
     public static final String TYPE_UNKNOWN = "未知异常";
+    public static final String TYPE_AUTH_FAIL = "身份校验失败";
 
 
     public PermissionException(String msg, String cause) throws Exception {

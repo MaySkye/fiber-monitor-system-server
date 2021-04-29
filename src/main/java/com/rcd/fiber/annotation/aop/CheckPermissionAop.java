@@ -81,15 +81,11 @@ public class CheckPermissionAop {
                     targetObject = request.getParameter("department");
                 }
             }
-            try {
-                // 检查权限
-                String check = Check.Check(policyName, user, monitorGraphResource + "/" + targetObject, action, "", user, UserJWTController.userMd5Map.get(user));
-                JSONObject res = JSONObject.parseObject(check);
-                if (!"0".equals(res.getString("code")))
-                    throw new PermissionException("您无权查看", "请联系管理员！");
-            } catch (Exception e) {
+            // 检查权限
+            String check = Check.Check(policyName, user, monitorGraphResource + "/" + targetObject, action, "", user, UserJWTController.userMd5Map.get(user));
+            JSONObject res = JSONObject.parseObject(check);
+            if (!"0".equals(res.getString("code")))
                 throw new PermissionException("您无权查看", "请联系管理员！");
-            }
         }
         try {
             proceedingJoinPoint.proceed(); //执行程序
