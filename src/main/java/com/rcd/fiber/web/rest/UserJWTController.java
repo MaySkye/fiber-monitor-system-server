@@ -79,7 +79,7 @@ public class UserJWTController {
             } catch (PermissionException e) {
                 throw e;
             } catch (Exception e) {
-                throw new PermissionException(PermissionException.TYPE_AUTH_FAIL, e.getCause().getMessage());
+                throw new PermissionException(PermissionException.TYPE_AUTH_FAIL, e.getMessage());
             }
         }
 
