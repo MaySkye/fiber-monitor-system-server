@@ -9,6 +9,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
+import java.sql.SQLException;
+import java.util.List;
 
 /**
  * @Author:
@@ -26,5 +28,12 @@ public class TelemetryResource {
     @ResponseBody
     public JSONObject getMonitorInfos(@RequestBody JSONObject params) {
         return service.getMonitorInfos(params);
+    }
+
+
+    @PostMapping("/getAllControlRecordByParams")
+    @ResponseBody
+    public List<JSONObject> getAllControlRecordByParams(@RequestBody JSONObject params) throws Exception {
+        return service.getAllControlRecordByParams(params);
     }
 }
