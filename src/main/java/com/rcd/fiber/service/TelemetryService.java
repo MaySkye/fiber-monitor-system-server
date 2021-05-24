@@ -45,42 +45,49 @@ public class TelemetryService {
      * @param params
      * @return
      */
-    public JSONObject getMonitorInfos(@RequestBody JSONObject params) {
-        // 获取查询参数
-        String siteName = params.getString("siteName");
-        JSONArray deviceNames = params.getJSONArray("deviceNames");
-
-        // 设备运行参数
-        JSONArray runtimeInfos = new JSONArray();
-
-        for (int i = 0; i < deviceNames.size(); i++) {
-            JSONObject query = new JSONObject();
-            query.put("site_name", siteName);
-            query.put("device_name", deviceNames.getString(i));
-            // Consumer
-            BiConsumer<String, Object> consumer = (String deviceName, Object infosObj) -> {
-                JSONArray infos = (JSONArray) infosObj;
-                for (int j = 0; j < infos.size(); j++) {
-                    JSONObject info = infos.getJSONObject(j);
-                    // 添加分组查询被省去的字段
-                    info.put("data_name", deviceName);
-                    runtimeInfos.add(info);
-                }
-            };
-            JSONObject groupRes = null;
-            // 查询signal表
-            groupRes = influxRepository.getSignalInfo(query);
-            if (groupRes != null) groupRes.forEach(consumer);
-            // 查询telemetry表
-            groupRes = influxRepository.getTelemetryInfo(query);
-            if (groupRes != null) groupRes.forEach(consumer);
-        }
-
+    public JSONObject getMonitorInfos(@RequestBody JSONArray params) {
         // 返回结果
         JSONObject res = new JSONObject();
-        // 获取告警信息
+        // 设备运行参数
+        JSONArray runtimeInfos = new JSONArray();
+        // 告警信息
+        JSONArray eventInfos = new JSONArray();
+        // 遍历所有站点
+        for(int i = 0; i < params.size(); i++){
+            JSONObject param = params.getJSONObject(i);
+            // 获取查询参数
+            String siteName = param.getString("siteName");
+            JSONArray deviceNames = param.getJSONArray("deviceNames");
+            // 根据站点、设备名查influxDB
+            for(int j = 0; j < deviceNames.size(); j++){
+                JSONObject query = new JSONObject();
+                query.put("site_name", siteName);
+                query.put("device_name", deviceNames.getString(j));
+                // Consumer
+                BiConsumer<String, Object> consumer = (String deviceName, Object infosObj) -> {
+                    JSONArray infos = (JSONArray) infosObj;
+                    for (int k = 0; k < infos.size(); k++) {
+                        JSONObject info = infos.getJSONObject(k);
+                        // 添加分组查询被省去的字段
+                        info.put("data_name", deviceName);
+                        runtimeInfos.add(info);
+                    }
+                };
+                // 查询signal表
+                JSONObject sigs = influxRepository.getSignalInfo(query);
+                if (sigs != null) sigs.forEach(consumer);
+                // 查询telemetry表
+                JSONObject tels = influxRepository.getTelemetryInfo(query);
+                if (tels != null) tels.forEach(consumer);
+            }
+            // 获取告警信息
+            List<EventInfoDTO> events = UserNotificationProcessImpl.notificationHandler.getEventsBySite(siteName);
+            eventInfos.addAll(events);
+        }
+
+        // 获取查询参数
         res.put("runtimeInfos", runtimeInfos);
-        res.put("eventInfos", UserNotificationProcessImpl.notificationHandler.getEventsBySite(siteName));
+        res.put("eventInfos", eventInfos);
         return res;
     }
 

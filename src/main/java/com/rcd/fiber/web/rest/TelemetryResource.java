@@ -1,5 +1,6 @@
 package com.rcd.fiber.web.rest;
 
+import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.rcd.fiber.security.jwt.TokenProvider;
 import com.rcd.fiber.service.TelemetryService;
@@ -26,7 +27,7 @@ public class TelemetryResource {
 
     @PostMapping("/getMonitorInfos")
     @ResponseBody
-    public JSONObject getMonitorInfos(@RequestBody JSONObject params) {
+    public JSONObject getMonitorInfos(@RequestBody JSONArray params) {
         return service.getMonitorInfos(params);
     }
 
