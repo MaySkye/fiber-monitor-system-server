@@ -77,7 +77,7 @@ public class MongoResource {
      * @return
      */
     @RequestMapping(value = "/upload", method = RequestMethod.POST)
-    @CheckPermission(value = false, object = "", action = "上传", checkDepartment = true)
+    @CheckPermission(value = true, object = "", action = "编辑", checkDepartment = true)
     @ResponseBody
     public HashMap<String, String> upload(MultipartFile multipartFile,
                                           HttpServletRequest request) {
