@@ -74,7 +74,7 @@ public class CheckPermissionAop {
                 String md5 = request.getParameter("md5");
                 String siteLevel = request.getParameter("site_level");
                 String siteName = request.getParameter("site_name");
-                // 根据md5查询mxe文件权限
+                // 根据md5获取组态图时，查询mxe文件所需的分系统权限
                 if (md5 != null) {
                     MxeFileInfo info = mongoService.getMxeFileInfoByMd5(md5);
                     if (info == null) {
@@ -82,7 +82,7 @@ public class CheckPermissionAop {
                     }
                     targetObject = info.getMetadata().getString("department");
                 }
-                // 根据站点名、站点等级查询mxe文件权限
+                // 根据站点名、站点等级获取组态图时，查询mxe文件所需的分系统权限
                 else if (siteLevel != null && siteName != null) {
                     MxeFileInfo info = mongoService.getMxeFileInfoBySiteNameAndLevel(siteName, siteLevel);
                     if (info == null) {
@@ -90,7 +90,7 @@ public class CheckPermissionAop {
                     }
                     targetObject = info.getMetadata().getString("department");
                 }
-                // 检验分系统
+                // 上传组态图时，检查分系统权限
                 else if (request.getParameter("department") != null) {
                     targetObject = request.getParameter("department");
                 }
