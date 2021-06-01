@@ -57,7 +57,7 @@ public class MongoService {
     public MxeFileInfo getMxeFileInfoBySiteNameAndLevel(String siteName, String siteLevel) {
         Query query = new Query(Criteria
             .where("metadata.site_name").is(siteName)
-            .and("metadata.site_level").is(siteLevel)
+//            .and("metadata.site_level").is(siteLevel)
         );
         return mongoRepository.getCurrentMxeFileInfo(query);
     }
@@ -80,7 +80,8 @@ public class MongoService {
         //查询GridFSFile文件信息
         Query query = new Query(Criteria
             .where("metadata.site_name").is(site_name)
-            .and("metadata.site_level").is(site_level));
+//            .and("metadata.site_level").is(site_level)
+        );
         query.with(Sort.by(Sort.Order.desc("uploadDate")));
         GridFSFile gsFile = mongoRepository.getLatestServiceFile(query);
         System.out.println("查询完成");
