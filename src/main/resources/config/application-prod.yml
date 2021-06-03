@@ -151,14 +151,14 @@ voltdb:
 wsn:
   # 订阅配置
   receive:
-    receiveAddr1: http://10.109.253.3:9011/wsn-core  # 服务器地址
+    receiveAddr1: http://192.168.1.115:20500/wsn-core  # 服务器地址
     receiveAddr2: http://192.168.231.63:9038/wsn-subscribe  # 使用本机ip+端口
     # 是否启用发布订阅 1 为启动 0为不启动
     status: 1
   #    发布配置
   send:
     # 注册时的配置
-    wsnAddr1: http://10.109.253.3:9011/wsn-core  # 服务器地址
+    wsnAddr1: http://192.168.1.115:20500/wsn-core  # 服务器地址
     sendAddr2: http://192.168.231.63:9039/wsn-send  # 使用本机ip+端口
     # 发送订阅时
     sendAddr3: http://192.168.231.63:9040/wsn-send  # 使用本机ip+端口
@@ -178,7 +178,7 @@ control:
   url: jdbc:mysql://10.112.137.203:3306/by?useSSL=false&serverTimezone=Asia/Shanghai
   user: root
   password: 123456
-  
+
 # 全局异常处理是否打印日志
 my-logging:
   exception-handler:
