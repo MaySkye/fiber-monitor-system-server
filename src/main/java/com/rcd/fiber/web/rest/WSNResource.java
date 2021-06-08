@@ -28,9 +28,10 @@ public class WSNResource {
     @PostMapping("/sendControlInfo")
     @Timed
     @ResponseBody
-    public JSONObject sendControlInfo(@RequestBody String info) {
-        System.out.println(" editTelemetryValue-info: " + info);
-        wsnService.sendControlInfo(info);
+    public JSONObject sendControlInfo(@RequestBody JSONObject params) {
+        System.out.println(" editTelemetryValue-info: " + params.toJSONString());
+        wsnService.sendControlInfo(params.getString("xml"));
+        String password = params.getString("password");
         return new JSONObject();
     }
 }
