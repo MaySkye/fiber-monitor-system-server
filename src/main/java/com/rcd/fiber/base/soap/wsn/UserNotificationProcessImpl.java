@@ -5,6 +5,7 @@ import com.rcd.fiber.base.start.NotificationHandler;
 import com.rcd.fiber.service.dto.EventInfoDTO;
 import com.rcd.fiber.utils.WWLogger;
 import com.rcd.fiber.web.rest.WSNResource;
+import com.rcd.fiber.websocket.EventPublisher;
 import org.dom4j.Document;
 import org.dom4j.DocumentHelper;
 import org.dom4j.Element;
@@ -66,6 +67,8 @@ public class UserNotificationProcessImpl implements INotificationProcess {
         // 创建提醒事件对象
         EventInfoDTO eventInfoDTO = new EventInfoDTO(siteName, deviceName, dataName, eventType, eventLevel, value, timestamp);
         notificationHandler.addNewEvent(eventInfoDTO);
+        // 广播时间
+        EventPublisher.sendEvent(eventInfoDTO);
         return notification;
     }
 

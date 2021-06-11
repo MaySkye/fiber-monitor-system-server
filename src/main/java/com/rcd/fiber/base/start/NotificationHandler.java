@@ -11,7 +11,7 @@ public class NotificationHandler {
     // 站点名--设备名--属性名
     ConcurrentHashMap<String, ConcurrentHashMap<String, ConcurrentHashMap<String, EventInfoDTO>>> events = new ConcurrentHashMap<>();
 
-    public synchronized void addNewEvent(EventInfoDTO event) {
+    public void addNewEvent(EventInfoDTO event) {
         // 获取站点事件表
         ConcurrentHashMap<String, ConcurrentHashMap<String, EventInfoDTO>> eventsOfSite = events.get(event.getSiteName());
         // 如果站点事件表为空
