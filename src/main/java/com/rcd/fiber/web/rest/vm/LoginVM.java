@@ -55,10 +55,10 @@ public class LoginVM {
         this.pemFileContent = pemFileContent;
     }
 
-    public String savePemFile() throws Exception
+    public static String savePemFile(String pemFileContent, String username) throws Exception
     {
         if(pemFileContent==null || pemFileContent.length() == 0) return null;
-        String filePath = MessageFormat.format("{0}/{1}.pem", System.getProperty("java.io.tmpdir"), username);
+        String filePath = MessageFormat.format("{0}/{1}-{2}.pem", System.getProperty("java.io.tmpdir"), username, System.currentTimeMillis());
         File file = new File(filePath);
             FileOutputStream fileOutputStream = new FileOutputStream(file);
             fileOutputStream.write(pemFileContent.getBytes());

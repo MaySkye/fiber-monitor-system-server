@@ -32,7 +32,6 @@ public class PublisherHandler {
     }
 
     // 王伟：修改设备监控值
-    @Async
     public JSONObject sendControlInfo(String info) {
         CasePublish pub = new CasePublish(receiveAddr1, sendAddr3, "control");
         //发布主题

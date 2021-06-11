@@ -68,7 +68,7 @@ public class UserJWTController {
         if (!"http://localhost:9000/".equals(request.getHeader("Referer")) && !"true".equals(request.getHeader("jgraphx"))) {
             // 校验用户合法性
             String username = loginVM.getUsername();
-            String pemPath = loginVM.savePemFile();
+            String pemPath = loginVM.savePemFile(loginVM.getPemFileContent(), loginVM.getUsername());
             try {
                 String strRes = VerifyIdentity.VerifyIdentity(username, pemPath);
                 JSONObject jsonRes = JSONObject.parseObject(strRes);
