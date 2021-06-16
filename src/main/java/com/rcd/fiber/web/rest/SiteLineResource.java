@@ -40,7 +40,6 @@ public class SiteLineResource {
         //读取返回数据
         List<SiteLine> list = siteLineservice.getAllSiteLine();
         String jsonListEmp = siteLineToJson(list);
-        System.out.println("jsonListEmp:  " + jsonListEmp);
         return jsonListEmp;
     }
 

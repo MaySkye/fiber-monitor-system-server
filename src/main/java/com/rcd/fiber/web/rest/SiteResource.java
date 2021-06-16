@@ -40,7 +40,6 @@ public class SiteResource {
         List<Site> list = siteservice.getAllSite();
         //list.stream().forEach(x->System.out.println(x));
         String jsonListEmp = getSiteJsonStr(list);
-        System.out.println("jsonListEmp:  " + jsonListEmp);
         return jsonListEmp;
         //return ResponseEntity.ok(list);
     }
