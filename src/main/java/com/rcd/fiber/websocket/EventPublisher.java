@@ -10,7 +10,7 @@ import javax.websocket.*;
 import javax.websocket.server.ServerEndpoint;
 import java.io.IOException;
 import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.ConcurrentSkipListSet;
+import java.util.concurrent.ConcurrentLinkedDeque;
 
 /**
  * websocket地址 ws://localhost:8888/event-websocket 单线程异常不会抛错，而断开连接
@@ -21,10 +21,10 @@ import java.util.concurrent.ConcurrentSkipListSet;
 @Component
 public class EventPublisher {
     // 站点名 - 用户名列表
-    static ConcurrentHashMap<String, ConcurrentSkipListSet<String>> siteUsersDict;
+    static ConcurrentHashMap<String, ConcurrentLinkedDeque<String>> siteUsersDict;
 
     // 用户名 -- session
-    private static ConcurrentHashMap<String, ConcurrentSkipListSet<Session>> allUserSessions = new ConcurrentHashMap<>();
+    private static ConcurrentHashMap<String, ConcurrentLinkedDeque<Session>> allUserSessions = new ConcurrentHashMap<>();
 
     static JSONObject ILLEGAL_USER = new JSONObject() {{
         put("type", "msg");
@@ -58,12 +58,14 @@ public class EventPublisher {
             try {
                 String username = TokenProvider.getClaims(token).getSubject();
                 session.getAsyncRemote().sendText(CONNECTED_SUCCESS.toJSONString());
+                session.getAsyncRemote().sendText("{\"siteName\":\"西安\",\"deviceName\":\"Keithley_2000型多用万用表\",\"dataName\":\"透射峰电压\",\"eventType\":\"exception\",\"eventLevel\":\"alarm\",\"value\":111}");
                 addNewUser(username, session);
                 JSONArray arr = params.getJSONArray("sites");
                 for (int i = 0; i < arr.size(); i++) {
                     addNewSiteUserItem(arr.getString(i), username);
                 }
             } catch (Exception e) {
+                e.printStackTrace();
                 handleIllegalUser(session);
             }
         } else {
@@ -87,18 +89,18 @@ public class EventPublisher {
     }
 
     private static void addNewSiteUserItem(String siteName, String username) {
-        ConcurrentSkipListSet allUsersOfSite = siteUsersDict.get(siteName);
+        ConcurrentLinkedDeque allUsersOfSite = siteUsersDict.get(siteName);
         if (allUsersOfSite == null) {
-            allUsersOfSite = new ConcurrentSkipListSet<String>();
+            allUsersOfSite = new ConcurrentLinkedDeque<String>();
             siteUsersDict.put(siteName, allUsersOfSite);
         }
         allUsersOfSite.add(username);
     }
 
     private static void addNewUser(String username, Session session) {
-        ConcurrentSkipListSet<Session> sessions = allUserSessions.get(username);
+        ConcurrentLinkedDeque<Session> sessions = allUserSessions.get(username);
         if (sessions == null) {
-            sessions = new ConcurrentSkipListSet<>();
+            sessions = new ConcurrentLinkedDeque<Session>();
             allUserSessions.put(username, sessions);
         }
         sessions.add(session);
@@ -107,11 +109,11 @@ public class EventPublisher {
     public static void sendEvent(EventInfoDTO event) {
         String siteName = event.getSiteName();
         // 获取订阅该站点时间的所有用户名
-        ConcurrentSkipListSet<String> allUserNamesOfSite = siteUsersDict.get(siteName);
+        ConcurrentLinkedDeque<String> allUserNamesOfSite = siteUsersDict.get(siteName);
         if (allUserNamesOfSite != null) {
             for (String userName : allUserNamesOfSite) {
                 // 获取用户名旗下的所有session
-                ConcurrentSkipListSet<Session> allSessionsOfUserName = allUserSessions.get(userName);
+                ConcurrentLinkedDeque<Session> allSessionsOfUserName = allUserSessions.get(userName);
                 if (allSessionsOfUserName != null) {
                     for (Session session : allSessionsOfUserName) {
                         if(session.isOpen()){
