@@ -44,7 +44,8 @@ public class UserJWTController {
     public JSONObject validSSO(@RequestBody JSONObject info, HttpServletRequest request) {
         try {
             // 尝试解析Token
-            String token_base64 = info.getString("token").substring(7);
+            String token = info.getString("token");
+            String token_base64 = token.indexOf("Bearer") == -1 ? token : token.substring(7);
             String user = TokenProvider.getClaims(token_base64).getSubject();
             userMd5Map.put(user, info.getString("hash"));
             JSONObject res = new JSONObject();

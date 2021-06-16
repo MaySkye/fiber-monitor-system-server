@@ -48,7 +48,6 @@ public class SiteResource {
     @Timed
     public String getSiteInfo(@PathVariable(value = "sitelevel") String sitelevel) {
         List<Site> list = siteservice.getAllSite();
-        System.out.println("sitelevel: "+sitelevel);
         if(sitelevel.equals("all")){
             return getSiteJsonStr(list);
         }
@@ -70,7 +69,6 @@ public class SiteResource {
     @Timed
     public void addSitePost(@RequestBody String site_json) {
         site_json=site_json.substring(1,site_json.length()-1);
-        System.out.println("site_json:"+site_json);
         JSONObject json = JSONObject.parseObject(site_json);
         Site site=new Site();
         site.setSiteName((String) json.get("val_sitename"));
@@ -88,7 +86,6 @@ public class SiteResource {
     @GetMapping("/delete/{sitename}")
     @Timed
     public int deleteSite(@PathVariable(value = "sitename") String sitename) {
-        System.out.println("delete-sitename: "+sitename);
         List<Site> list = siteservice.getAllSite();
         for(int i=0;i<list.size();i++){
             if(list.get(i).getSiteName().equals(sitename)){
@@ -113,7 +110,6 @@ public class SiteResource {
     @ResponseBody
     @Timed
     public int updateSitePost(@RequestBody String site_json){
-        System.out.println("updateSitePost:  "+site_json);
         Site site = new Site();
         JSONObject obj = JSONObject.parseObject(site_json);
         site.setSiteId(obj.getLong("site_id"));
