@@ -58,7 +58,6 @@ public class EventPublisher {
             try {
                 String username = TokenProvider.getClaims(token).getSubject();
                 session.getAsyncRemote().sendText(CONNECTED_SUCCESS.toJSONString());
-                session.getAsyncRemote().sendText("{\"siteName\":\"西安\",\"deviceName\":\"Keithley_2000型多用万用表\",\"dataName\":\"透射峰电压\",\"eventType\":\"exception\",\"eventLevel\":\"alarm\",\"value\":111}");
                 addNewUser(username, session);
                 JSONArray arr = params.getJSONArray("sites");
                 for (int i = 0; i < arr.size(); i++) {
