@@ -21,7 +21,7 @@ import java.util.concurrent.ConcurrentLinkedDeque;
 @Component
 public class EventPublisher {
     // 站点名 - 用户名列表
-    static ConcurrentHashMap<String, ConcurrentLinkedDeque<String>> siteUsersDict;
+    private static ConcurrentHashMap<String, ConcurrentLinkedDeque<String>> siteUsersDict = new ConcurrentHashMap();
 
     // 用户名 -- session
     private static ConcurrentHashMap<String, ConcurrentLinkedDeque<Session>> allUserSessions = new ConcurrentHashMap<>();
@@ -100,7 +100,7 @@ public class EventPublisher {
     private static void addNewUser(String username, Session session) {
         ConcurrentLinkedDeque<Session> sessions = allUserSessions.get(username);
         if (sessions == null) {
-            sessions = new ConcurrentLinkedDeque<Session>();
+            sessions = new ConcurrentLinkedDeque<>();
             allUserSessions.put(username, sessions);
         }
         sessions.add(session);
@@ -118,6 +118,8 @@ public class EventPublisher {
                     for (Session session : allSessionsOfUserName) {
                         if(session.isOpen()){
                             session.getAsyncRemote().sendText(JSONObject.toJSONString(event));
+                        }else{
+                            allSessionsOfUserName.remove(session);
                         }
                     }
                 }
