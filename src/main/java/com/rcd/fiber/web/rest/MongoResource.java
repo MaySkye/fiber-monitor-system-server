@@ -124,6 +124,7 @@ public class MongoResource {
      *
      * @param md5
      */
+    @CheckPermission(value = true, object = "", action = "编辑", checkDepartment = true)
     @GetMapping("/delete/{md5}")
     @Timed
     public void deleteSite(@PathVariable(value = "md5") String md5) {
