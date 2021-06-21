@@ -122,12 +122,11 @@ public class MongoResource {
     /**
      * 根据objectId删除文件
      * @param objectId
-     * @param department
      */
-    @CheckPermission(value = false, object = "", action = "编辑", checkDepartment = true)
+    @CheckPermission(value = true, object = "", action = "编辑", checkDepartment = true)
     @GetMapping("/deleteFileByObjectId")
     @Timed
-    public void deleteFileByObjectId(@RequestParam String objectId, @RequestParam String department) {
+    public void deleteFileByObjectId(@RequestParam String objectId) {
         service.deleteFileByObjectId(objectId);
     }
 }
