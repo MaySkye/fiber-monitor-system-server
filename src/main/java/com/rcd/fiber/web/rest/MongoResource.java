@@ -86,7 +86,7 @@ public class MongoResource {
             .append("site_level", request.getParameter("site_level"))
             .append("department", request.getParameter("department"))
             .append("filename", request.getParameter("filename"));
-        return service.uploadServiceFile(multipartFile, metadata);
+        return service.uploadMxeFile(multipartFile, metadata);
     }
 
     /**
@@ -103,32 +103,31 @@ public class MongoResource {
 
 
     /**
-     * 根据md5下载组态图文件
+     * 根据objectId下载组态图文件
      *
      * @param request
      * @param response
-     * @param md5
+     * @param objectId
      */
-    @RequestMapping("/getMxeFileByMd5")
+    @RequestMapping("/getMxeFileByObjectId")
     @ResponseBody
     @CheckPermission(value = true, object = "", action = "查看", checkDepartment = true)
     @Timed
-    public void getMxeFileByMd5(HttpServletRequest request, HttpServletResponse response,
-                                @RequestParam("md5") String md5) {
-        System.out.println("get-md5: " + md5);
-        service.getMxeFileByMd5(request, response, md5);
+    public void getMxeFileByObjectId(HttpServletRequest request, HttpServletResponse response,
+                                     @RequestParam String objectId) {
+        service.getMxeFileByObjectId(request, response, objectId);
     }
 
+
     /**
-     * 根据md5删除组态图文件
-     *
-     * @param md5
+     * 根据objectId删除文件
+     * @param objectId
+     * @param department
      */
-    @CheckPermission(value = true, object = "", action = "编辑", checkDepartment = true)
-    @GetMapping("/delete/{md5}")
+    @CheckPermission(value = false, object = "", action = "编辑", checkDepartment = true)
+    @GetMapping("/deleteFileByObjectId")
     @Timed
-    public void deleteSite(@PathVariable(value = "md5") String md5) {
-        System.out.println("md5: " + md5);
-        service.deleteFile(md5);
+    public void deleteFileByObjectId(@RequestParam String objectId, @RequestParam String department) {
+        service.deleteFileByObjectId(objectId);
     }
 }

@@ -33,9 +33,10 @@ public class MongoRepository {
         MxeFileInfo info = mongoTemplate.findOne(query, MxeFileInfo.class, bucketName + ".files");
         return info;
     }
+
     //赵艺：查询所有service文件信息
     public List<MxeFileInfo> getAllServiceInfo() {
-        List<MxeFileInfo> infos = mongoTemplate.findAll( MxeFileInfo.class,bucketName + ".files");
+        List<MxeFileInfo> infos = mongoTemplate.findAll(MxeFileInfo.class, bucketName + ".files");
         return infos;
     }
 
@@ -46,8 +47,8 @@ public class MongoRepository {
     }
 
     //赵艺： 删除某一文件
-    public void delete(Query query){
-        mongoTemplate.findAndRemove(query, MxeFileInfo.class, bucketName + ".files");
+    public void deleteFileByCondition(Query query) {
+        gridFsTemplate.delete(query);
     }
 
     //王伟：下载service（latest）文件时查询信息
@@ -57,8 +58,7 @@ public class MongoRepository {
     }
 
     //王伟：上传service文件
-    public ObjectId uploadServiceFile(InputStream inputStream,String filename,Document metadata)
-    {
+    public ObjectId uploadMxeFile(InputStream inputStream, String filename, Document metadata) {
         ObjectId objectId = gridFsTemplate.store(inputStream, filename, metadata);
         return objectId;
     }

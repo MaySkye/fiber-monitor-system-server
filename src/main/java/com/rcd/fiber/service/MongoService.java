@@ -66,12 +66,12 @@ public class MongoService {
     /**
      * 根据md5获取文件元数据
      *
-     * @param md5
+     * @param objectId
      * @return
      */
-    public MxeFileInfo getMxeFileInfoByMd5(String md5) {
+    public MxeFileInfo getMxeFileInfoByObjectId(String objectId) {
         Query query = new Query(Criteria.
-            where("md5").is(md5));
+            where("_id").is(objectId));
         return mongoRepository.getCurrentMxeFileInfo(query);
     }
 
@@ -115,13 +115,13 @@ public class MongoService {
      * @param metadata
      * @return
      */
-    public HashMap<String, String> uploadServiceFile(MultipartFile multipartFile, Document metadata) {
+    public HashMap<String, String> uploadMxeFile(MultipartFile multipartFile, Document metadata) {
         HashMap<String, String> res = new HashMap<>();
         try {
             String fixedFilename = metadata.getString("filename");
             metadata.remove("filename");
             InputStream inputStream = multipartFile.getInputStream();
-            ObjectId objectId = mongoRepository.uploadServiceFile(inputStream, fixedFilename, metadata);
+            ObjectId objectId = mongoRepository.uploadMxeFile(inputStream, fixedFilename, metadata);
             //System.out.println("multipartFile.getOriginalFilename():"+multipartFile.getOriginalFilename());
             res.put("objectId", objectId.toString());
             res.put("type", "success");
@@ -134,7 +134,7 @@ public class MongoService {
     }
 
     /**
-     * 查询所有service文件信息
+     * 查询所有mxe文件信息
      * @return
      */
     public JSONArray getAllServiceInfo() {
@@ -150,27 +150,26 @@ public class MongoService {
             jsonObject.put("upload_time", mxeFileInfo.getUploadDate().toString());
             jsonObject.put("department", mxeFileInfo.getMetadata().getString("department"));
             jsonObject.put("md5", mxeFileInfo.getMd5());
-            jsonObject.put("id", mxeFileInfo.get_id());
+            jsonObject.put("_id", mxeFileInfo.get_id().toString());
             array.add(jsonObject);
         }
         return array;
     }
 
     /**
-     * 根据md5下载组态图文件
+     * 根据objectId下载组态图文件
      * @param request
      * @param response
-     * @param md5
+     * @param objectId
      */
-    public void getMxeFileByMd5(HttpServletRequest request, HttpServletResponse response, String md5) {
+    public void getMxeFileByObjectId(HttpServletRequest request, HttpServletResponse response, String objectId) {
         Query query = new Query(Criteria
-            .where("md5").is(md5)
+            .where("_id").is(objectId)
         );
         GridFSFile gsFile = mongoRepository.getFileInfo(query);
         //返回结果
         HashMap<String, String> res = new HashMap<>();
         try {
-            System.out.println("开始try");
             //获取IO流
             GridFSDownloadStream downloadStream = gridFSBucket.openDownloadStream(gsFile.getObjectId());
             OutputStream outputStream = response.getOutputStream();
@@ -190,12 +189,12 @@ public class MongoService {
         }
     }
 
-    //赵艺：删除某一service文件
-    public void deleteFile(String md5) {
-        Query query = new Query(Criteria
-            .where("md5").is(md5)
-        );
-        mongoRepository.delete(query);
+    /**
+     * 根据objectId删除文件
+     * @param objectId
+     */
+    public void deleteFileByObjectId(String objectId){
+        Query query = new Query(Criteria.where("_id").is(objectId));
+        mongoRepository.deleteFileByCondition(query);
     }
-
 }
