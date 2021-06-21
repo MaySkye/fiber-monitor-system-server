@@ -75,7 +75,8 @@ public class CheckPermissionAop {
                 String siteLevel = request.getParameter("site_level");
                 String siteName = request.getParameter("site_name");
                 // 根据objectId获取组态图时，查询mxe文件所需的分系统权限
-                if (objectId != null && request.getRequestURL().indexOf("getMxeFile") != -1) {
+                if (objectId != null &&
+                    (request.getRequestURL().indexOf("getMxeFile") != -1 || request.getRequestURL().indexOf("deleteFileByObjectId") != -1)) {
                     MxeFileInfo info = mongoService.getMxeFileInfoByObjectId(objectId);
                     if (info == null) {
                         throw new Exception("找不到组态图", new Throwable("MxeFile not found"));

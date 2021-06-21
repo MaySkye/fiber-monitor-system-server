@@ -35,20 +35,6 @@ public class MongoResource {
         this.service = service;
     }
 
-    /**
-     * 根据站点名、站点等级获取文件的元数据
-     *
-     * @param site_name
-     * @param site_level
-     * @return
-     */
-    @RequestMapping("/getMxeFileInfoBySiteNameAndLevel")
-    @ResponseBody
-    @Timed
-    public MxeFileInfo getMxeFileInfoBySiteNameAndLevel(@RequestParam("site_name") String site_name,
-                                                        @RequestParam("site_level") String site_level) {
-        return service.getMxeFileInfoBySiteNameAndLevel(site_name, site_level);
-    }
 
     /**
      * 根据站点名、站点等级获取最新的组态图文件
