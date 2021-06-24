@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * @Author:zhoayi
@@ -28,7 +29,8 @@ public class SiteResource {
     private final Logger logger = LoggerFactory.getLogger(SiteResource.class);
     private final SiteService siteservice;
     private final SiteLineService siteLineservice;
-    public SiteResource(SiteService siteservice,SiteLineService siteLineservice) {
+
+    public SiteResource(SiteService siteservice, SiteLineService siteLineservice) {
         this.siteservice = siteservice;
         this.siteLineservice = siteLineservice;
     }
@@ -48,29 +50,24 @@ public class SiteResource {
     @Timed
     public String getSiteInfo(@PathVariable(value = "sitelevel") String sitelevel) {
         List<Site> list = siteservice.getAllSite();
-        if(sitelevel.equals("all")){
+        if (sitelevel.equals("all")) {
             return getSiteJsonStr(list);
-        }
-        else if(sitelevel.equals("1")){
-            return getSiteJsonStr(getLevelSite(list,1));
-        }
-        else if(sitelevel.equals("2")){
-            return getSiteJsonStr(getLevelSite(list,2));
-        }
-        else if(sitelevel.equals("3")){
-            return getSiteJsonStr(getLevelSite(list,3));
-        }else {
-            return null;
+        } else {
+            return getSiteJsonStr(
+                list.stream()
+                    .filter((Site site) -> site.getSiteLevel() == Integer.parseInt(sitelevel))
+                    .collect(Collectors.toList())
+            );
         }
     }
 
-    @RequestMapping(value = "/addsite",method = RequestMethod.POST)
+    @RequestMapping(value = "/addsite", method = RequestMethod.POST)
     @ResponseBody
     @Timed
     public void addSitePost(@RequestBody String site_json) {
-        site_json=site_json.substring(1,site_json.length()-1);
+        site_json = site_json.substring(1, site_json.length() - 1);
         JSONObject json = JSONObject.parseObject(site_json);
-        Site site=new Site();
+        Site site = new Site();
         site.setSiteName((String) json.get("val_sitename"));
         site.setSiteType((String) json.get("val_sitetype"));
         site.setSiteAddress((String) json.get("val_siteaddress"));
@@ -87,15 +84,15 @@ public class SiteResource {
     @Timed
     public int deleteSite(@PathVariable(value = "sitename") String sitename) {
         List<Site> list = siteservice.getAllSite();
-        for(int i=0;i<list.size();i++){
-            if(list.get(i).getSiteName().equals(sitename)){
+        for (int i = 0; i < list.size(); i++) {
+            if (list.get(i).getSiteName().equals(sitename)) {
                 siteservice.deleteSite(list.get(i));
                 //判断是否存在与该站点有关的链路
                 List<SiteLine> siteLines = siteLineservice.getAllSiteLine();
-                for(int j=0;j<siteLines.size();j++){
+                for (int j = 0; j < siteLines.size(); j++) {
                     String point1 = siteLines.get(j).getPoint1();
                     String point2 = siteLines.get(j).getPoint2();
-                    if(point1.equals(sitename)||point2.equals(sitename)){
+                    if (point1.equals(sitename) || point2.equals(sitename)) {
                         //删除该链路
                         siteLineservice.deleteSiteLine(siteLines.get(j));
                     }
@@ -106,10 +103,10 @@ public class SiteResource {
         return -1;
     }
 
-    @RequestMapping(value = "/updatesite",method = RequestMethod.POST)
+    @RequestMapping(value = "/updatesite", method = RequestMethod.POST)
     @ResponseBody
     @Timed
-    public int updateSitePost(@RequestBody String site_json){
+    public int updateSitePost(@RequestBody String site_json) {
         Site site = new Site();
         JSONObject obj = JSONObject.parseObject(site_json);
         site.setSiteId(obj.getLong("site_id"));
@@ -120,10 +117,10 @@ public class SiteResource {
         site.setSiteLocaly(obj.getDouble("site_localy"));
         site.setSiteInfo(obj.getString("site_info"));
         site.setSiteAddress(obj.getString("site_address"));
-       return siteservice.updateSite(site);
+        return siteservice.updateSite(site);
     }
 
-    public  static String getSiteJsonStr(List<Site> items) throws JSONException {
+    public static String getSiteJsonStr(List<Site> items) throws JSONException {
         if (items == null)
             return "";
         JSONArray array = new JSONArray();
@@ -145,35 +142,22 @@ public class SiteResource {
             jsonObject.put("devcount", info.getDevcount());
             /*int devcount=(int)(5+Math.random()*(10-5+1));
             jsonObject.put("devcount", devcount);*/
-            if(info.getSiteName().equals("郑州")){
-                jsonObject.put("state","故障" );
+            if (info.getSiteName().equals("郑州")) {
+                jsonObject.put("state", "故障");
+            } else if (info.getSiteName().equals("天津")) {
+                jsonObject.put("state", "异常");
+            } else if (info.getSiteName().equals("温州")) {
+                jsonObject.put("state", "异常");
+            } else if (info.getSiteName().equals("襄樊")) {
+                jsonObject.put("state", "异常");
+            } else if (info.getSiteName().equals("昆明")) {
+                jsonObject.put("state", "故障");
+            } else {
+                jsonObject.put("state", "正常");
             }
-            else if(info.getSiteName().equals("天津")){
-                jsonObject.put("state","异常" );
-            }
-            else if(info.getSiteName().equals("温州")){
-                jsonObject.put("state","异常" );
-            }
-            else if(info.getSiteName().equals("襄樊")){
-                jsonObject.put("state","异常" );
-            }
-            else if(info.getSiteName().equals("昆明")){
-                jsonObject.put("state","故障" );
-            }
-            else{jsonObject.put("state","正常" );}
             //System.out.println("jsonObject:  " + jsonObject.toString());
             array.add(jsonObject);
         }
         return array.toString();
-    }
-
-    private  List<Site> getLevelSite(List<Site> items,int level){
-        List<Site> resList = new ArrayList<>();
-        for(int i=0;i<items.size();i++){
-            if(items.get(i).getSiteLevel()==level){
-                resList.add(items.get(i));
-            }
-        }
-        return resList;
     }
 }
