@@ -40,10 +40,7 @@ public class SiteResource {
     @Timed
     public String getAllSite() {
         List<Site> list = siteservice.getAllSite();
-        //list.stream().forEach(x->System.out.println(x));
-        String jsonListEmp = getSiteJsonStr(list);
-        return jsonListEmp;
-        //return ResponseEntity.ok(list);
+        return getSiteJsonStr(list);
     }
 
     @GetMapping("/findsiteinfo/{sitelevel}")
