@@ -39,8 +39,7 @@ public class SiteLineResource {
         updateAllSiteLine();
         //读取返回数据
         List<SiteLine> list = siteLineservice.getAllSiteLine();
-        String jsonListEmp = siteLineToJson(list);
-        return jsonListEmp;
+        return siteLineToJson(list);
     }
 
     @GetMapping("/findPaintInfo")
