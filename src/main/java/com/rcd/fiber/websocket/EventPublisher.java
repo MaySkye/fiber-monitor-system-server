@@ -9,6 +9,7 @@ import org.springframework.stereotype.Component;
 import javax.websocket.*;
 import javax.websocket.server.ServerEndpoint;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentLinkedDeque;
 
@@ -109,17 +110,19 @@ public class EventPublisher {
         String siteName = event.getSiteName();
         // 获取订阅该站点时间的所有用户名
         ConcurrentLinkedDeque<String> allUserNamesOfSite = siteUsersDict.get(siteName);
-        if (allUserNamesOfSite != null) {
-            for (String userName : allUserNamesOfSite) {
-                // 获取用户名旗下的所有session
-                ConcurrentLinkedDeque<Session> allSessionsOfUserName = allUserSessions.get(userName);
-                if (allSessionsOfUserName != null) {
-                    for (Session session : allSessionsOfUserName) {
-                        if(session.isOpen()){
-                            session.getAsyncRemote().sendText(JSONObject.toJSONString(event));
-                        }else{
-                            allSessionsOfUserName.remove(session);
-                        }
+        ConcurrentLinkedDeque<String> allUserNamesOfAll = siteUsersDict.get("all");
+        ArrayList<String> list = new ArrayList<>();
+        if (allUserNamesOfSite != null) list.addAll(allUserNamesOfSite);
+        if (allUserNamesOfAll != null) list.addAll(allUserNamesOfAll);
+        for (String userName : list) {
+            // 获取用户名旗下的所有session
+            ConcurrentLinkedDeque<Session> allSessionsOfUserName = allUserSessions.get(userName);
+            if (allSessionsOfUserName != null) {
+                for (Session session : allSessionsOfUserName) {
+                    if (session.isOpen()) {
+                        session.getAsyncRemote().sendText(JSONObject.toJSONString(event));
+                    } else {
+                        allSessionsOfUserName.remove(session);
                     }
                 }
             }
