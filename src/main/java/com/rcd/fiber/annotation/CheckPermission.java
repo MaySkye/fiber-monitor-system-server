@@ -16,4 +16,6 @@ public @interface CheckPermission {
     String action() default "";
 
     boolean checkDepartment() default false;
+
+    boolean checkSite() default false;
 }

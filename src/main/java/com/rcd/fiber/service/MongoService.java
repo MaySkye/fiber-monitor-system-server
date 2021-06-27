@@ -51,14 +51,13 @@ public class MongoService {
      * 根据站点名、站点等级获取文件的元数据
      *
      * @param siteName
-     * @param siteLevel
      * @return
      */
-    public MxeFileInfo getMxeFileInfoBySiteNameAndLevel(String siteName, String siteLevel) {
+    public MxeFileInfo getMxeFileInfoBySite(String siteName) {
         Query query = new Query(Criteria
             .where("metadata.site_name").is(siteName)
-//            .and("metadata.site_level").is(siteLevel)
         );
+        query.with(Sort.by(Sort.Order.desc("uploadDate")));
         return mongoRepository.getCurrentMxeFileInfo(query);
     }
 
@@ -76,11 +75,10 @@ public class MongoService {
     }
 
     //王伟：下载站点使用的service文件
-    public void getMxeFileBySiteNameAndLevel(HttpServletRequest request, HttpServletResponse response, String site_name, String site_level) {
+    public void getMxeFileBySiteName(HttpServletRequest request, HttpServletResponse response, String site_name) {
         //查询GridFSFile文件信息
         Query query = new Query(Criteria
             .where("metadata.site_name").is(site_name)
-//            .and("metadata.site_level").is(site_level)
         );
         query.with(Sort.by(Sort.Order.desc("uploadDate")));
         GridFSFile gsFile = mongoRepository.getLatestServiceFile(query);
@@ -111,6 +109,7 @@ public class MongoService {
 
     /**
      * 上传组态图文件
+     *
      * @param multipartFile
      * @param metadata
      * @return
@@ -135,6 +134,7 @@ public class MongoService {
 
     /**
      * 查询所有mxe文件信息
+     *
      * @return
      */
     public JSONArray getAllServiceInfo() {
@@ -158,6 +158,7 @@ public class MongoService {
 
     /**
      * 根据objectId下载组态图文件
+     *
      * @param request
      * @param response
      * @param objectId
@@ -191,9 +192,10 @@ public class MongoService {
 
     /**
      * 根据objectId删除文件
+     *
      * @param objectId
      */
-    public void deleteFileByObjectId(String objectId){
+    public void deleteFileByObjectId(String objectId) {
         Query query = new Query(Criteria.where("_id").is(objectId));
         mongoRepository.deleteFileByCondition(query);
     }

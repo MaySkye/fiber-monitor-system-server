@@ -65,42 +65,9 @@ public class CheckPermissionAop {
             HttpServletResponse response = ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getResponse();
             // 尝试解析Token
             String token_base64 = request.getHeader("Authorization").substring(7);
-            String user = TokenProvider.getClaims(token_base64).getSubject();
-            // 注解信息
-            String targetObject = checkPermission.object();
-            String action = checkPermission.action();
-            // 检查分系统
-            if (checkPermission.checkDepartment()) {
-                String objectId = request.getParameter("objectId");
-                String siteLevel = request.getParameter("site_level");
-                String siteName = request.getParameter("site_name");
-                // 根据objectId获取组态图时，查询mxe文件所需的分系统权限
-                if (objectId != null &&
-                    (request.getRequestURL().indexOf("getMxeFile") != -1 || request.getRequestURL().indexOf("deleteFileByObjectId") != -1)) {
-                    MxeFileInfo info = mongoService.getMxeFileInfoByObjectId(objectId);
-                    if (info == null) {
-                        throw new Exception("找不到组态图", new Throwable("MxeFile not found"));
-                    }
-                    targetObject = info.getMetadata().getString("department");
-                }
-                // 根据站点名、站点等级获取组态图时，查询mxe文件所需的分系统权限
-                else if (siteLevel != null && siteName != null && request.getRequestURL().indexOf("getMxeFile") != -1) {
-                    MxeFileInfo info = mongoService.getMxeFileInfoBySiteNameAndLevel(siteName, siteLevel);
-                    if (info == null) {
-                        throw new Exception("找不到组态图", new Throwable("MxeFile not found"));
-                    }
-                    targetObject = info.getMetadata().getString("department");
-                }
-                // 上传组态图时，检查分系统权限
-                else if (request.getParameter("department") != null) {
-                    targetObject = request.getParameter("department");
-                }
-            }
+            String username = TokenProvider.getClaims(token_base64).getSubject();
             // 检查权限
-            String check = Check.Check(policyName, user, monitorGraphResource + "/" + targetObject, action, "", user, UserJWTController.userMd5Map.get(user));
-            JSONObject res = JSONObject.parseObject(check);
-            if (!"0".equals(res.getString("code")))
-                throw new PermissionException("您无权查看", "请联系管理员！");
+            checkPermission(username, request, checkPermission);
         }
         try {
             proceedingJoinPoint.proceed(); //执行程序
@@ -132,4 +99,69 @@ public class CheckPermissionAop {
         ex.printStackTrace();
     }
 
+    /**
+     * 检查权限
+     *
+     * @param username
+     * @param request
+     * @param checkPermission
+     * @throws Exception
+     */
+    private void checkPermission(String username, HttpServletRequest request, CheckPermission checkPermission) throws Exception {
+        // 获取参数
+        String objectId = request.getParameter("objectId");
+        String siteName = request.getParameter("site_name");
+        String department = request.getParameter("department");
+        // 根据objectId：获取组态图、删除组态图时，查询mxe文件所需的分系统权限
+        if (objectId != null) {
+            MxeFileInfo info = mongoService.getMxeFileInfoByObjectId(objectId);
+            checkMxeFilePermission(username, checkPermission, info);
+        }
+        // 根据站点名：获取组态图时，查询mxe文件所需的分系统权限
+        else if (siteName != null) {
+            MxeFileInfo info = mongoService.getMxeFileInfoBySite(siteName);
+            checkMxeFilePermission(username, checkPermission, info);
+        }
+        // 上传组态图时，检查分系统权限
+        else if (department != null) {
+            if (checkPermission.checkDepartment()) {
+                checkResponse(Check.Check(policyName, username, monitorGraphResource + "/" + department, checkPermission.action(), "", username, UserJWTController.userMd5Map.get(username)));
+            }
+        }
+    }
+
+    /**
+     * 检查mxe文件权限
+     *
+     * @param username
+     * @param checkPermission
+     * @param mxeInfo
+     * @throws Exception
+     */
+    private void checkMxeFilePermission(String username, CheckPermission checkPermission, MxeFileInfo mxeInfo) throws Exception {
+        if (mxeInfo == null) {
+            throw new Exception("找不到组态图", new Throwable("MxeFile not found"));
+        }
+        if (checkPermission.checkDepartment()) {
+            checkResponse(Check.Check(policyName, username, monitorGraphResource + "/" + mxeInfo.getMetadata().getString("department"), checkPermission.action(), "", username, UserJWTController.userMd5Map.get(username)));
+        }
+        if (checkPermission.checkSite()) {
+            checkResponse(Check.Check(policyName, username, monitorGraphResource + "/" + mxeInfo.getMetadata().getString("site_name"), checkPermission.action(), "", username, UserJWTController.userMd5Map.get(username)));
+        }
+    }
+
+    /**
+     * 检查安全系统响应
+     *
+     * @param res
+     * @throws Exception
+     */
+    private void checkResponse(String res) throws Exception {
+        JSONObject result = JSONObject.parseObject(res);
+        if (!"0".equals(result.getString("code"))) {
+            {
+                throw new PermissionException("您无权查看", "请联系管理员！");
+            }
+        }
+    }
 }

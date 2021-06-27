@@ -42,17 +42,14 @@ public class MongoResource {
      * @param request
      * @param response
      * @param site_name
-     * @param site_level
      */
-    @RequestMapping("/getMxeFileBySiteNameAndLevel")
+    @RequestMapping("/getMxeFileBySiteName")
     @ResponseBody
     @CheckPermission(value = true, object = "", action = "查看", checkDepartment = true)
     @Timed
-    public void getMxeFileBySiteNameAndLevel(HttpServletRequest request, HttpServletResponse response,
-                                             @RequestParam("site_name") String site_name,
-                                             @RequestParam("site_level") String site_level) {
-        System.out.println("site_name:" + site_name + "  site_level:" + site_level);
-        service.getMxeFileBySiteNameAndLevel(request, response, site_name, site_level);
+    public void getMxeFileBySiteName(HttpServletRequest request, HttpServletResponse response,
+                                             @RequestParam("site_name") String site_name) {
+        service.getMxeFileBySiteName(request, response, site_name);
     }
 
     /**
