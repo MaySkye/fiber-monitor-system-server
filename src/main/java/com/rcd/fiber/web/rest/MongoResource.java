@@ -45,10 +45,10 @@ public class MongoResource {
      */
     @RequestMapping("/getMxeFileBySiteName")
     @ResponseBody
-    @CheckPermission(value = true, object = "", action = "查看", checkDepartment = true)
+    @CheckPermission(value = true, object = "", action = "查看", checkDepartment = true, checkSite = true)
     @Timed
     public void getMxeFileBySiteName(HttpServletRequest request, HttpServletResponse response,
-                                             @RequestParam("site_name") String site_name) {
+                                     @RequestParam("site_name") String site_name) {
         service.getMxeFileBySiteName(request, response, site_name);
     }
 
@@ -60,7 +60,7 @@ public class MongoResource {
      * @return
      */
     @RequestMapping(value = "/upload", method = RequestMethod.POST)
-    @CheckPermission(value = true, object = "", action = "编辑", checkDepartment = true)
+    @CheckPermission(value = true, object = "", action = "编辑", checkDepartment = true, checkSite = true)
     @ResponseBody
     public HashMap<String, String> upload(MultipartFile multipartFile,
                                           HttpServletRequest request) {
@@ -94,7 +94,7 @@ public class MongoResource {
      */
     @RequestMapping("/getMxeFileByObjectId")
     @ResponseBody
-    @CheckPermission(value = true, object = "", action = "查看", checkDepartment = true)
+    @CheckPermission(value = true, object = "", action = "查看", checkDepartment = true, checkSite = true)
     @Timed
     public void getMxeFileByObjectId(HttpServletRequest request, HttpServletResponse response,
                                      @RequestParam String objectId) {
@@ -104,9 +104,10 @@ public class MongoResource {
 
     /**
      * 根据objectId删除文件
+     *
      * @param objectId
      */
-    @CheckPermission(value = true, object = "", action = "编辑", checkDepartment = true)
+    @CheckPermission(value = true, object = "", action = "编辑", checkDepartment = true, checkSite = true)
     @GetMapping("/deleteFileByObjectId")
     @Timed
     public void deleteFileByObjectId(@RequestParam String objectId) {
